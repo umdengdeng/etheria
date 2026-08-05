@@ -180,6 +180,24 @@
     background:rgba(8,10,16,.85);padding:1px 6px;border-radius:8px;font-variant-numeric:tabular-nums}
   .slot .sn{font-size:9.5px;color:var(--muted);text-align:center;line-height:1.1;padding:0 3px}
 
+  /* QUEST BOARD (함께 목표) */
+  .questbox{background:linear-gradient(160deg,rgba(120,150,220,.12),rgba(255,255,255,.03));
+    border:1px solid rgba(140,170,255,.28);border-radius:15px;padding:15px 16px;margin-bottom:12px}
+  .questbox .qgoal{font-size:11px;color:var(--accent2);font-weight:800;letter-spacing:.4px}
+  .questbox .qttl{font-size:16px;font-weight:900;margin:2px 0 12px}
+  .qtask{margin-bottom:11px}
+  .qtaskrow{display:flex;align-items:center;gap:10px}
+  .qtask .qck{width:21px;height:21px;border-radius:6px;border:1.5px solid var(--edge);display:grid;place-items:center;font-size:12px;flex:none;color:var(--dim)}
+  .qtask.ok .qck{background:#41e08a;border-color:#41e08a;color:#08213f}
+  .qtask .qlb{flex:1;font-size:12.5px;font-weight:700}
+  .qtask .qpg{font-size:11px;color:var(--gold);font-weight:800;font-variant-numeric:tabular-nums}
+  .qbar{height:5px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;margin:5px 0 0 31px}
+  .qbar i{display:block;height:100%;background:linear-gradient(90deg,#8fb4ff,#c9dcff);transition:width .3s}
+  .qready{color:#7dffa8;font-size:12px;font-weight:800;text-align:center;padding:4px 0 10px}
+  .qhint{color:var(--dim);font-size:11.5px;text-align:center;padding:2px 0 10px;line-height:1.5}
+  .resetbtn{width:100%;margin-top:18px;background:rgba(255,90,90,.08);border:1px dashed rgba(255,120,120,.4);
+    color:#ff9a9a;padding:10px;border-radius:11px;font-size:12px;font-family:var(--sans);cursor:pointer}
+
   /* HUNT / 1ST-PERSON AUTO COMBAT */
   #hunt{flex-direction:column;padding:0;justify-content:flex-start;background:#07090e;overflow:hidden}
   #huntScene{position:relative;flex:1;overflow:hidden}
@@ -515,12 +533,42 @@ const EPS=[
  ],end:"― 얼어붙었던 첫 번째 열쇠가, 완전히 당신의 것이 되었다.\n(💗 수위 연출/CG는 여기 이어서 채워 넣습니다.)"},
 ];
 
+// 챕터별 '함께하는 목표' — 활동(사냥/채집/대화/선물)을 같이 해나가면 다음 이야기가 열린다.
+const QUESTS={
+ ep1:{goal:"낯선 땅, 아스라에 도착하다",tasks:[]},
+ ep2:{goal:"엘리아나의 검과 삶을 이해하기",tasks:[
+   {k:"talk",n:1,label:"대화로 마음 나누기",where:"💬 대화 탭"},
+   {k:"hunt",n:2,label:"함께 마수 사냥 (강함 증명)",where:"🗺️ 탐험 › 사냥터"}]},
+ ep3:{goal:"균열의 위협에 함께 맞서기",tasks:[
+   {k:"hunt",n:3,label:"균열의 마수 처치",where:"🗺️ 탐험 › 사냥터"},
+   {k:"gather",n:2,label:"치료용 약초·재료 채집",where:"🗺️ 탐험 › 숲/과수원"}]},
+ ep4:{goal:"봉인된 문의 비밀에 다가가기",tasks:[
+   {k:"gather",n:3,label:"문을 조사할 소재 모으기",where:"🗺️ 탐험 › 광산/숲"},
+   {k:"talk",n:2,label:"그녀와 깊은 대화",where:"💬 대화 탭"},
+   {k:"gift",n:1,label:"진심을 담은 선물",where:"📖 스토리 › 🎁 선물하기"}]},
+ ep5:{goal:"마지막, 서로의 마음을 확인하기",tasks:[
+   {k:"hunt",n:3,label:"함께하는 마지막 사냥",where:"🗺️ 탐험 › 사냥터"},
+   {k:"talk",n:2,label:"마음을 나누는 대화",where:"💬 대화 탭"},
+   {k:"gift",n:2,label:"마음을 담은 선물",where:"📖 스토리 › 🎁 선물하기"}]},
+};
+
 /* ============ STATE ============ */
-const DEF={seen:false,gold:0,exp:0,lv:1,aff:0,epDone:[],inv:{}};
+const DEF={seen:false,gold:0,exp:0,lv:1,aff:0,epDone:[],inv:{},cur:0,tprog:{gather:0,hunt:0,talk:0,gift:0}};
 let ST=load();
-function load(){try{const s=JSON.parse(localStorage.getItem("eth_v3"));return s?{...DEF,...s}:{...DEF};}catch(e){return{...DEF};}}
+function load(){let s;try{s=JSON.parse(localStorage.getItem("eth_v3"));}catch(e){}
+  const st=s?{...DEF,...s}:{...DEF};
+  if(!st.tprog)st.tprog={gather:0,hunt:0,talk:0,gift:0};
+  for(const k of["gather","hunt","talk","gift"])if(st.tprog[k]==null)st.tprog[k]=0;
+  if(st.cur==null)st.cur=(st.epDone?st.epDone.length:0); // 구버전 세이브 이어받기
+  return st;}
 function save(){localStorage.setItem("eth_v3",JSON.stringify(ST));}
 const xpNeed=lv=>lv*100;
+// 활동 진행 누적 (현재 챕터 목표에 반영)
+function bumpTask(k){ST.tprog[k]=(ST.tprog[k]||0)+1;save();}
+function questDone(ep){const q=QUESTS[ep.id];if(!q)return true;return q.tasks.every(t=>(ST.tprog[t.k]||0)>=t.n);}
+// 전체 리셋 (개발용 치트 — 정식 서비스에서는 제거)
+function resetAll(){if(!confirm("[개발용] 모든 진행(호감도·레벨·아이템·스토리)을 초기화할까요?"))return;
+  localStorage.removeItem("eth_v3");location.reload();}
 
 /* ============ NAV ============ */
 const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
@@ -565,24 +613,49 @@ function openGiftModal(){
     <p style="margin-bottom:14px">보유 💰 ${ST.gold} · 💗=최애 +50%</p>${gl}<button class="btn ghost" id="giftClose" style="margin-top:8px;width:100%">닫기</button></div>`;
   ov.classList.add("on");
   ov.querySelectorAll(".gbuy").forEach(b=>b.onclick=()=>{const g=GIFTS.find(x=>x.id===b.dataset.g);if(ST.gold<g.cost)return;
-    ST.gold-=g.cost;const add=g.fav?Math.round(g.aff*1.5):g.aff;const before=ST.aff;ST.aff=Math.min(100,ST.aff+add);save();
+    ST.gold-=g.cost;const add=g.fav?Math.round(g.aff*1.5):g.aff;const before=ST.aff;ST.aff=Math.min(100,ST.aff+add);bumpTask("gift");save();
     ov.classList.remove("on");openHub("story");flashStage(before,ST.aff);});
   $("#giftClose").onclick=()=>{ov.classList.remove("on");};
 }
+const TICON={hunt:"⚔️",gather:"🌿",talk:"💬",gift:"🎁"};
 function renderStory(b){
-  b.innerHTML=`<div class="sec-t">제1장 · 아스라 왕국</div>`+heroCard()+`<div class="sec-t">스토리 에피소드</div>`;
-  EPS.forEach((ep,i)=>{
-    const cleared=ST.epDone.includes(ep.id);
-    const prevOk=i===0||ST.epDone.includes(EPS[i-1].id);
-    const affOk=ST.aff>=ep.reqAff;
-    const open=prevOk&&affOk;
-    let btn = cleared?`<button class="go" data-ep="${ep.id}">다시 보기</button>`
-      :(open?`<button class="go" data-ep="${ep.id}">진행</button>`
-      :`<button class="go" disabled>🔒 ${!prevOk?'이전 에피소드':`호감도 ${ep.reqAff}`}</button>`);
-    b.insertAdjacentHTML("beforeend",`<div class="item ${cleared?'done':''}"><div class="ic">${cleared?'✅':'📖'}</div>
-      <div class="m"><b>${ep.title}</b><p>${ep.sub}</p></div>${btn}</div>`);
-  });
+  b.innerHTML=`<div class="sec-t">제1장 · 아스라 왕국</div>`+heroCard();
+  const cur=Math.min(ST.cur,EPS.length);
+  if(cur<EPS.length){
+    const ep=EPS[cur],q=QUESTS[ep.id]||{goal:"",tasks:[]};
+    const ready=questDone(ep);
+    let tasksHtml="";
+    q.tasks.forEach(t=>{
+      const p=Math.min(ST.tprog[t.k]||0,t.n),ok=p>=t.n;
+      tasksHtml+=`<div class="qtask ${ok?'ok':''}">
+        <div class="qtaskrow"><div class="qck">${ok?'✓':TICON[t.k]}</div>
+          <div class="qlb">${t.label} <small>· ${t.where}</small></div>
+          <div class="qpg">${p}/${t.n}</div></div>
+        <div class="qbar"><i style="width:${p/t.n*100}%"></i></div></div>`;
+    });
+    b.insertAdjacentHTML("beforeend",`<div class="sec-t">지금의 이야기</div>
+      <div class="questbox">
+        <div class="qgoal">함께하는 목표 · ${ep.title}</div>
+        <div class="qttl">${q.goal}</div>
+        ${tasksHtml||'<div class="qhint">아스라에 도착한 이야기부터 시작해요.</div>'}
+        ${ready
+          ? `<div class="qready">✨ 목표 달성! 다음 이야기가 열렸어요</div><button class="go" data-ep="${ep.id}" style="width:100%">▶ 이야기 진행하기</button>`
+          : `<div class="qhint">엘리아나와 함께 위 목표를 해나가면,<br>다음 이야기가 자연스럽게 열립니다.</div>`}
+      </div>`);
+  } else {
+    b.insertAdjacentHTML("beforeend",`<div class="questbox"><div class="qgoal">제1장 완결</div>
+      <div class="qttl">아스라의 문이 열렸다</div>
+      <div class="qhint">엘리아나와의 이야기를 모두 함께했어요.<br>다음 나라로 이어지는 여정은 곧 업데이트됩니다.</div></div>`);
+  }
+  const done=EPS.filter(e=>ST.epDone.includes(e.id));
+  if(done.length){
+    b.insertAdjacentHTML("beforeend",`<div class="sec-t">지나온 이야기</div>`);
+    done.forEach(ep=>b.insertAdjacentHTML("beforeend",`<div class="item done"><div class="ic">✅</div>
+      <div class="m"><b>${ep.title}</b><p>${ep.sub}</p></div><button class="go" data-ep="${ep.id}">다시 보기</button></div>`));
+  }
+  b.insertAdjacentHTML("beforeend",`<button class="resetbtn" id="resetBtn">🧹 전체 리셋 (개발용 치트 · 정식 서비스에서는 제거)</button>`);
   b.querySelectorAll(".go[data-ep]").forEach(x=>x.onclick=()=>startEp(EPS.find(e=>e.id===x.dataset.ep)));
+  $("#resetBtn").onclick=resetAll;
 }
 function renderTalk(b){
   b.innerHTML=heroCard()+`<div class="sec-t">💬 대화하기 — 성격을 읽고 답하면 호감도↑</div>
@@ -665,6 +738,7 @@ function renderGathered(){
 }
 function finishGather(){
   if(GA.done)return;GA.done=true;const l=GA.l;
+  bumpTask("gather");
   ST.gold+=GA.gold;ST.exp+=GA.exp;
   let lvUp=false;while(ST.exp>=xpNeed(ST.lv)){ST.exp-=xpNeed(ST.lv);ST.lv++;lvUp=true;}
   save();
@@ -734,7 +808,7 @@ function exchange(){
   },170);
 }
 function monDown(){
-  CB.busy=false;$("#monSpr").classList.add("dead");CB.kills++;$("#killCnt").textContent=CB.kills;
+  CB.busy=false;$("#monSpr").classList.add("dead");CB.kills++;$("#killCnt").textContent=CB.kills;bumpTask("hunt");
   const gold=rnd(6,12)+CB.monLv*2,exp=rnd(10,18)+CB.monLv*3;ST.gold+=gold;ST.exp+=exp;
   const pool=["hide","fang","core"],got={},dn=rnd(1,2);
   for(let i=0;i<dn;i++){const d=pool[Math.floor(Math.random()*pool.length)];got[d]=(got[d]||0)+1;addItem(d,1);}
@@ -773,8 +847,15 @@ function typew(t){typing=true;curFull=t;vtext.textContent="";vadv.classList.remo
   const step=()=>{if(!typing)return;vtext.textContent=t.slice(0,i);i++;if(i<=t.length)setTimeout(step,20);else{typing=false;vadv.classList.add("show");}};step();}
 
 function startEp(ep){curEp=ep;queue=ep.nodes;qi=0;afterCb=()=>{ // on ep end
-    const before=ST.aff; if(!ST.epDone.includes(ep.id)){ST.epDone.push(ep.id);ST.gold+=ep.gold;save();}
-    bigOverlay("📖",ep.title+" 완료",`${ep.end}\n\n골드 +${ep.gold} 💰`,()=>{flashStage(before,ST.aff,()=>openHub("story"));});
+    const before=ST.aff,firstClear=!ST.epDone.includes(ep.id);
+    let bonus=0;
+    if(firstClear){
+      ST.epDone.push(ep.id);ST.gold+=ep.gold;
+      bonus=10;ST.aff=Math.min(100,ST.aff+bonus); // 함께 이야기를 넘긴 유대감
+      if(EPS[ST.cur]&&EPS[ST.cur].id===ep.id){ST.cur=Math.min(EPS.length,ST.cur+1);ST.tprog={gather:0,hunt:0,talk:0,gift:0};} // 다음 챕터로
+      save();
+    }
+    bigOverlay("📖",ep.title+" 완료",`${ep.end}\n\n골드 +${ep.gold} 💰${firstClear?`  ·  유대감 +${bonus} ♥`:""}`,()=>{flashStage(before,ST.aff,()=>openHub("story"));});
   };
   curBg="";curSp="__none__";show("date");vHud();vStep();}
 function vStep(){
@@ -809,7 +890,7 @@ function startTalk(){
   const t=TALKS[Math.floor((Date.now()/1000)%TALKS.length)]; // vary without Math.random dependency on load
   curEp={bg:"asra_training"};queue=[{bg:"asra_training",sp:"neutral",name:"엘리아나",text:"…무슨 일이야. 할 말 있으면 해."},
     {q:{sp:"neutral",text:"「"+t.q+"」",a:t.a.map(x=>({t:x.t,fit:x.fit,reply:{sp:x.fit==="good"?"blush":x.fit==="bad"?"angry":"neutral",text:x.reply}}))}}];
-  qi=0;afterCb=()=>{const before=ST.aff;bigOverlay("💬","대화 종료",`엘리아나와 대화했다.\n현재 단계: ${stageOf(ST.aff).name}`,()=>openHub("talk"));};
+  qi=0;afterCb=()=>{bumpTask("talk");bigOverlay("💬","대화 종료",`엘리아나와 대화했다.\n현재 단계: ${stageOf(ST.aff).name}`,()=>openHub("talk"));};
   curBg="";curSp="__none__";show("date");vHud();vStep();
 }
 
