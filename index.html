@@ -170,13 +170,53 @@
   .locsheet .lrow .btn{flex:1;margin:0}
   .locsheet .lrow .ghost{flex:0 0 34%}
 
-  /* HUNT */
-  #hunt{background:linear-gradient(180deg,#0e1420,#07090e);align-items:center;justify-content:center;text-align:center;padding:26px}
-  #hunt .mon{width:min(70%,320px);aspect-ratio:1;background-size:contain;background-repeat:no-repeat;background-position:center;
-    filter:drop-shadow(0 10px 30px rgba(255,80,80,.25))}
-  #hunt h2{font-size:22px;font-weight:900;margin:8px 0}
-  #hunt p{color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:18px;max-width:34ch}
-  #hunt .btn{width:min(80%,320px);margin:6px auto;display:block}
+  /* INVENTORY GRID (게임인벤) */
+  .invgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+  .slot{aspect-ratio:1;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid var(--edge);
+    position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+  .slot.has{background:linear-gradient(160deg,rgba(120,150,220,.15),rgba(255,255,255,.03));border-color:rgba(140,170,255,.32)}
+  .slot .si{font-size:30px;line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5))}
+  .slot .sq{position:absolute;right:5px;bottom:4px;font-size:12px;font-weight:900;color:var(--gold);
+    background:rgba(8,10,16,.85);padding:1px 6px;border-radius:8px;font-variant-numeric:tabular-nums}
+  .slot .sn{font-size:9.5px;color:var(--muted);text-align:center;line-height:1.1;padding:0 3px}
+
+  /* HUNT / AUTO COMBAT */
+  #hunt{background:radial-gradient(120% 80% at 50% 0%,#1a2233,#0a0d14 68%);flex-direction:column;padding:0;justify-content:flex-start}
+  .bTop{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;border-bottom:1px solid var(--edge)}
+  .bTop .bx{background:rgba(255,255,255,.06);border:1px solid var(--edge);color:var(--muted);
+    padding:7px 12px;border-radius:9px;font-size:13px;cursor:pointer;font-family:var(--sans)}
+  .bTop .bTitle{font-weight:900;font-size:15px}
+  .bTop .bKill{font-size:12px;color:var(--gold);font-weight:800}
+  .arena{flex:1;display:flex;align-items:center;justify-content:space-around;gap:6px;padding:22px 14px;position:relative}
+  .fighter{display:flex;flex-direction:column;align-items:center;gap:11px;width:42%;position:relative}
+  .fighter .nmrow{font-size:12px;font-weight:800;display:flex;gap:6px;align-items:baseline}
+  .fighter .nmrow span{color:var(--dim);font-size:11px}
+  .hpwrap{width:100%}
+  .hpbar{height:11px;background:#2a1520;border:1px solid rgba(255,255,255,.1);border-radius:7px;overflow:hidden}
+  .hpbar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#41e08a,#a7f0b0);transition:width .28s}
+  .fighter.mon .hpbar i{background:linear-gradient(90deg,#ff5a5a,#ffab5a)}
+  .hpwrap small{display:block;text-align:center;color:var(--dim);font-size:10px;margin-top:3px;font-variant-numeric:tabular-nums}
+  .av{width:118px;height:118px;border-radius:22px;display:grid;place-items:center;position:relative;
+    background:rgba(255,255,255,.03);border:1px solid var(--edge)}
+  .av.pl{background:radial-gradient(circle at 50% 40%,rgba(120,170,255,.25),rgba(255,255,255,.02))}
+  .av.pl .face{font-size:56px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.5))}
+  .av.mon{background:radial-gradient(circle at 50% 40%,rgba(255,90,90,.22),rgba(255,255,255,.02))}
+  .av.mon .spr{width:104px;height:104px;background-size:contain;background-repeat:no-repeat;background-position:center;
+    filter:drop-shadow(0 6px 16px rgba(255,70,70,.35))}
+  .av.dead{opacity:0;transform:scale(.55) rotate(10deg);transition:.42s}
+  .vs{font-size:20px;color:var(--dim);align-self:center}
+  .lungeR{animation:lungeR .34s}.lungeL{animation:lungeL .34s}.hurt{animation:hurt .36s}
+  @keyframes lungeR{40%{transform:translateX(30px)}100%{transform:translateX(0)}}
+  @keyframes lungeL{40%{transform:translateX(-30px)}100%{transform:translateX(0)}}
+  @keyframes hurt{0%,100%{transform:translateX(0);filter:none}25%{transform:translateX(-7px);filter:brightness(2.6) saturate(.3)}50%{transform:translateX(7px)}75%{transform:translateX(-4px)}}
+  .dmg{position:absolute;top:20%;left:50%;font-weight:900;font-size:23px;color:#fff;
+    text-shadow:0 2px 7px rgba(0,0,0,.8);pointer-events:none;animation:floatUp .78s ease-out forwards;z-index:5}
+  .dmg.crit{color:#ffd24a;font-size:29px}
+  @keyframes floatUp{0%{opacity:0;transform:translate(-50%,12px) scale(.6)}25%{opacity:1;transform:translate(-50%,-6px) scale(1.15)}100%{opacity:0;transform:translate(-50%,-48px) scale(1)}}
+  .bLog{min-height:20px;text-align:center;color:var(--gold);font-size:12.5px;font-weight:700;padding:2px 16px 12px}
+  .bBtns{display:flex;gap:10px;padding:0 16px 20px}
+  .bBtns .btn{flex:1;margin:0}
+  .btn.on2{background:linear-gradient(135deg,#ff7aa8,#ff5f8f)!important;color:#fff!important}
   @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 
@@ -225,13 +265,31 @@
     <div class="toast" id="toast"></div>
   </section>
 
-  <!-- HUNT -->
+  <!-- HUNT / AUTO COMBAT -->
   <section class="screen" id="hunt">
-    <div class="mon" id="monImg"></div>
-    <h2 id="huntTitle">마수 · 그림자 야수</h2>
-    <p id="huntDesc">대단절의 균열에서 새어 나온 마수. 사냥해서 경험치와 골드를 얻자. (강해질수록 엘리아나가 당신을 다시 본다)</p>
-    <button class="btn pink" id="huntBtn">⚔️ 사냥한다</button>
-    <button class="btn ghost" id="huntBack">허브로</button>
+    <div class="bTop">
+      <button class="bx" id="huntBack">‹ 나가기</button>
+      <div class="bTitle">⚔️ 마수 사냥터</div>
+      <div class="bKill">처치 <span id="killCnt">0</span></div>
+    </div>
+    <div class="arena">
+      <div class="fighter pl" id="fPlayer">
+        <div class="nmrow"><b id="plName">게이트워커</b> <span id="plLv">Lv.1</span></div>
+        <div class="hpwrap"><div class="hpbar"><i id="plHp"></i></div><small id="plHpTxt"></small></div>
+        <div class="av pl"><span class="face">🗡️</span></div>
+      </div>
+      <div class="vs">⚔️</div>
+      <div class="fighter mon" id="fMon">
+        <div class="nmrow"><b id="monName">그림자 야수</b> <span id="monLv">Lv.1</span></div>
+        <div class="hpwrap"><div class="hpbar"><i id="monHp"></i></div><small id="monHpTxt"></small></div>
+        <div class="av mon"><div class="spr" id="monSpr"></div></div>
+      </div>
+    </div>
+    <div class="bLog" id="bLog"></div>
+    <div class="bBtns">
+      <button class="btn" id="atkBtn">⚔️ 공격</button>
+      <button class="btn pink" id="autoBtn">🔄 자동 OFF</button>
+    </div>
   </section>
 
   <div id="overlay"></div>
@@ -336,7 +394,6 @@ const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
 function show(id){$$(".screen").forEach(s=>s.classList.remove("on"));$("#"+id).classList.add("on");}
 const SPR=window.SPRITES||{},BG=window.BGS||{};
 $("#landHero").style.backgroundImage=`url(${BG.asra_rampart||BG.asra_castle||""})`;
-$("#monImg").style.backgroundImage=`url(${SPR.shadowbeast||""})`;
 function refreshCont(){$("#contBtn").disabled=!ST.seen;}
 $("#startBtn").onclick=()=>{ST.seen=true;save();openHub("story");};
 $("#contBtn").onclick=()=>openHub("story");
@@ -425,15 +482,17 @@ function openLoc(l){
     </div></div>`;
   ov.classList.add("on");
   $("#lcancel").onclick=()=>ov.classList.remove("on");
-  $("#lgo").onclick=()=>{ov.classList.remove("on");doActivity(l);};
+  $("#lgo").onclick=()=>{ov.classList.remove("on");if(l.combat)startCombat();else doActivity(l);};
 }
 function renderBag(b){
-  const keys=Object.keys(ST.inv).filter(k=>ST.inv[k]>0);
-  b.innerHTML=`<div class="sec-t">🎒 가방 · 인벤토리</div>`;
-  if(!keys.length){b.insertAdjacentHTML("beforeend",`<div style="color:var(--dim);text-align:center;padding:34px;font-size:14px">아직 아이템이 없어요.<br>🗺️ 탐험에서 활동해 아이템을 모아보세요.</div>`);return;}
-  keys.forEach(k=>{const it=ITEMS[k];b.insertAdjacentHTML("beforeend",`<div class="item"><div class="ic">${it.ic}</div>
-    <div class="m"><b>${it.n}</b></div><div style="color:var(--gold);font-weight:800;font-size:16px">×${ST.inv[k]}</div></div>`);});
-  b.insertAdjacentHTML("beforeend",`<div style="color:var(--dim);font-size:12px;padding:12px 4px">💡 곧: 아이템을 조합(제작)해 선물·강화석을 만들 수 있게 됩니다.</div>`);
+  const keys=Object.keys(ITEMS).filter(k=>(ST.inv[k]||0)>0);
+  const SLOTS=Math.max(20,Math.ceil((keys.length+4)/4)*4);
+  let cells="";
+  keys.forEach(k=>{cells+=`<div class="slot has"><div class="si">${ITEMS[k].ic}</div><span class="sq">${ST.inv[k]}</span><div class="sn">${ITEMS[k].n}</div></div>`;});
+  for(let i=keys.length;i<SLOTS;i++)cells+=`<div class="slot"></div>`;
+  b.innerHTML=`<div class="maphead"><div class="h">🎒 가방 <small>${keys.length}종 보유</small></div></div>
+    <div class="invgrid">${cells}</div>
+    <div class="maptip">아이템은 곧 <b>조합(제작)</b>으로 선물·강화석이 됩니다.</div>`;
 }
 function addItem(id,n){ST.inv[id]=(ST.inv[id]||0)+n;}
 function doActivity(l){
@@ -460,26 +519,77 @@ function encounterEliana(l){
   curBg="";curSp="__none__";show("date");vHud();vStep();
 }
 
-/* ============ HUNT (RPG: level + gold only) ============ */
-$("#huntBack").onclick=()=>openHub("story");
-$("#huntBtn").onclick=()=>{
-  const goldGain=8+Math.floor(Math.random()*8)+ST.lv*2;
-  const expGain=12+Math.floor(Math.random()*10)+ST.lv*2;
-  ST.gold+=goldGain;ST.exp+=expGain;
-  // 강함 증명 → 엘리아나 소량 호감 (RPG↔로맨스)
-  let affLine="";const beforeA=ST.aff;
-  if(Math.random()<0.5){ST.aff=Math.min(100,ST.aff+1);affLine="  엘리아나 호감 +1 ♥";}
-  let lvUp=false;
-  while(ST.exp>=xpNeed(ST.lv)){ST.exp-=xpNeed(ST.lv);ST.lv++;lvUp=true;}
-  save();
-  if(lvUp){bigOverlay("⚔️",`레벨 업! Lv.${ST.lv}`,`강해졌다. 마수를 더 사냥하거나 엘리아나를 만나러 가자.\n골드 +${goldGain} · EXP +${expGain}${affLine}`,()=>openHub("hunt"));}
-  else{ overlayFlash(`마수 처치! 💰+${goldGain}  ⚔️EXP+${expGain}${affLine}`); flashStage(beforeA,ST.aff); }
-};
-function overlayFlash(msg){ // quick toast on hunt screen
-  let t=document.querySelector("#huntToast");
-  if(!t){t=document.createElement("div");t.id="huntToast";t.className="toast";$("#hunt").appendChild(t);}
-  t.textContent=msg;t.className="toast on gold";setTimeout(()=>t.classList.remove("on"),1600);
+/* ============ AUTO HUNT COMBAT (캐릭터 vs 마수, 자동 반복) ============ */
+let CB=null;
+const pMaxHP=()=>60+ST.lv*14, pATK=()=>9+ST.lv*3+(ST.wpn||0)*4;
+function startCombat(){
+  CB={pMax:pMaxHP(),pHP:pMaxHP(),pAtk:pATK(),monLv:1,monMax:1,monHP:1,monAtk:1,kills:0,auto:false,busy:false,timer:null};
+  $("#plName").textContent="게이트워커";$("#plLv").textContent="Lv."+ST.lv;
+  $("#killCnt").textContent=0;$("#autoBtn").textContent="🔄 자동 OFF";$("#autoBtn").classList.remove("on2");
+  logB("장소에 도착. ⚔️공격 또는 🔄자동을 눌러 사냥을 시작하세요.");
+  spawnMon();show("hunt");
 }
+function spawnMon(){
+  const lv=Math.max(1,ST.lv+rnd(-1,1));
+  CB.monLv=lv;CB.monMax=28+lv*13;CB.monHP=CB.monMax;CB.monAtk=4+lv*2;
+  $("#monName").textContent="그림자 야수";$("#monLv").textContent="Lv."+lv;
+  $("#monSpr").style.backgroundImage=`url(${SPR.shadowbeast||""})`;
+  $("#fMon .av").classList.remove("dead");drawHP();
+}
+function drawHP(){
+  $("#plHp").style.width=Math.max(0,CB.pHP/CB.pMax*100)+"%";
+  $("#plHpTxt").textContent=`${Math.max(0,Math.ceil(CB.pHP))} / ${CB.pMax}`;
+  $("#monHp").style.width=Math.max(0,CB.monHP/CB.monMax*100)+"%";
+  $("#monHpTxt").textContent=`${Math.max(0,Math.ceil(CB.monHP))} / ${CB.monMax}`;
+}
+function anim(sel,cls){const el=$(sel);if(!el)return;el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);setTimeout(()=>el.classList.remove(cls),380);}
+function floatDmg(sel,val,crit){const h=$(sel);if(!h)return;const d=document.createElement("div");
+  d.className="dmg"+(crit?" crit":"");d.textContent=(crit?"⚡":"")+"-"+val;h.appendChild(d);setTimeout(()=>d.remove(),760);}
+function logB(m){$("#bLog").textContent=m;}
+function exchange(){
+  if(!CB||CB.busy||$("#hunt").className.indexOf("on")<0)return;CB.busy=true;
+  anim("#fPlayer .av","lungeR");
+  const crit=Math.random()<0.18;let dmg=Math.round(CB.pAtk*(0.85+Math.random()*0.3))*(crit?2:1);
+  setTimeout(()=>{
+    CB.monHP-=dmg;anim("#fMon .av","hurt");floatDmg("#fMon",dmg,crit);drawHP();
+    if(CB.monHP<=0){monDown();return;}
+    setTimeout(()=>{
+      anim("#fMon .av","lungeL");
+      const md=Math.round(CB.monAtk*(0.8+Math.random()*0.4));
+      setTimeout(()=>{
+        CB.pHP-=md;anim("#fPlayer .av","hurt");floatDmg("#fPlayer",md,false);drawHP();
+        if(CB.pHP<=0){playerDown();return;}
+        CB.busy=false;if(CB.auto)CB.timer=setTimeout(exchange,190);
+      },200);
+    },260);
+  },200);
+}
+function monDown(){
+  CB.busy=false;$("#fMon .av").classList.add("dead");CB.kills++;$("#killCnt").textContent=CB.kills;
+  const gold=rnd(6,12)+CB.monLv*2,exp=rnd(10,18)+CB.monLv*3;ST.gold+=gold;ST.exp+=exp;
+  const pool=["hide","fang","core"],got={},dn=rnd(1,2);
+  for(let i=0;i<dn;i++){const d=pool[Math.floor(Math.random()*pool.length)];got[d]=(got[d]||0)+1;addItem(d,1);}
+  let lvUp=false;while(ST.exp>=xpNeed(ST.lv)){ST.exp-=xpNeed(ST.lv);ST.lv++;lvUp=true;}
+  let affTxt="";if(Math.random()<0.4){ST.aff=Math.min(100,ST.aff+1);affTxt=" · 엘리아나 호감 +1 ♥";}
+  save();
+  const gs=Object.keys(got).map(k=>ITEMS[k].ic+"×"+got[k]).join(" ");
+  logB(`처치! 💰+${gold}  ⚔️+${exp}  ${gs}${affTxt}${lvUp?"  · ⚔️레벨업 Lv."+ST.lv:""}`);
+  if(lvUp){$("#plLv").textContent="Lv."+ST.lv;CB.pMax=pMaxHP();CB.pAtk=pATK();CB.pHP=CB.pMax;}
+  setTimeout(()=>{spawnMon();if(CB.auto)CB.timer=setTimeout(exchange,240);},720);
+}
+function playerDown(){
+  CB.busy=false;logB("쓰러졌다… 체력을 회복하고 다시 도전! (패널티 없음)");
+  CB.pHP=CB.pMax;drawHP();
+  setTimeout(()=>{if(CB.auto)CB.timer=setTimeout(exchange,400);},700);
+}
+function setAuto(on){
+  if(!CB)return;CB.auto=on;const b=$("#autoBtn");
+  b.textContent=on?"⏸ 자동 ON":"🔄 자동 OFF";b.classList.toggle("on2",on);
+  if(on){if(!CB.busy)exchange();}else clearTimeout(CB.timer);
+}
+$("#huntBack").onclick=()=>{if(CB){CB.auto=false;clearTimeout(CB.timer);}openHub("explore");};
+$("#atkBtn").onclick=()=>{if(CB&&!CB.busy&&!CB.auto)exchange();};
+$("#autoBtn").onclick=()=>setAuto(!(CB&&CB.auto));
 
 /* ============ VN ENGINE (episodes + talks) ============ */
 const vbg=$("#vbg"),vsp=$("#vspImg"),vtext=$("#vtext"),vtag=$("#vtag"),vadv=$("#vadv"),vch=$("#vchoices"),
