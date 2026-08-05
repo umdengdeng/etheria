@@ -533,6 +533,100 @@ const EPS=[
  ],end:"― 얼어붙었던 첫 번째 열쇠가, 완전히 당신의 것이 되었다.\n(💗 수위 연출/CG는 여기 이어서 채워 넣습니다.)"},
 ];
 
+// ============ 일상 대화 (히로인별 · 스토리 진행 중 나누는 긴 잡담. 단계가 오를수록 새 대화 해금) ============
+// stage: 0경계 1관심 2설렘 3연인 (stageIdx 기준). node 포맷은 에피소드와 동일.
+const DAILY=[
+ {id:"d1",stage:0,title:"훈련장의 잡담",sub:"검을 손질하는 그녀 곁에서",bg:"asra_training",nodes:[
+   {bg:"asra_training",narr:1,text:"― 훈련장 한켠. 엘리아나가 목검을 정비하고 있다. 당신이 다가가자 흘깃 시선을 준다."},
+   {sp:"neutral",name:"엘리아나",text:"…또 왔어? 딱히 할 일이 없나 보군. 뭐, 방해만 안 하면 있든 말든 상관없어."},
+   {sp:"neutral",name:"엘리아나",text:"(검날을 천으로 닦으며) …이 검, 벌써 세 자루째야. 앞의 두 자루는 마수를 상대하다 부러졌지."},
+   {q:{sp:"neutral",text:"「검이 벌써 세 자루째라고?」",a:[
+     {t:"검이 부러질 만큼 싸웠단 거잖아요. …그동안 얼마나 많이 막아낸 거예요.",fit:"good",reply:{sp:"blush",text:"…뭐야 그 말투는. 그냥 소모품이 빨리 닳았을 뿐이야. …그래도, 그렇게 봐주는 건. …나쁘진 않네."}},
+     {t:"관리를 정말 잘 하시네요.",fit:"ok",reply:{sp:"neutral",text:"당연하지. 검은 목숨이야. 소홀히 하는 놈은 전장에서 제일 먼저 죽어."}},
+     {t:"여자가 무슨 검을 세 자루씩이나요.",fit:"bad",reply:{sp:"angry",text:"…한 번만 더 그 소리 하면, 네가 네 자루째 부러뜨리는 대상이 될 거다."}}]}},
+   {sp:"smile",name:"엘리아나",text:"매일 새벽 다섯 시. 눈이 오든 비가 오든 여기 나와. 십 년째 하루도 안 빠졌지."},
+   {sp:"neutral",name:"엘리아나",text:"처음엔 손에 물집이 잡혀서 검도 못 쥐었어. 지금은… 뭐, 물집 잡힐 새도 없이 굳은살이 박였지만."},
+   {q:{sp:"neutral",text:"「매일 새벽마다, 십 년을.」",a:[
+     {t:"그 꾸준함이 지금의 당신을 만든 거네요. 존경스러워요.",fit:"good",reply:{sp:"blush",text:"조, 존경은 무슨. …그냥 안 하면 불안해서 하는 거야. …근데 그 말, 기분 나쁘진 않다."}},
+     {t:"안 힘들어요, 매일?",fit:"ok",reply:{sp:"neutral",text:"힘들지. 근데 안 하면 더 불안해. 검을 놓은 손은 금방 무뎌지니까."}}]}},
+   {narr:1,text:"그녀가 목검을 내려놓고, 잠시 하늘을 올려다본다. 새벽빛이 옆얼굴에 부드럽게 스민다."},
+   {sp:"smile",name:"엘리아나",text:"…가끔은 이렇게 누가 옆에 있는 것도. …아니, 됐어. 훈련 끝났으니 넌 이만 가봐. …또 와도 되고."},
+ ]},
+ {id:"d2",stage:0,title:"아스라의 하루",sub:"왕국과 사람들 이야기",bg:"asra_castle",nodes:[
+   {bg:"asra_castle",narr:1,text:"― 성 안뜰. 순찰을 돌던 엘리아나가 당신을 발견한다."},
+   {sp:"neutral",name:"엘리아나",text:"마침 잘 됐군. 이 성, 처음이지? …따라와. 딱히 안내는 아니고, 순찰길이 겹칠 뿐이야."},
+   {sp:"neutral",name:"엘리아나",text:"저기 종탑 보이지? 대단절 전엔 저 종이 게이트가 열릴 때마다 울렸어. 다른 나라 사람들이 오갔지. …지금은 그냥 시간만 알려."},
+   {q:{sp:"neutral",text:"「종이 게이트마다 울렸다고요?」",a:[
+     {t:"그 시절 아스라는 분명 시끌벅적하고 따뜻했겠네요. 언젠가 그 종소리 다시 듣고 싶다.",fit:"good",reply:{sp:"blush",text:"…다시. …너는 가끔 그런 말을 아무렇지 않게 하는구나. …글쎄. 그럴 날이 올까. …네가 있으면, 혹시."}},
+     {t:"지금은 참 조용하네요.",fit:"ok",reply:{sp:"neutral",text:"조용한 게 아니라, 갇힌 거야. 문이 닫힌 세상은 그냥… 멈춰 있어."}}]}},
+   {sp:"neutral",name:"엘리아나",text:"병사 식당은 저쪽이야. 오늘 메뉴도 또 콩 수프겠지. …십 년째 물자가 부족하거든. 게이트가 끊겨 교역이 안 되니까."},
+   {sp:"neutral",name:"엘리아나",text:"그래도 요리장 아저씨 솜씨는 좋아. 그 콩 수프, 은근히 중독성 있어. …나중에 한 그릇 먹어봐."},
+   {q:{sp:"neutral",text:"「부단장님이 콩 수프를 추천하다니 의외네요.」",a:[
+     {t:"부단장님 추천이면 먹어봐야죠. …같이 먹으면 더 맛있을 것 같은데요.",fit:"good",reply:{sp:"blush",text:"가, 같이? …그, 그건 순찰 일정 봐서. …아무튼, 맛없어도 나 원망하지 마."}},
+     {t:"물자가 그렇게 부족해요?",fit:"ok",reply:{sp:"neutral",text:"부족하지. 그래도 굶는 사람은 없게 하고 있어. 그게 내 일이기도 하니까."}}]}},
+   {narr:1,text:"순찰을 도는 그녀의 뒤로, 성 사람들이 인사하며 지나간다. 다들 어려워하면서도, 눈빛엔 깊은 신뢰가 담겨 있다."},
+   {sp:"smile",name:"엘리아나",text:"…봤지? 다들 겉으론 날 무서워해. 뭐, 상관없어. 무서워도 지켜줄 수 있으면 그걸로 됐어."},
+   {sp:"neutral",name:"엘리아나",text:"…자, 순찰 끝. 넌 여기까지. …심심하면 또 겹쳐도 되고."},
+ ]},
+ {id:"d3",stage:1,title:"의외의 일면",sub:"얼음 기사의 숨겨진 비밀",bg:"asra_rampart",nodes:[
+   {bg:"asra_rampart",narr:1,text:"― 성벽 위. 엘리아나가 무언가를 손에 쥐고 있다가, 당신을 보고 황급히 등 뒤로 숨긴다."},
+   {sp:"surprise",name:"엘리아나",text:"!! …어, 언제 왔어. 아무것도 아니야. 이건 그냥… 아무것도 아니라고."},
+   {q:{sp:"surprise",text:"「손에 든 거, 뭐예요?」",a:[
+     {t:"안 뺏어요. 그냥 궁금해서요. …뭔가 소중한 건가 봐요?",fit:"good",reply:{sp:"blush",text:"…소중한 건 아니고. …그냥. (조심스레 손을 편다) …길고양이가 낳은 새끼야. 성벽 구석에 있길래. …버, 버릴 수도 없잖아."}},
+     {t:"설마 인형이라도 숨긴 거예요? 풋.",fit:"bad",reply:{sp:"angry",text:"…웃어? (그러나 귀가 새빨갛다) …됐어, 저리 가."}}]}},
+   {sp:"blush",name:"엘리아나",text:"…웃지 마. 기사가 이런 거 챙긴다고 하면 다들 이상하게 보니까. 그래서 아무한테도 말 안 했어."},
+   {sp:"neutral",name:"엘리아나",text:"…이 녀석, 밥은 내가 몰래 챙겨줘. 훈련 끝나고 남는 육포 조금씩. …이것도 비밀이야. 알았지?"},
+   {q:{sp:"neutral",text:"「비밀, 지켜줄게요.」",a:[
+     {t:"당신, 생각보다 훨씬 다정한 사람이네요. …그런 면, 더 알고 싶어요.",fit:"good",reply:{sp:"blush",text:"다, 다정은 무슨. …그냥 약한 걸 못 지나칠 뿐이야. …근데. 더 알고 싶다니. …너, 진짜 반칙이야."}},
+     {t:"고양이 귀엽네요.",fit:"ok",reply:{sp:"blush",text:"…그렇지? (자기도 모르게 미소 짓다) …아, 아니. 넌 못 본 걸로 해."}}]}},
+   {narr:1,text:"새끼 고양이가 그녀의 손가락을 앙 문다. 검을 쥐던 그 손이, 지금은 한없이 조심스럽다."},
+   {sp:"smile",name:"엘리아나",text:"…가끔 이 성벽에 올라와. 순찰 겸, 이 녀석 보러. …너도 심심하면. …아니, 딱히 오라는 건 아니고."},
+ ]},
+ {id:"d4",stage:1,title:"비 오는 날",sub:"빗소리 아래의 속말",bg:"asra_night",nodes:[
+   {bg:"asra_night",narr:1,text:"― 비. 처마 아래, 엘리아나가 젖은 머리를 대충 털며 서 있다."},
+   {sp:"neutral",name:"엘리아나",text:"…순찰 돌다 쫄딱 젖었네. 이런 날은 마수도 안 움직여서, 그나마 여유가 있어."},
+   {sp:"neutral",name:"엘리아나",text:"(빗소리를 들으며) …비 오는 날은 좀 싫어. 대단절이 있던 그날도, 이렇게 비가 왔거든."},
+   {q:{sp:"neutral",text:"「비 오는 날이 싫군요.」",a:[
+     {t:"그럼 오늘은 그날 말고 다른 기억으로 덮어요. 나랑 같이 빗소리 듣는 날로.",fit:"good",reply:{sp:"blush",text:"…다른 기억으로. …너는 정말. 그런 말을 어디서 배워 오는 거야. …그래도. 오늘은 조금 덜 싫을지도."}},
+     {t:"안 좋은 기억이 있나 봐요.",fit:"ok",reply:{sp:"neutral",text:"…뭐, 다들 하나쯤 있잖아. 신경 쓰지 마."}}]}},
+   {sp:"neutral",name:"엘리아나",text:"(잠시 침묵) …있잖아. 넌 비 오는 날 뭐 해? …아, 기억이 없다고 했지. …미안, 실없는 질문이었어."},
+   {q:{sp:"neutral",text:"「기억은 없지만…」",a:[
+     {t:"기억은 없어도, 지금 이 순간은 기억할 수 있잖아요. 당신이랑 처마 밑에서 비 피하던 날, 이렇게.",fit:"good",reply:{sp:"blush",text:"…또 그런 소리. (작게 웃는다) …좋아. 그럼 이건 내 새 기억으로 해둘게. 나쁘지 않네, 이런 것도."}},
+     {t:"지금부터 새로 만들면 되죠, 기억.",fit:"ok",reply:{sp:"smile",text:"…그건 그렇네. …제법 긍정적이잖아, 너."}}]}},
+   {narr:1,text:"빗줄기가 조금씩 가늘어진다. 두 사람은 말없이, 같은 처마 아래 나란히 서 있다."},
+   {sp:"smile",name:"엘리아나",text:"…비 그쳤네. 오늘 이 시간, 의외로 나쁘지 않았어. …고마워. 아, 방금 건 못 들은 걸로."},
+ ]},
+ {id:"d5",stage:2,title:"달빛 속말",sub:"조금 더 솔직해진 밤",bg:"asra_night",nodes:[
+   {bg:"asra_night",narr:1,text:"― 늦은 밤 성벽. 엘리아나가 먼저 당신을 불러냈다."},
+   {sp:"blush",name:"엘리아나",text:"…이 시간에 부른 거, 이상하게 생각하지 마. 그냥… 잠이 안 와서. 네 생각이… 아니, 아무것도 아니야."},
+   {q:{sp:"blush",text:"「제 생각이 났어요?」",a:[
+     {t:"저도예요. 요즘 눈만 감으면 당신 얼굴이 떠올라서, 잠을 설쳐요.",fit:"good",reply:{sp:"blush",text:"…뭐, 뭐야 그 고백 같은 건. …치사해. 그럼 나만 이상한 게 아니었네. …조금, 안심했어."}},
+     {t:"잠 안 오면 같이 야식이라도 할까요?",fit:"ok",reply:{sp:"smile",text:"풋. 이 밤에 무슨 야식이야. …근데, 나쁘지 않은 생각이네."}}]}},
+   {sp:"blush",name:"엘리아나",text:"…있잖아. 요즘 이상해. 검을 휘두르다가도, 밥을 먹다가도. 문득 네가 지금 뭐 하나 궁금해져."},
+   {sp:"blush",name:"엘리아나",text:"이런 거 처음이야. 누굴 신경 쓰는 거. …나 원래 이런 사람 아니었는데. 너 때문에 자꾸 물러 터져."},
+   {q:{sp:"blush",text:"「저 때문에요?」",a:[
+     {t:"그럼 제가 책임질게요. 당신이 물러진 만큼, 옆에서 단단히 받쳐줄게요.",fit:"good",reply:{sp:"blush",text:"…책임진다니. 그런 말, 진짜로 지킬 자신 있어? …있잖아. 그 말, 안 믿는 척했지만. 사실 엄청, 붙잡고 싶었어."}},
+     {t:"저도 당신 때문에 매일이 시끄러운걸요.",fit:"ok",reply:{sp:"blush",text:"…그래? 그럼 피장파장이네. …나쁘지 않아, 이 소란."}}]}},
+   {narr:1,text:"달빛 아래, 그녀가 아주 가까이 다가온다. 늘 검을 겨누던 거리가, 지금은 온기가 닿을 만큼 좁다."},
+   {sp:"blush",name:"엘리아나",text:"…오늘은 여기까지. 더 있다간… 아니. 아무튼, 잘 자. 꿈에서도… 아, 아무것도 아니야! 얼른 가!"},
+ ]},
+ {id:"d6",stage:3,title:"연인의 아침",sub:"가장 가까워진 사이의 잡담",bg:"asra_castle",nodes:[
+   {bg:"asra_castle",narr:1,text:"― 아침 훈련장. 엘리아나가 당신을 보자 자연스럽게 웃는다. 예전의 날 선 경계는 이제 없다."},
+   {sp:"smile",name:"엘리아나",text:"왔어? 오늘은 좀 늦었네. …기다렸잖아. …뭐, 딱히 오래 기다린 건 아니고."},
+   {sp:"smile",name:"엘리아나",text:"오늘 아침 콩 수프, 네 것도 받아 왔어. 식겠다, 얼른 먹어. …맛있지? 내가 뭐랬어."},
+   {q:{sp:"smile",text:"「이렇게 챙겨주는 거예요?」",a:[
+     {t:"이렇게 챙겨주니까, 매일 아침이 기대돼요. …당신이랑 있는 하루 전부가.",fit:"good",reply:{sp:"blush",text:"…아침부터 그런 말 하지 마. 심장에 안 좋아. …근데. 나도. 요즘 아침이 제일 좋아. 네가 오는 시간이니까."}},
+     {t:"잘 먹을게요.",fit:"ok",reply:{sp:"smile",text:"그래. 다 먹고 오늘은 나랑 순찰 같이 돌자. 데이트… 아니, 순찰. 순찰이야."}}]}},
+   {sp:"neutral",name:"엘리아나",text:"참, 어제 그 새끼 고양이 말이야. 이제 제법 커서 성벽을 막 뛰어다녀. 다음에 같이 보러 가자."},
+   {sp:"smile",name:"엘리아나",text:"예전엔 이런 거 다 혼자 했는데. …이제 '같이'라는 말이 이렇게 자연스러워질 줄은 몰랐어. 다 너 때문이야."},
+   {q:{sp:"smile",text:"「다 저 때문이에요?」",a:[
+     {t:"그럼 앞으로도 쭉, 전부 저랑 '같이' 해요. 아침도, 순찰도, 십 년 뒤의 새벽 훈련까지.",fit:"good",reply:{sp:"blush",text:"…십 년 뒤까지. 너, 진짜. …좋아. 약속이야. 그때도 내 옆에서 이 검, 같이 봐줘."}},
+     {t:"책임이 무겁네요.",fit:"ok",reply:{sp:"smile",text:"무거우면 같이 들면 되지. 원래 그러려고 옆에 두는 거잖아, 너를."}}]}},
+   {narr:1,text:"아침 햇살 아래, 두 사람의 웃음이 겹친다. 얼음 같던 기사의 하루는, 이제 혼자가 아니다."},
+   {sp:"smile",name:"엘리아나",text:"…자, 수다는 여기까지. 훈련하러 가자. 오늘도, 같이."},
+ ]},
+];
+
 // 챕터별 '함께하는 목표' — 활동(사냥/채집/대화/선물)을 같이 해나가면 다음 이야기가 열린다.
 const QUESTS={
  ep1:{goal:"낯선 땅, 아스라에 도착하다",tasks:[]},
@@ -553,7 +647,7 @@ const QUESTS={
 };
 
 /* ============ STATE ============ */
-const DEF={seen:false,gold:0,exp:0,lv:1,aff:0,epDone:[],inv:{},cur:0,tprog:{gather:0,hunt:0,talk:0,gift:0}};
+const DEF={seen:false,gold:0,exp:0,lv:1,aff:0,epDone:[],inv:{},cur:0,tprog:{gather:0,hunt:0,talk:0,gift:0},talkSeen:[]};
 let ST=load();
 function load(){let s;try{s=JSON.parse(localStorage.getItem("eth_v3"));}catch(e){}
   const st=s?{...DEF,...s}:{...DEF};
@@ -658,11 +752,26 @@ function renderStory(b){
   $("#resetBtn").onclick=resetAll;
 }
 function renderTalk(b){
-  b.innerHTML=heroCard()+`<div class="sec-t">💬 대화하기 — 성격을 읽고 답하면 호감도↑</div>
-    <div class="item"><div class="ic">💬</div><div class="m"><b>엘리아나와 대화</b><p>랜덤 질문에 그녀의 성격(도도한 츤데레·실력 인정에 약함)에 맞게 답하기</p></div>
-    <button class="go" id="talkGo">시작</button></div>
-    <div style="color:var(--dim);font-size:12px;padding:4px 6px">💡 힌트: 느끼한 아부·가벼운 태도는 역효과. 실력 인정·진심·배려가 통해요.</div>`;
-  $("#talkGo").onclick=startTalk;
+  const si=stageIdx(ST.aff);
+  b.innerHTML=heroCard()+`<div class="sec-t">💬 일상 대화 — 도란도란 길게 이야기 나누기</div>`;
+  const avail=DAILY.filter(d=>d.stage<=si);
+  avail.forEach(d=>{
+    const seen=(ST.talkSeen||[]).includes(d.id);
+    b.insertAdjacentHTML("beforeend",`<div class="item"><div class="ic">💬</div>
+      <div class="m"><b>${d.title} ${seen?'<span style="color:var(--dim);font-size:11px">· 다시</span>':'<span style="color:#7dffa8;font-size:11px">· NEW</span>'}</b><p>${d.sub}</p></div>
+      <button class="go" data-d="${d.id}">대화</button></div>`);
+  });
+  const locked=DAILY.filter(d=>d.stage>si);
+  if(locked.length)b.insertAdjacentHTML("beforeend",`<div class="qhint">💗 더 가까워지면 새로운 일상 대화가 열립니다 (${locked.length}개 더)</div>`);
+  b.insertAdjacentHTML("beforeend",`<div style="color:var(--dim);font-size:12px;padding:6px">💡 느끼한 아부·가벼운 태도는 역효과. 실력 인정·진심·배려가 통해요.</div>`);
+  b.querySelectorAll(".go[data-d]").forEach(x=>x.onclick=()=>startDaily(DAILY.find(d=>d.id===x.dataset.d)));
+}
+function startDaily(d){
+  curEp={bg:d.bg};queue=d.nodes;qi=0;
+  afterCb=()=>{ if(!ST.talkSeen)ST.talkSeen=[]; if(!ST.talkSeen.includes(d.id))ST.talkSeen.push(d.id);
+    bumpTask("talk"); // '대화' 목표에 반영
+    bigOverlay("💬",d.title,`엘리아나와 도란도란 이야기를 나눴다.\n현재 단계 : ${stageOf(ST.aff).name}`,()=>openHub("talk")); };
+  curBg="";curSp="__none__";show("date");vHud();vStep();
 }
 function renderExplore(b){
   const pins=LOCS.map(l=>`<div class="pin ${l.enc?'enc':''} ${l.combat?'combat':''}" data-l="${l.id}" style="left:${l.mx}%;top:${l.my}%">
