@@ -161,8 +161,8 @@
     <div class="tabs">
       <div class="tab on" data-t="story">📖 스토리</div>
       <div class="tab" data-t="talk">💬 대화</div>
-      <div class="tab" data-t="gift">🎁 선물</div>
-      <div class="tab" data-t="hunt">⚔️ 사냥</div>
+      <div class="tab" data-t="explore">🗺️ 탐험</div>
+      <div class="tab" data-t="bag">🎒 가방</div>
     </div>
     <div class="hubbody" id="hubBody"></div>
   </section>
@@ -205,6 +205,21 @@ const GIFTS=[
  {id:"ring",ic:"💍",name:"은빛 반지",desc:"진심을 담은 반지",cost:220,aff:20,fav:true},
  {id:"flower",ic:"💐",name:"들꽃 다발",desc:"소박한 꽃",cost:25,aff:4,fav:false},
 ];
+// 탐험 아이템 (장소 드랍)
+const ITEMS={
+ berry:{n:"산딸기",ic:"🍓"},herb:{n:"약초",ic:"🌿"},wood:{n:"목재",ic:"🪵"},
+ hide:{n:"마수 가죽",ic:"🟫"},fang:{n:"마수 이빨",ic:"🦷"},core:{n:"마정석",ic:"🔮"},
+ ore:{n:"광석",ic:"⛏️"},gem:{n:"보석 원석",ic:"💎"},apple:{n:"과일",ic:"🍎"},honey:{n:"꿀",ic:"🍯"},
+};
+// 지역 맵 장소: act 활동 / drops 드랍풀 / exp·gold 범위 / enc 히로인 조우 확률
+const LOCS=[
+ {id:"forest",name:"실바른 숲",ic:"🌲",act:"채집",drops:["berry","herb","wood"],exp:[2,5],gold:[2,6]},
+ {id:"hunt",name:"마수 사냥터",ic:"⚔️",act:"사냥",drops:["hide","fang","core"],exp:[14,26],gold:[8,18],combat:true},
+ {id:"mine",name:"버려진 광산",ic:"⛏️",act:"채굴",drops:["ore","gem"],exp:[3,7],gold:[4,10]},
+ {id:"orchard",name:"왕립 과수원",ic:"🍎",act:"채집",drops:["apple","honey"],exp:[2,5],gold:[3,7]},
+ {id:"rampart",name:"아스라 성벽",ic:"🏰",act:"순찰",drops:["ore","herb"],exp:[3,6],gold:[3,7],enc:0.5},
+];
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 // 대화 모드: 성격 기반 Q&A (반복). fit: good/ok/bad
 const TALKS=[
  {q:"훈련장에서 홀로 검을 휘두르는 엘리아나. 어떻게 말을 걸까?",a:[
@@ -263,7 +278,7 @@ const EPS=[
 ];
 
 /* ============ STATE ============ */
-const DEF={seen:false,gold:0,exp:0,lv:1,aff:0,epDone:[]};
+const DEF={seen:false,gold:0,exp:0,lv:1,aff:0,epDone:[],inv:{}};
 let ST=load();
 function load(){try{const s=JSON.parse(localStorage.getItem("eth_v3"));return s?{...DEF,...s}:{...DEF};}catch(e){return{...DEF};}}
 function save(){localStorage.setItem("eth_v3",JSON.stringify(ST));}
@@ -293,8 +308,8 @@ function openHub(tab){
   const b=$("#hubBody");b.innerHTML="";
   if(hubTab==="story")renderStory(b);
   else if(hubTab==="talk")renderTalk(b);
-  else if(hubTab==="gift")renderGift(b);
-  else if(hubTab==="hunt"){show("hunt");}
+  else if(hubTab==="explore")renderExplore(b);
+  else if(hubTab==="bag")renderBag(b);
 }
 function heroCard(){
   const a=ST.aff,st=stageOf(a),si=stageIdx(a);
@@ -302,7 +317,20 @@ function heroCard(){
     <div class="info"><div class="nm">엘리아나<span>아스라 · 기사단 부단장</span></div>
     <div class="desc">겉은 얼음, 속은 여린 최강의 여기사. '실력 인정'과 '진심'에 약하다.</div>
     <div class="stagebar"><div class="lab"><span class="st">${st.name} ${si>=4?'💖':''}</span><span class="pct">${a}/100 ♥</span></div>
-    <div class="bar"><i style="width:${Math.min(100,a)}%"></i></div></div></div></div>`;
+    <div class="bar"><i style="width:${Math.min(100,a)}%"></i></div></div>
+    <div class="row"><button class="btn ghost" onclick="openGiftModal()">🎁 선물하기</button></div></div></div>`;
+}
+function openGiftModal(){
+  const gl=GIFTS.map(g=>`<div class="item"><div class="ic">${g.ic}</div><div class="m"><b>${g.name} ${g.fav?'💗':''}</b>
+    <p>${g.desc} · 호감도 +${g.fav?Math.round(g.aff*1.5):g.aff}</p></div>
+    <button class="go gold gbuy" data-g="${g.id}" ${ST.gold<g.cost?'disabled':''}>💰${g.cost}</button></div>`).join("");
+  ov.innerHTML=`<div style="width:min(100%,440px);max-height:86%;overflow-y:auto"><h2 style="color:var(--gold);margin-bottom:4px">🎁 엘리아나에게 선물</h2>
+    <p style="margin-bottom:14px">보유 💰 ${ST.gold} · 💗=최애 +50%</p>${gl}<button class="btn ghost" id="giftClose" style="margin-top:8px;width:100%">닫기</button></div>`;
+  ov.classList.add("on");
+  ov.querySelectorAll(".gbuy").forEach(b=>b.onclick=()=>{const g=GIFTS.find(x=>x.id===b.dataset.g);if(ST.gold<g.cost)return;
+    ST.gold-=g.cost;const add=g.fav?Math.round(g.aff*1.5):g.aff;const before=ST.aff;ST.aff=Math.min(100,ST.aff+add);save();
+    ov.classList.remove("on");openHub("story");flashStage(before,ST.aff);});
+  $("#giftClose").onclick=()=>{ov.classList.remove("on");};
 }
 function renderStory(b){
   b.innerHTML=`<div class="sec-t">제1장 · 아스라 왕국</div>`+heroCard()+`<div class="sec-t">스토리 에피소드</div>`;
@@ -326,18 +354,47 @@ function renderTalk(b){
     <div style="color:var(--dim);font-size:12px;padding:4px 6px">💡 힌트: 느끼한 아부·가벼운 태도는 역효과. 실력 인정·진심·배려가 통해요.</div>`;
   $("#talkGo").onclick=startTalk;
 }
-function renderGift(b){
-  b.innerHTML=heroCard()+`<div class="sec-t">🎁 선물 — 골드로 호감도 부스트 (💗=엘리아나 최애 +50%)</div>`;
-  GIFTS.forEach(g=>{
-    b.insertAdjacentHTML("beforeend",`<div class="item"><div class="ic">${g.ic}</div>
-      <div class="m"><b>${g.name} ${g.fav?'💗':''}</b><p>${g.desc} · 호감도 +${g.fav?Math.round(g.aff*1.5):g.aff}</p></div>
-      <button class="go gold" data-g="${g.id}" ${ST.gold<g.cost?'disabled':''}>💰${g.cost}</button></div>`);
+function renderExplore(b){
+  b.innerHTML=`<div class="sec-t">🗺️ 아스라 왕국 · 탐험</div>
+    <div style="color:var(--dim);font-size:12px;padding:0 4px 12px">장소에서 활동하면 고유 아이템·골드·경험치를 얻어요. 가끔 히로인과 마주칠 수도.</div>`;
+  LOCS.forEach(l=>{
+    b.insertAdjacentHTML("beforeend",`<div class="item"><div class="ic">${l.ic}</div>
+      <div class="m"><b>${l.name}</b><p>${l.act} · 드랍 ${l.drops.map(d=>ITEMS[d].ic).join(" ")}${l.enc?' · 💗조우':''}${l.combat?' · ⚔️EXP':''}</p></div>
+      <button class="go loc" data-l="${l.id}">${l.act}</button></div>`);
   });
-  b.querySelectorAll(".go[data-g]").forEach(x=>x.onclick=()=>{
-    const g=GIFTS.find(y=>y.id===x.dataset.g);if(ST.gold<g.cost)return;
-    ST.gold-=g.cost;const add=g.fav?Math.round(g.aff*1.5):g.aff;const before=ST.aff;ST.aff=Math.min(100,ST.aff+add);save();
-    openHub("gift");flashStage(before,ST.aff);
+  b.querySelectorAll(".loc").forEach(x=>x.onclick=()=>doActivity(LOCS.find(l=>l.id===x.dataset.l)));
+}
+function renderBag(b){
+  const keys=Object.keys(ST.inv).filter(k=>ST.inv[k]>0);
+  b.innerHTML=`<div class="sec-t">🎒 가방 · 인벤토리</div>`;
+  if(!keys.length){b.insertAdjacentHTML("beforeend",`<div style="color:var(--dim);text-align:center;padding:34px;font-size:14px">아직 아이템이 없어요.<br>🗺️ 탐험에서 활동해 아이템을 모아보세요.</div>`);return;}
+  keys.forEach(k=>{const it=ITEMS[k];b.insertAdjacentHTML("beforeend",`<div class="item"><div class="ic">${it.ic}</div>
+    <div class="m"><b>${it.n}</b></div><div style="color:var(--gold);font-weight:800;font-size:16px">×${ST.inv[k]}</div></div>`);});
+  b.insertAdjacentHTML("beforeend",`<div style="color:var(--dim);font-size:12px;padding:12px 4px">💡 곧: 아이템을 조합(제작)해 선물·강화석을 만들 수 있게 됩니다.</div>`);
+}
+function addItem(id,n){ST.inv[id]=(ST.inv[id]||0)+n;}
+function doActivity(l){
+  const gold=rnd(l.gold[0],l.gold[1])+(l.combat?ST.lv*2:0), exp=rnd(l.exp[0],l.exp[1])+(l.combat?ST.lv*2:0);
+  const got={},cnt=rnd(1,2);
+  for(let i=0;i<cnt;i++){const d=l.drops[Math.floor(Math.random()*l.drops.length)];got[d]=(got[d]||0)+1;addItem(d,1);}
+  ST.gold+=gold;ST.exp+=exp;
+  let lvUp=false;while(ST.exp>=xpNeed(ST.lv)){ST.exp-=xpNeed(ST.lv);ST.lv++;lvUp=true;}
+  save();
+  if(l.enc&&Math.random()<l.enc){encounterEliana(l);return;}
+  const gotStr=Object.keys(got).map(k=>`${ITEMS[k].ic}${ITEMS[k].n}×${got[k]}`).join("  ");
+  const title=lvUp?`⚔️ 레벨 업! Lv.${ST.lv}`:`${l.ic} ${l.name} 완료`;
+  bigOverlay(l.combat?"⚔️":l.ic,title,`획득 ${gotStr}\n💰 +${gold}  ⚔️EXP +${exp}${l.combat?"\n(강함 증명 — 엘리아나 호감 +1 ♥)":""}`,()=>{
+    if(l.combat){const bef=ST.aff;ST.aff=Math.min(100,ST.aff+1);save();flashStage(bef,ST.aff,()=>openHub("explore"));}else openHub("explore");
   });
+}
+function encounterEliana(l){
+  curEp={bg:l.id==="rampart"?"asra_rampart":"asra_training"};
+  const t=TALKS[rnd(0,TALKS.length-1)];
+  queue=[{bg:curEp.bg,narr:1,text:`― ${l.name}에서 ${l.act}하던 중, 엘리아나와 마주쳤다.`},
+    {sp:"neutral",name:"엘리아나",text:"…너, 또 여기서 뭐 하는 거야."},
+    {q:{sp:"neutral",text:"「"+t.q+"」",a:t.a.map(x=>({t:x.t,fit:x.fit,reply:{sp:x.fit==="good"?"blush":x.fit==="bad"?"angry":"neutral",text:x.reply}}))}}];
+  qi=0;afterCb=()=>bigOverlay("💗","우연한 만남",`엘리아나와 마주쳤다.\n현재 단계 : ${stageOf(ST.aff).name}`,()=>openHub("explore"));
+  curBg="";curSp="__none__";show("date");vHud();vStep();
 }
 
 /* ============ HUNT (RPG: level + gold only) ============ */
