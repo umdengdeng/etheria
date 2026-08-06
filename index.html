@@ -148,11 +148,11 @@
   #vchoices.on{display:flex}
   #vchoices .qbox{background:var(--panel);border:1px solid var(--edge);border-radius:16px;padding:16px 18px;font-size:17px;line-height:1.55;backdrop-filter:blur(10px)}
   #vchoices .qbox .qn{display:inline-block;background:linear-gradient(135deg,var(--gold),#ffe0a0);color:#4a3208;font-weight:800;font-size:14px;padding:3px 13px;border-radius:9px;margin-bottom:8px}
-  #vchoices .qh{background:rgba(255,207,110,.1);border:1px solid rgba(255,207,110,.32);border-radius:12px;padding:8px 16px;font-size:12.5px;color:var(--gold);font-weight:700;text-align:center}
-  .ch{background:rgba(18,24,36,.94);border:1.5px solid var(--edge);color:var(--ink);font-family:var(--sans);font-size:16px;font-weight:600;
-    padding:15px 20px;border-radius:13px;cursor:pointer;transition:transform .15s,background .15s,border-color .15s;opacity:0;transform:translateY(10px);text-align:left}
+  .ch{background:linear-gradient(135deg,rgba(122,178,255,.20),rgba(150,130,235,.14));border:1.5px solid rgba(150,180,255,.45);
+    color:#eaf1ff;font-family:var(--sans);font-size:16px;font-weight:600;
+    padding:15px 18px;border-radius:14px;cursor:pointer;transition:transform .15s,background .15s,border-color .15s;opacity:0;transform:translateY(10px);text-align:left}
   .ch.in{opacity:1;transform:translateY(0)}
-  .ch:hover{background:rgba(107,168,255,.14);border-color:var(--accent);transform:translateY(-2px)}
+  .ch:hover,.ch:active{background:linear-gradient(135deg,rgba(122,178,255,.34),rgba(150,130,235,.24));border-color:#8fb4ff;transform:translateY(-2px)}
   .toast{position:absolute;top:64px;left:50%;transform:translateX(-50%);z-index:20;background:rgba(10,14,22,.94);border:1px solid var(--edge);
     color:var(--soft);padding:10px 20px;border-radius:999px;font-size:14px;font-weight:700;opacity:0;transition:opacity .3s;white-space:nowrap}
   .toast.on{opacity:1}
@@ -293,6 +293,49 @@
   .gGot{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:8px;min-height:26px}
   .gGot .gchip{background:rgba(255,255,255,.06);border:1px solid var(--edge);border-radius:20px;padding:4px 11px;font-size:12.5px;font-weight:700}
   #gather .bBtns{display:flex;gap:10px;margin-top:10px}#gather .bBtns .btn{flex:1;margin:0}
+
+  /* LOBBY (로비 홈) */
+  #lobby{padding:0;overflow:hidden;justify-content:flex-end}
+  #lobbyBg{position:absolute;inset:0;background-size:cover;background-position:center top}
+  #lobbyBg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,8,14,.45),rgba(6,8,14,.1) 26%,rgba(6,8,14,.78) 66%,rgba(6,8,14,.97))}
+  #lobbySpr{position:absolute;left:50%;transform:translateX(-50%);width:min(96%,430px);top:7%;bottom:150px;
+    background-size:contain;background-repeat:no-repeat;background-position:bottom center;z-index:1;filter:drop-shadow(0 10px 30px rgba(0,0,0,.5))}
+  .lobUI{position:relative;z-index:2;display:flex;flex-direction:column;height:100%;padding:14px}
+  .lobTop{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .lobName{background:rgba(10,14,22,.6);backdrop-filter:blur(6px);border:1px solid var(--edge);border-radius:13px;padding:8px 13px}
+  .lobName b{font-size:15px;font-weight:900}.lobName span{color:var(--dim);font-size:11px;margin-left:6px}
+  .lobName .stg{display:flex;align-items:center;gap:7px;margin-top:5px}
+  .lobName .stg .nm2{color:var(--accent2);font-weight:800;font-size:11px}
+  .lobName .bar2{flex:1;height:5px;background:rgba(255,255,255,.12);border-radius:3px;overflow:hidden;min-width:80px}
+  .lobName .bar2 i{display:block;height:100%;background:linear-gradient(90deg,var(--accent2),#ffb3cf)}
+  .lobSpacer{flex:1}
+  .lobMenu{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .lobMenu button{background:rgba(14,20,30,.78);backdrop-filter:blur(8px);border:1px solid var(--edge);color:var(--ink);
+    font-family:var(--sans);font-weight:800;font-size:15px;padding:16px 12px;border-radius:15px;cursor:pointer;text-align:left;
+    display:flex;align-items:center;gap:9px;transition:transform .12s,border-color .12s,background .12s}
+  .lobMenu button:hover,.lobMenu button:active{transform:translateY(-2px);border-color:var(--accent);background:rgba(107,168,255,.16)}
+  .lobMenu button .em{font-size:22px}
+  .lobMenu button.msgr{grid-column:1/3;background:linear-gradient(135deg,rgba(255,224,92,.18),rgba(255,150,180,.14));border-color:rgba(255,210,120,.4);justify-content:center;text-align:center}
+  .lobMenu button.msgr.locked{background:rgba(20,24,32,.7);border-color:var(--edge);color:var(--dim);cursor:not-allowed}
+  .lobMenu button.msgr .lk{font-size:11px;color:var(--dim);font-weight:600;margin-left:4px}
+
+  /* MESSENGER (💌) */
+  #msgr{padding:0;flex-direction:column;background:#0e161f}
+  .msgrHead{display:flex;align-items:center;gap:11px;padding:12px 14px;background:rgba(10,15,22,.96);border-bottom:1px solid var(--edge);z-index:2}
+  .msgrHead .mback{background:none;border:none;color:var(--soft);font-size:22px;cursor:pointer;padding:0 4px 0 0;font-family:var(--sans)}
+  .msgrHead .mav{width:38px;height:38px;border-radius:50%;background-size:cover;background-position:center top;border:1px solid var(--edge)}
+  .msgrHead .mnm{font-weight:800;font-size:15px}
+  .msgrHead .mst{font-size:11px;color:#7dffa8}
+  .msgrLog{flex:1;overflow-y:auto;padding:16px 13px;display:flex;flex-direction:column;gap:9px;background:linear-gradient(180deg,#0e161f,#0a1017)}
+  .bub{max-width:78%;padding:9px 13px;border-radius:16px;font-size:14px;line-height:1.5;word-break:break-word;animation:bubIn .25s}
+  @keyframes bubIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+  .bub.her{align-self:flex-start;background:#26323f;color:#eaf1ff;border-bottom-left-radius:5px}
+  .bub.you{align-self:flex-end;background:#ffe45c;color:#2a2200;border-bottom-right-radius:5px;font-weight:600}
+  .bub .who{display:block;font-size:10px;color:var(--dim);margin:0 0 3px 4px}
+  .msgrOpts{padding:10px 12px calc(14px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px;background:rgba(10,15,22,.96);border-top:1px solid var(--edge)}
+  .msgrOpts .mo{background:linear-gradient(135deg,rgba(122,178,255,.18),rgba(150,130,235,.12));border:1.5px solid rgba(150,180,255,.4);
+    color:#eaf1ff;font-family:var(--sans);font-size:14px;font-weight:600;padding:12px 15px;border-radius:22px;cursor:pointer;text-align:left;transition:.12s}
+  .msgrOpts .mo:hover,.msgrOpts .mo:active{background:linear-gradient(135deg,rgba(122,178,255,.32),rgba(150,130,235,.2));border-color:#8fb4ff}
   @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 
@@ -310,9 +353,33 @@
     </div>
   </section>
 
+  <!-- LOBBY (로비 홈) -->
+  <section class="screen" id="lobby">
+    <div id="lobbyBg"></div>
+    <div id="lobbySpr"></div>
+    <div class="lobUI">
+      <div class="lobTop">
+        <div class="lobName">
+          <div><b>엘리아나</b><span>아스라 · 기사단 부단장</span></div>
+          <div class="stg"><span class="nm2" id="lobStage">경계</span><div class="bar2"><i id="lobAff"></i></div></div>
+        </div>
+        <div class="gold">💰 <span id="lobGold">0</span></div>
+      </div>
+      <div class="lobSpacer"></div>
+      <div class="lobMenu">
+        <button data-go="story"><span class="em">📖</span> 스토리</button>
+        <button data-go="talk"><span class="em">💬</span> 대화</button>
+        <button data-go="explore"><span class="em">🗺️</span> 탐험</button>
+        <button data-go="bag"><span class="em">🎒</span> 가방</button>
+        <button class="msgr" id="lobMsgr"><span class="em">💌</span> 메신저</button>
+      </div>
+    </div>
+  </section>
+
   <!-- HUB -->
   <section class="screen" id="hub">
     <div class="topbar">
+      <button class="bx" id="hubHome" style="padding:6px 11px">🏠</button>
       <div class="lv">
         <span class="lvbadge">Lv.<span id="lvVal">1</span></span>
         <div class="xpwrap"><div class="xpb"><i id="xpBar"></i></div><small id="xpTxt">EXP</small></div>
@@ -326,6 +393,17 @@
       <div class="tab" data-t="bag">🎒 가방</div>
     </div>
     <div class="hubbody" id="hubBody"></div>
+  </section>
+
+  <!-- MESSENGER (💌) -->
+  <section class="screen" id="msgr">
+    <div class="msgrHead">
+      <button class="mback" id="msgrBack">‹</button>
+      <div class="mav" id="msgrAv"></div>
+      <div><div class="mnm">엘리아나</div><div class="mst">● 온라인</div></div>
+    </div>
+    <div class="msgrLog" id="msgrLog"></div>
+    <div class="msgrOpts" id="msgrOpts"></div>
   </section>
 
   <!-- DATE / VN -->
@@ -661,7 +739,7 @@ const QUESTS={
 };
 
 /* ============ STATE ============ */
-const DEF={seen:false,gold:0,exp:0,lv:1,aff:0,epDone:[],inv:{},cur:0,tprog:{gather:0,hunt:0,talk:0,gift:0},talkSeen:[]};
+const DEF={seen:false,gold:0,exp:0,lv:1,aff:0,epDone:[],inv:{},cur:0,tprog:{gather:0,hunt:0,talk:0,gift:0},talkSeen:[],msgrLog:[],msgrUsed:[]};
 let ST=load();
 function load(){let s;try{s=JSON.parse(localStorage.getItem("eth_v3"));}catch(e){}
   const st=s?{...DEF,...s}:{...DEF};
@@ -686,9 +764,26 @@ $("#landHero").style.backgroundImage=`url(${BG.asra_rampart||BG.asra_castle||""}
 function refreshCont(){$("#contBtn").disabled=!ST.seen;}
 $("#startBtn").onclick=()=>{const first=!ST.epDone.includes("ep1");ST.seen=true;save();
   if(first)startEp(EPS[0]); // 여행 시작 → 첫 화면부터 오프닝 스토리 자동 재생
-  else openHub("story");};
-$("#contBtn").onclick=()=>openHub("story");
+  else openLobby();};
+$("#contBtn").onclick=()=>openLobby();
 refreshCont();
+
+/* ============ LOBBY (로비 홈) ============ */
+const MSGR_MINSTAGE=3; // 연인 단계 이상에서 메신저 해금
+$("#hubHome").onclick=()=>openLobby();
+$$("#lobby .lobMenu button[data-go]").forEach(x=>x.onclick=()=>openHub(x.dataset.go));
+$("#lobMsgr").onclick=()=>{ if(stageIdx(ST.aff)>=MSGR_MINSTAGE)openMessenger(); };
+function openLobby(){
+  show("lobby");
+  $("#lobbyBg").style.backgroundImage=`url(${BG.asra_castle||BG.asra_rampart||""})`;
+  $("#lobbySpr").style.backgroundImage=`url(${SPR.eliana_smile||SPR.eliana_neutral||""})`;
+  $("#lobGold").textContent=ST.gold;
+  $("#lobStage").textContent=stageOf(ST.aff).name;
+  $("#lobAff").style.width=Math.min(100,ST.aff)+"%";
+  const mb=$("#lobMsgr"),si=stageIdx(ST.aff);
+  if(si>=MSGR_MINSTAGE){mb.classList.remove("locked");mb.innerHTML='<span class="em">💌</span> 메신저';}
+  else{mb.classList.add("locked");mb.innerHTML='<span class="em">🔒</span> 메신저 <span class="lk">· 연인이 되면 열려요</span>';}
+}
 
 /* ============ HUB ============ */
 let hubTab="story";
@@ -706,6 +801,54 @@ function openHub(tab){
   else if(hubTab==="explore")renderExplore(b);
   else if(hubTab==="bag")renderBag(b);
 }
+/* ============ MESSENGER (💌 완전 친해지면 메신저처럼) ============ */
+// 자연스러운 반말 문자 톤 · 내 대사도 다양하고 캐주얼하게
+const MSGS=[
+ {you:"뭐해?",her:"방금 훈련 끝났어. 지금 고양이 밥 주는 중 ㅋㅋ 넌 뭐해?"},
+ {you:"밥은 먹었어?",her:"아직. 오늘도 콩 수프겠지 뭐… 너랑 같이 먹으면 그나마 나은데."},
+ {you:"보고싶다",her:"…갑자기 그런 말 하면 어떡해. 심장에 안 좋다니까. …나도, 뭐. 조금은."},
+ {you:"오늘 진짜 예뻤어",her:"기, 기사한테 예쁘다니 무슨. …그래도, 기분 나쁘진 않네. 흥."},
+ {you:"내일 시간 돼?",her:"순찰 있긴 한데… 너 온다고 하면 시간 뺄 수 있어. 오는 거지?"},
+ {you:"고양이는 잘 커?",her:"완전 개구쟁이 됐어 ㅋㅋ 성벽을 막 뛰어다녀. 다음에 같이 보러 가자."},
+ {you:"오늘 좀 힘들었어",her:"…무슨 일 있었어? 말해봐. 다 못 해결해줘도, 들어줄 순 있으니까."},
+ {you:"자?",her:"아니 아직 안 자. …네 생각하느라. 아, 방금 건 못 본 걸로 해줘."},
+ {you:"ㅋㅋㅋㅋㅋ",her:"뭐가 그렇게 웃겨 ㅋㅋ …근데 너 웃으면 나도 모르게 따라 웃게 되더라."},
+ {you:"나 지금 사냥 중이야",her:"조심해. 무리하지 말고. …다치면 진짜 가만 안 둔다. 걱정돼서 그래, 바보야."},
+ {you:"주말에 데이트할래?",her:"데, 데이트?! …큼. 뭐, 순찰 겸이라면… 아니. 그냥 데이트하자. 됐지?"},
+ {you:"사랑해",her:"…!! 너 진짜, 이런 걸 이렇게 훅 들어와. …나도. 나도 그래. 됐어?"},
+ {you:"뭐 먹고싶은 거 있어?",her:"음… 사실 나 단 거 좋아해. 디저트. 아무한테도 말 안 했는데, 너한테만 말하는 거야."},
+ {you:"잘자",her:"응 잘 자. 좋은 꿈 꾸고. …꿈에 나 나오면, 내일 꼭 얘기해줘."},
+ {you:"그냥 목소리 듣고싶었어",her:"…그런 이유로 연락해도 돼. 언제든지. 사실 나도, 폰 계속 보고 있었어."},
+ {you:"오늘 하루 어땠어?",her:"평범했어. 훈련하고, 순찰하고. …근데 너한테 이렇게 얘기하니까, 평범한 하루도 특별해지네."},
+];
+function openMessenger(){
+  show("msgr");
+  $("#msgrAv").style.backgroundImage=`url(${SPR.eliana_smile||SPR.eliana_neutral||""})`;
+  if(!ST.msgrLog||!ST.msgrLog.length){ST.msgrLog=[{s:"her",t:"왔어? 마침 심심하던 참인데. 무슨 일이야?"}];save();}
+  renderMsgrLog();msgrOptions();
+}
+function renderMsgrLog(){
+  const log=$("#msgrLog");
+  log.innerHTML=(ST.msgrLog||[]).map(m=>`<div class="bub ${m.s}">${m.s==="her"?'<span class="who">엘리아나</span>':''}${m.t}</div>`).join("");
+  log.scrollTop=log.scrollHeight;
+}
+function msgrOptions(){
+  const opts=$("#msgrOpts");if(!ST.msgrUsed)ST.msgrUsed=[];
+  let pool=MSGS.map((m,i)=>i).filter(i=>!ST.msgrUsed.includes(i));
+  if(pool.length<3){ST.msgrUsed=[];pool=MSGS.map((m,i)=>i);} // 다 쓰면 초기화(계속 대화 가능)
+  const pick=[],tmp=pool.slice();
+  for(let k=0;k<3&&tmp.length;k++){const j=Math.floor(Math.random()*tmp.length);pick.push(tmp.splice(j,1)[0]);}
+  opts.innerHTML=pick.map(i=>`<button class="mo" data-i="${i}">${MSGS[i].you}</button>`).join("");
+  opts.querySelectorAll(".mo").forEach(btn=>btn.onclick=()=>sendMsg(+btn.dataset.i));
+}
+function sendMsg(i){
+  const m=MSGS[i];if(!ST.msgrUsed.includes(i))ST.msgrUsed.push(i);
+  ST.msgrLog.push({s:"you",t:m.you});save();renderMsgrLog();
+  $("#msgrOpts").innerHTML=`<div style="color:var(--dim);font-size:12.5px;text-align:center;padding:12px">엘리아나가 입력 중…</div>`;
+  setTimeout(()=>{ST.msgrLog.push({s:"her",t:m.her});save();renderMsgrLog();msgrOptions();},750);
+}
+$("#msgrBack").onclick=()=>openLobby();
+
 function heroCard(){
   const a=ST.aff,st=stageOf(a),si=stageIdx(a);
   return `<div class="hcard"><div class="por" style="background-image:url(${SPR.eliana_neutral||""})"></div>
@@ -767,19 +910,20 @@ function renderStory(b){
   b.querySelectorAll(".go[data-ep]").forEach(x=>x.onclick=()=>startEp(EPS.find(e=>e.id===x.dataset.ep)));
   $("#resetBtn").onclick=resetAll;
 }
+// 대화 해금 문턱(호감도). 한 번 하면 사라지고, 더 가까워지면 다음 이야기가 열림.
+const DAILY_MINAFF={d1:0,d2:10,d3:22,d4:35,d5:50,d6:70};
 function renderTalk(b){
-  const si=stageIdx(ST.aff);
-  b.innerHTML=heroCard()+`<div class="sec-t">💬 일상 대화 — 도란도란 길게 이야기 나누기</div>`;
-  const avail=DAILY.filter(d=>d.stage<=si);
-  avail.forEach(d=>{
-    const seen=(ST.talkSeen||[]).includes(d.id);
-    b.insertAdjacentHTML("beforeend",`<div class="item"><div class="ic">💬</div>
-      <div class="m"><b>${d.title} ${seen?'<span style="color:var(--dim);font-size:11px">· 다시</span>':'<span style="color:#7dffa8;font-size:11px">· NEW</span>'}</b><p>${d.sub}</p></div>
-      <button class="go" data-d="${d.id}">대화</button></div>`);
-  });
-  const locked=DAILY.filter(d=>d.stage>si);
-  if(locked.length)b.insertAdjacentHTML("beforeend",`<div class="qhint">💗 더 가까워지면 새로운 일상 대화가 열립니다 (${locked.length}개 더)</div>`);
-  b.insertAdjacentHTML("beforeend",`<div style="color:var(--dim);font-size:12px;padding:6px">💡 느끼한 아부·가벼운 태도는 역효과. 실력 인정·진심·배려가 통해요.</div>`);
+  b.innerHTML=heroCard()+`<div class="sec-t">💬 엘리아나와 나눌 이야기</div>`;
+  const seen=ST.talkSeen||[];
+  const avail=DAILY.filter(d=>ST.aff>=(DAILY_MINAFF[d.id]||0)&&!seen.includes(d.id));
+  if(avail.length){
+    avail.forEach(d=>b.insertAdjacentHTML("beforeend",`<div class="item"><div class="ic">💬</div>
+      <div class="m"><b>${d.title}</b><p>${d.sub}</p></div><button class="go" data-d="${d.id}">이야기하기</button></div>`));
+  }else{
+    b.insertAdjacentHTML("beforeend",`<div class="qhint" style="padding:28px 12px">지금은 나눌 이야기가 없어요.<br>함께 시간을 보내며 더 가까워지면,<br>엘리아나가 새로운 이야기를 들려줄 거예요.</div>`);
+  }
+  const future=DAILY.filter(d=>ST.aff<(DAILY_MINAFF[d.id]||0)&&!seen.includes(d.id));
+  if(future.length&&avail.length)b.insertAdjacentHTML("beforeend",`<div class="qhint">💗 더 가까워지면 새로운 이야기가 열려요</div>`);
   b.querySelectorAll(".go[data-d]").forEach(x=>x.onclick=()=>startDaily(DAILY.find(d=>d.id===x.dataset.d)));
 }
 function startDaily(d){
@@ -997,7 +1141,7 @@ $("#vbox").onclick=()=>{if(vch.classList.contains("on"))return;
 function scoreOf(fit){return fit==="good"?2:fit==="bad"?0:1;}
 function vShowQ(q,cb){
   setSp(q.sp||curSp);$("#vbox").style.display="none";
-  vch.innerHTML=`<div class="qbox"><span class="qn">엘리아나</span><br>${q.text}</div><div class="qh">💬 성격을 읽고 답하세요</div>`;
+  vch.innerHTML=`<div class="qbox"><span class="qn">엘리아나</span><br>${q.text}</div>`;
   vch.classList.add("on");
   q.a.forEach((c,i)=>{const b=document.createElement("button");b.className="ch";b.textContent=c.t;
     b.onclick=()=>{vch.classList.remove("on");vch.innerHTML="";$("#vbox").style.display="";
