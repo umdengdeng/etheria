@@ -268,6 +268,19 @@
   .bBtns{display:flex;gap:10px}
   .bBtns .btn{flex:1;margin:0}
   .btn.on2{background:linear-gradient(135deg,#ff7aa8,#ff5f8f)!important;color:#fff!important}
+  /* 방치 사냥 idle HUD */
+  .idleRow{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+  .huntGold{background:rgba(255,207,110,.14);border:1px solid rgba(255,207,110,.4);border-radius:999px;
+    padding:4px 12px;font-weight:800;font-size:13px;color:var(--gold);font-variant-numeric:tabular-nums}
+  .hKill b{color:var(--accent2)}
+  .upgRow{display:flex;gap:8px;margin:10px 0}
+  .upg{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:rgba(255,255,255,.05);
+    border:1px solid var(--edge);border-radius:12px;padding:9px 4px;cursor:pointer;font-family:var(--sans);color:var(--ink);transition:.12s}
+  .upg:hover,.upg:active{border-color:var(--accent);background:rgba(107,168,255,.14);transform:translateY(-2px)}
+  .upg .ut{font-size:12px;font-weight:800}
+  .upg .ul{font-size:11px;color:var(--soft);font-weight:700}
+  .upg .uc{font-size:12px;font-weight:800;color:var(--gold);font-variant-numeric:tabular-nums}
+  .upg.cant{opacity:.5}.upg.cant .uc{color:#ff8a8a}
 
   /* GATHER / 1ST-PERSON 채집·채굴·순찰 */
   #gather{flex-direction:column;padding:0;justify-content:flex-start;background:#07090e;overflow:hidden}
@@ -426,11 +439,11 @@
       <div id="riftDark"></div>
       <div class="hTop">
         <button class="bx" id="huntBack">‹ 나가기</button>
-        <div class="hKill">🗡️ 처치 <span id="killCnt">0</span></div>
+        <div class="hKill">🏔️ <b id="stageLabel">1</b> 스테이지 · 최고 <span id="bestStage">1</span></div>
       </div>
       <div id="monWrap">
         <div class="monHpFloat">
-          <div class="mhpName"><span id="monName">그림자 야수</span> <b id="monLv">Lv.1</b></div>
+          <div class="mhpName"><span id="monName">그림자 마수</span> <b id="monLv">1 스테이지</b></div>
           <div class="mhpbar"><i id="monHp"></i></div>
         </div>
         <div id="monSpr"></div>
@@ -440,9 +453,14 @@
       <div id="dmgLayer"></div>
     </div>
     <div id="huntHud">
-      <div class="pHpRow"><span class="pTag">🗡️ 게이트워커 <b id="plLv">Lv.1</b></span><span class="pHpTxt" id="plHpTxt"></span></div>
+      <div class="idleRow"><span class="pTag">🗡️ 게이트워커 <b id="plLv">Lv.1</b></span><span class="huntGold" id="huntGold">💰 0</span></div>
       <div class="pHpbar"><i id="plHp"></i></div>
       <div class="bLog" id="bLog"></div>
+      <div class="upgRow">
+        <button class="upg" id="upgAtk"><span class="ut">⚔️ 공격력</span><span class="ul" id="upgAtkLv">Lv.1</span><span class="uc" id="upgAtkCost">💰20</span></button>
+        <button class="upg" id="upgHp"><span class="ut">❤️ 체력</span><span class="ul" id="upgHpLv">Lv.1</span><span class="uc" id="upgHpCost">💰20</span></button>
+        <button class="upg" id="upgCrit"><span class="ut">💥 치명타</span><span class="ul" id="upgCritLv">Lv.1</span><span class="uc" id="upgCritCost">💰30</span></button>
+      </div>
       <div class="bBtns">
         <button class="btn" id="atkBtn">⚔️ 공격</button>
         <button class="btn pink" id="autoBtn">🔄 자동 OFF</button>
@@ -739,7 +757,8 @@ const QUESTS={
 };
 
 /* ============ STATE ============ */
-const DEF={seen:false,gold:0,exp:0,lv:1,aff:0,epDone:[],inv:{},cur:0,tprog:{gather:0,hunt:0,talk:0,gift:0},talkSeen:[],msgrLog:[],msgrUsed:[]};
+const DEF={seen:false,gold:0,exp:0,lv:1,aff:0,epDone:[],inv:{},cur:0,tprog:{gather:0,hunt:0,talk:0,gift:0},talkSeen:[],msgrLog:[],msgrUsed:[],
+  stage:1,bestStage:1,atkLv:0,hpLv:0,critLv:0};
 let ST=load();
 function load(){let s;try{s=JSON.parse(localStorage.getItem("eth_v3"));}catch(e){}
   const st=s?{...DEF,...s}:{...DEF};
@@ -1027,28 +1046,39 @@ function encounterEliana(l){
   curBg="";curSp="__none__";show("date");vHud();vStep();
 }
 
-/* ============ 1ST-PERSON AUTO HUNT COMBAT (마수를 정면으로 마주보고 사냥) ============ */
+/* ============ 방치형 스테이지 사냥 (버서커 키우기 스타일) ============ */
 let CB=null;
-const pMaxHP=()=>60+ST.lv*14, pATK=()=>9+ST.lv*3+(ST.wpn||0)*4;
+const pATK=()=>10+(ST.atkLv||0)*5+ST.lv*2+(ST.wpn||0)*4;
+const pMaxHP=()=>80+(ST.hpLv||0)*30+ST.lv*10;
+const pCrit=()=>Math.min(0.6,0.15+(ST.critLv||0)*0.02);
+const UPG={atk:{base:20,mult:1.32,key:"atkLv",nm:"공격력"},hp:{base:20,mult:1.30,key:"hpLv",nm:"체력"},crit:{base:30,mult:1.40,key:"critLv",nm:"치명타"}};
+const upgCost=t=>Math.round(UPG[t].base*Math.pow(UPG[t].mult,ST[UPG[t].key]||0));
+const cap=s=>s[0].toUpperCase()+s.slice(1);
+function monStats(s){const boss=s%10===0;
+  return{boss,hp:Math.round(30*Math.pow(1.17,s-1))*(boss?5:1),atk:Math.round(4+s*1.6)*(boss?2:1),
+    gold:Math.round(7*Math.pow(1.16,s-1))*(boss?10:1),exp:Math.round(5*Math.pow(1.12,s-1))};}
 function startCombat(){
-  CB={pMax:pMaxHP(),pHP:pMaxHP(),pAtk:pATK(),monLv:1,monMax:1,monHP:1,monAtk:1,kills:0,auto:false,busy:false,timer:null};
+  if(!ST.stage)ST.stage=1;if(!ST.bestStage)ST.bestStage=1;
+  CB={pMax:pMaxHP(),pHP:pMaxHP(),pAtk:pATK(),monMax:1,monHP:1,monAtk:1,boss:false,rewGold:0,rewExp:0,auto:true,busy:false,timer:null};
   $("#huntBgImg").style.backgroundImage=`url(${BG.hunt_rift||BG.asra_night||""})`;
-  $("#plLv").textContent="Lv."+ST.lv;
-  $("#killCnt").textContent=0;$("#autoBtn").textContent="🔄 자동 OFF";$("#autoBtn").classList.remove("on2");
-  logB("대단절의 균열 앞. ⚔️공격 또는 🔄자동으로 마수를 사냥하세요.");
-  spawnMon();show("hunt");
+  $("#autoBtn").textContent="⏸ 자동 ON";$("#autoBtn").classList.add("on2");
+  logB("방치 사냥 시작! 골드로 강화해 더 높은 스테이지에 도전하세요.");
+  updateIdleHud();spawnMon();show("hunt");
+  CB.timer=setTimeout(exchange,500);
 }
 function spawnMon(){
-  const lv=Math.max(1,ST.lv+rnd(-1,1));
-  CB.monLv=lv;CB.monMax=28+lv*13;CB.monHP=CB.monMax;CB.monAtk=4+lv*2;
-  $("#monName").textContent="그림자 야수";$("#monLv").textContent="Lv."+lv;
-  const s=$("#monSpr");s.classList.remove("dead");s.style.backgroundImage=`url(${SPR.shadowbeast||""})`;
-  s.style.opacity=0;requestAnimationFrame(()=>{s.style.transition="opacity .4s";s.style.opacity=1;});
+  const s=ST.stage,m=monStats(s);
+  CB.monMax=m.hp;CB.monHP=m.hp;CB.monAtk=m.atk;CB.boss=m.boss;CB.rewGold=m.gold;CB.rewExp=m.exp;
+  $("#monName").textContent=m.boss?"⭐ 보스 · 균열의 마수":"그림자 마수";
+  $("#monLv").textContent=s+" 스테이지";
+  const sp=$("#monSpr");sp.classList.remove("dead");sp.style.backgroundImage=`url(${SPR.shadowbeast||""})`;
+  sp.style.filter=m.boss?"drop-shadow(0 14px 30px rgba(255,180,60,.6)) hue-rotate(-25deg) saturate(1.35)":"";
+  sp.style.transform=m.boss?"scale(1.16)":"scale(1)";
+  sp.style.opacity=0;requestAnimationFrame(()=>{sp.style.transition="opacity .35s";sp.style.opacity=1;});
   drawHP();
 }
 function drawHP(){
   $("#plHp").style.width=Math.max(0,CB.pHP/CB.pMax*100)+"%";
-  $("#plHpTxt").textContent=`HP ${Math.max(0,Math.ceil(CB.pHP))} / ${CB.pMax}`;
   $("#monHp").style.width=Math.max(0,CB.monHP/CB.monMax*100)+"%";
 }
 function fx(sel,cls,ms){const el=$(sel);if(!el)return;el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);setTimeout(()=>el.classList.remove(cls),ms||400);}
@@ -1056,52 +1086,69 @@ function floatDmg(xPct,yPct,val,kind){const h=$("#dmgLayer");if(!h)return;const 
   d.className="dmg"+(kind==="crit"?" crit":kind==="pl"?" pl":"");d.style.left=xPct+"%";d.style.top=yPct+"%";
   d.textContent=(kind==="crit"?"⚡":"")+"-"+val;h.appendChild(d);setTimeout(()=>d.remove(),820);}
 function logB(m){$("#bLog").textContent=m;}
+function updateIdleHud(){
+  $("#plLv").textContent="Lv."+ST.lv;
+  $("#stageLabel").textContent=ST.stage;$("#bestStage").textContent=ST.bestStage;
+  $("#huntGold").textContent="💰 "+ST.gold;
+  ["atk","hp","crit"].forEach(t=>{const lv=ST[UPG[t].key]||0,cost=upgCost(t);
+    $("#upg"+cap(t)+"Lv").textContent="Lv."+(lv+1);$("#upg"+cap(t)+"Cost").textContent="💰"+cost;
+    $("#upg"+cap(t)).classList.toggle("cant",ST.gold<cost);});
+}
+function buyUpg(t){
+  const cost=upgCost(t);if(ST.gold<cost)return;
+  ST.gold-=cost;ST[UPG[t].key]=(ST[UPG[t].key]||0)+1;save();
+  if(CB){CB.pAtk=pATK();const old=CB.pMax;CB.pMax=pMaxHP();CB.pHP=Math.min(CB.pMax,CB.pHP+(CB.pMax-old));}
+  updateIdleHud();logB(`${UPG[t].nm} 강화! Lv.${ST[UPG[t].key]+1}`);
+}
 function exchange(){
   if(!CB||CB.busy||!$("#hunt").classList.contains("on"))return;CB.busy=true;
-  // --- 내가 공격: 검격 이펙트 ---
-  fx("#slashFx","go",340);
-  const crit=Math.random()<0.18;let dmg=Math.round(CB.pAtk*(0.85+Math.random()*0.3))*(crit?2:1);
+  fx("#slashFx","go",300);
+  const crit=Math.random()<pCrit();let dmg=Math.round(CB.pAtk*(0.85+Math.random()*0.3))*(crit?2:1);
   setTimeout(()=>{
-    CB.monHP-=dmg;fx("#monSpr","hurt",380);floatDmg(50,30,dmg,crit?"crit":"mon");drawHP();
+    CB.monHP-=dmg;fx("#monSpr","hurt",340);floatDmg(50,30,dmg,crit?"crit":"mon");drawHP();
     if(CB.monHP<=0){monDown();return;}
-    // --- 마수 반격: 화면으로 달려듦 → 피격 연출 ---
     setTimeout(()=>{
-      fx("#monSpr","lunge",500);
+      fx("#monSpr","lunge",460);
       const md=Math.round(CB.monAtk*(0.8+Math.random()*0.4));
       setTimeout(()=>{
-        CB.pHP-=md;fx("#hitVig","flash",400);fx("#huntScene","shake",340);floatDmg(50,78,md,"pl");drawHP();
+        CB.pHP-=md;fx("#hitVig","flash",380);fx("#huntScene","shake",320);floatDmg(50,78,md,"pl");drawHP();
         if(CB.pHP<=0){playerDown();return;}
-        CB.busy=false;if(CB.auto)CB.timer=setTimeout(exchange,220);
-      },230);
-    },300);
-  },170);
+        CB.busy=false;if(CB.auto)CB.timer=setTimeout(exchange,150);
+      },180);
+    },240);
+  },150);
 }
 function monDown(){
-  CB.busy=false;$("#monSpr").classList.add("dead");CB.kills++;$("#killCnt").textContent=CB.kills;bumpTask("hunt");
-  const gold=rnd(6,12)+CB.monLv*2,exp=rnd(10,18)+CB.monLv*3;ST.gold+=gold;ST.exp+=exp;
-  const pool=["hide","fang","core"],got={},dn=rnd(1,2);
-  for(let i=0;i<dn;i++){const d=pool[Math.floor(Math.random()*pool.length)];got[d]=(got[d]||0)+1;addItem(d,1);}
+  CB.busy=false;$("#monSpr").classList.add("dead");bumpTask("hunt");
+  ST.gold+=CB.rewGold;ST.exp+=CB.rewExp;
+  if(Math.random()<0.5){const pool=["hide","fang","core"];addItem(pool[Math.floor(Math.random()*3)],1);}
   let lvUp=false;while(ST.exp>=xpNeed(ST.lv)){ST.exp-=xpNeed(ST.lv);ST.lv++;lvUp=true;}
-  let affTxt="";if(Math.random()<0.4){ST.aff=Math.min(100,ST.aff+1);affTxt=" · 엘리아나 호감 +1 ♥";}
+  if(Math.random()<0.25)ST.aff=Math.min(100,ST.aff+1);
+  const cleared=ST.stage;if(cleared>ST.bestStage)ST.bestStage=cleared;ST.stage=cleared+1;
+  if(lvUp){CB.pMax=pMaxHP();CB.pAtk=pATK();}
+  CB.pHP=Math.min(CB.pMax,CB.pHP+CB.pMax*0.18); // 클리어 시 소량 회복
   save();
-  const gs=Object.keys(got).map(k=>ITEMS[k].ic+"×"+got[k]).join(" ");
-  logB(`처치! 💰+${gold}  ⚔️+${exp}  ${gs}${affTxt}${lvUp?"  · ⚔️레벨업 Lv."+ST.lv:""}`);
-  if(lvUp){$("#plLv").textContent="Lv."+ST.lv;CB.pMax=pMaxHP();CB.pAtk=pATK();CB.pHP=CB.pMax;}
-  setTimeout(()=>{spawnMon();if(CB.auto)CB.timer=setTimeout(exchange,260);},780);
+  logB(`${CB.boss?"⭐ 보스 격파!":"클리어!"} 💰+${CB.rewGold}  ⚔️+${CB.rewExp}${lvUp?"  Lv."+ST.lv:""}  →  ${ST.stage}스테이지`);
+  updateIdleHud();
+  setTimeout(()=>{spawnMon();if(CB.auto)CB.timer=setTimeout(exchange,240);},560);
 }
 function playerDown(){
-  CB.busy=false;logB("쓰러졌다… 체력을 회복하고 다시 도전! (패널티 없음)");
-  CB.pHP=CB.pMax;drawHP();
-  setTimeout(()=>{if(CB.auto)CB.timer=setTimeout(exchange,450);},750);
+  CB.busy=false;const drop=ST.stage>1;if(drop)ST.stage--;save();
+  logB(`쓰러졌다… ${drop?ST.stage+"스테이지로 내려가 재정비":"체력 회복 후 재도전"}. 강화로 더 강해지세요!`);
+  CB.pMax=pMaxHP();CB.pHP=CB.pMax;updateIdleHud();
+  setTimeout(()=>{spawnMon();if(CB.auto)CB.timer=setTimeout(exchange,450);},750);
 }
 function setAuto(on){
   if(!CB)return;CB.auto=on;const b=$("#autoBtn");
-  b.textContent=on?"⏸ 자동 ON":"🔄 자동 OFF";b.classList.toggle("on2",on);
+  b.textContent=on?"⏸ 자동 ON":"▶ 자동 OFF";b.classList.toggle("on2",on);
   if(on){if(!CB.busy)exchange();}else clearTimeout(CB.timer);
 }
 $("#huntBack").onclick=()=>{if(CB){CB.auto=false;clearTimeout(CB.timer);}openHub("explore");};
-$("#atkBtn").onclick=()=>{if(CB&&!CB.busy&&!CB.auto)exchange();};
+$("#atkBtn").onclick=()=>{if(CB&&!CB.busy)exchange();};
 $("#autoBtn").onclick=()=>setAuto(!(CB&&CB.auto));
+$("#upgAtk").onclick=()=>buyUpg("atk");
+$("#upgHp").onclick=()=>buyUpg("hp");
+$("#upgCrit").onclick=()=>buyUpg("crit");
 
 /* ============ VN ENGINE (episodes + talks) ============ */
 const vbg=$("#vbg"),vsp=$("#vspImg"),vtext=$("#vtext"),vtag=$("#vtag"),vadv=$("#vadv"),vch=$("#vchoices"),
