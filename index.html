@@ -149,11 +149,13 @@
   #vchoices.on{display:flex}
   #vchoices .qbox{background:var(--panel);border:1px solid var(--edge);border-radius:16px;padding:16px 18px;font-size:17px;line-height:1.55;backdrop-filter:blur(10px)}
   #vchoices .qbox .qn{display:inline-block;background:linear-gradient(135deg,var(--gold),#ffe0a0);color:#4a3208;font-weight:800;font-size:14px;padding:3px 13px;border-radius:9px;margin-bottom:8px}
-  .ch{background:linear-gradient(135deg,rgba(24,32,50,.92),rgba(30,28,48,.9));border:1px solid rgba(120,150,210,.32);
-    color:#d7e0f0;font-family:var(--sans);font-size:16px;font-weight:600;
-    padding:15px 18px;border-radius:14px;cursor:pointer;transition:transform .15s,background .15s,border-color .15s;opacity:0;transform:translateY(10px);text-align:left}
+  .ch{position:relative;background:rgba(20,26,40,.9);border:1px solid rgba(120,150,210,.26);border-left:3px solid rgba(120,160,255,.65);
+    color:#dbe4f2;font-family:var(--sans);font-size:15.5px;font-weight:600;line-height:1.5;
+    padding:14px 34px 14px 16px;border-radius:12px;cursor:pointer;transition:transform .15s,background .15s,border-color .15s;opacity:0;transform:translateY(10px);text-align:left}
+  .ch::after{content:"›";position:absolute;right:14px;top:50%;transform:translateY(-50%);color:rgba(150,180,255,.55);font-size:22px;font-weight:800;line-height:1}
   .ch.in{opacity:1;transform:translateY(0)}
-  .ch:hover,.ch:active{background:linear-gradient(135deg,rgba(40,54,84,.95),rgba(48,44,76,.92));border-color:rgba(140,175,255,.7);transform:translateY(-2px)}
+  .ch:hover,.ch:active{background:rgba(38,50,76,.95);border-left-color:#9cc4ff;transform:translateY(-2px)}
+  .ch:hover::after,.ch:active::after{color:#9cc4ff}
   .toast{position:absolute;top:64px;left:50%;transform:translateX(-50%);z-index:20;background:rgba(10,14,22,.94);border:1px solid var(--edge);
     color:var(--soft);padding:10px 20px;border-radius:999px;font-size:14px;font-weight:700;opacity:0;transition:opacity .3s;white-space:nowrap}
   .toast.on{opacity:1}
@@ -589,54 +591,56 @@ const TALKS=[
 // 대사가 길게 오가다가 선택지가 나오고, 또 오가다가 선택지가 나오는 구성.
 const EPS=[
  {id:"ep1",title:"제1화 · 눈을 뜬 곳",sub:"과로사한 직장인, 낯선 세계에서 깨어나다",reqAff:0,gold:20,bg:"loc_forest",nodes:[
-   {bg:"bg_office",narr:1,text:"― 밤 11시. 사무실에 남은 건 나 하나. 모니터 불빛만 얼굴을 파랗게 비춘다."},
-   {narr:1,text:"(하… 이번 주만 야근 벌써 네 번째네. 서류는 줄 생각을 안 하고, 팀장님 '이것만 더'는 무슨 앱이야, 매일 업데이트되게.)"},
-   {narr:1,text:"(나 이걸 왜 하고 있냐 진짜. 마지막으로 제대로 웃어본 게 언제인지 기억도 안 난다 ㅋㅋ… 아 안 웃기네.)"},
-   {narr:1,text:"어깨는 돌덩이고 눈앞은 뿌옇다. 근데도 마우스 쥔 손은 멈출 줄을 모른다."},
-   {bg:"bg_home",narr:1,text:"― 자정 넘어서 겨우 기어들어온 원룸. 불도 안 켜고 침대에 그대로 다이빙."},
-   {narr:1,text:"(딱 5분만 눕는다. 5분만. 진짜 딱 5분만…)"},
-   {narr:1,text:"근데 뭔가 이상하다. 몸이 점점 무거워진다. 손끝 하나 까딱할 수가 없어. 심장 뛰는 소리가… 점점 느려진다."},
-   {narr:1,text:"(어… 잠깐, 이거 느낌 좀 쎄한데. 눈이… 안 떠져. 야, 이거 진짜 아닌 것 같은데…)"},
-   {bg:"bg_void",narr:1,text:"― 그리고, 모든 게 새하얗게 지워졌다."},
-   {narr:1,text:"(…아. 나 죽었네. 야근하다 과로사라니. 부고 기사 제목 뽑히는 소리 들린다. 웃프다 진짜.)"},
+   {bg:"bg_office",narr:1,text:"― 밤 11시. 사무실에 남은 건 나 하나. 모니터 불빛만이 얼굴을 파랗게 비춘다."},
+   {narr:1,text:"(야근 나흘째. 서류는 줄지 않고, 팀장의 '이것만 더'는 매일 갱신된다. 이젠 화도 안 난다.)"},
+   {narr:1,text:"(언제부터였을까. 이 생활을 그냥 당연하게 받아들이게 된 게.)"},
+   {narr:1,text:"어깨가 무겁다. 눈앞이 뿌옇다. 그래도 손은 습관처럼 마우스를 움직인다."},
+   {bg:"bg_home",narr:1,text:"― 자정을 넘겨 도착한 원룸. 불도 켜지 않고 침대에 몸을 던진다."},
+   {narr:1,text:"(잠깐만 쉬자. 딱 오 분만.)"},
+   {narr:1,text:"그런데, 몸이 이상하다. 점점 무거워진다. 손끝 하나 움직이지 않는다. 심장 뛰는 소리가… 느려진다."},
+   {narr:1,text:"(…위험하다. 일어나야 하는데. 몸이, 말을 안 들어.)"},
+   {bg:"bg_void",narr:1,text:"― 그리고, 모든 것이 새하얗게 지워졌다."},
+   {narr:1,text:"(과로사, 인가. …끝이 이렇게 조용할 줄은 몰랐군.)"},
    {narr:1,text:"새하얀 빛 속. 낯선 감각이 온몸을 감싼다. 마치 다시 태어나는 것처럼 ― 따뜻하고, 또 아프게."},
-   {bg:"loc_forest",narr:1,text:"― 얼굴 위로 쏟아지는 햇살. 새소리. 풀 냄새. 번쩍, 눈이 떠졌다."},
-   {narr:1,text:"(…어? 여기가 어디임. 나 분명 침대에서 죽… 은 것 같은데. 회사, 야근, 원룸, 그 지긋지긋한 서류까지가 마지막 기억이고.)"},
-   {narr:1,text:"(손에 웬 낡은 검? 셔츠도 사원증도 없고 옷도 처음 보는 거. …잠깐만. 이 그림 어디서 많이 봤는데.)"},
-   {narr:1,text:"(설마… 이세계 전생 그거임?? 아 ㅋㅋㅋ 실화냐. 내가 소설 주인공? 나 참… 죽어서까지 야근 안 하는 게 어디냐 싶기도 하고.)"},
-   {narr:1,text:"믿기진 않는데, 머릿속에 딱 하나 이상하게 선명한 감각이 박혀 있다. ― 어딘가의 '문'을 찾아야 한다는 이끌림."},
-   {narr:1,text:"(뭐 어쩌겠어. 죽었다 살아난 김에 가보기나 하자.) 나뭇가지를 헤치며 걷자 ― 저편에서 쇳소리랑 짐승 울음이 뒤섞여 들려온다."},
-   {narr:1,text:"나무 사이로 보인 광경에 숨이 턱 막힌다. 은빛 머리의 여기사가, 사람만 한 시커먼 짐승과 홀로 맞붙고 있다. 검이 번뜩일 때마다 어둠이 툭툭 베여 나간다."},
-   {me:1,text:"(뭐야 저거… 늑대? 곰? 아니, 저런 게 세상에 어딨어. 게임 몬스터도 아니고.)"},
+   {bg:"loc_forest",narr:1,text:"― 얼굴 위로 쏟아지는 햇살. 새소리. 풀 냄새. 눈이 떠졌다."},
+   {narr:1,text:"(…여기가 어디지. 분명 집에서 쓰러졌는데. 병원 천장도, 익숙한 벽지도 아니다.)"},
+   {me:1,text:"…숲?"},
+   {narr:1,text:"몸을 일으킨다. 손엔 낡은 검 한 자루. 옷차림은 낯설고, 주머니엔 지갑도 사원증도 없다. 상황을 하나씩 맞춰본다."},
+   {me:1,text:"(죽었고, 눈을 떠보니 검을 든 채 낯선 숲 한복판. …정황을 종합하면, 답은 하나뿐이군.)"},
+   {me:1,text:"(다른 세계, 라는 건가.)"},
+   {narr:1,text:"믿기 어렵지만, 부정할 근거도 없다. 그리고 머릿속엔 딱 하나, 이상하게 선명한 감각이 있다. ― 어딘가의 '문'을 찾아야 한다는."},
+   {narr:1,text:"(앉아 있는다고 답이 나오진 않는다. 일단 움직이자.) 걸음을 옮기자 ― 저편에서 쇳소리와 짐승의 울음이 뒤섞여 들려온다."},
+   {narr:1,text:"나무 사이로 보인 광경에 걸음이 멈춘다. 은빛 머리의 여기사가, 사람만 한 시커먼 짐승과 홀로 맞붙고 있다. 검이 움직일 때마다 어둠이 베여 나간다."},
+   {me:1,text:"(저건… 내가 아는 생물이 아니다. 그리고 저 사람, 혼자서 저걸 상대하고 있어.)"},
    {sp:"neutral",name:"엘리아나",text:"(마지막 일격으로 짐승의 숨통을 끊으며) …후. 이걸로 끝인가."},
-   {narr:1,text:"짐승이 검은 안개가 되어 스르륵 흩어진다. 나도 모르게 마른침을 삼키는 순간, 그녀의 시선이 정확히 나를 향한다."},
-   {sp:"neutral",name:"엘리아나",text:"……거기. 나무 뒤. 다 보여. 나와."},
-   {me:1,text:"(아 씨, 들켰다.) …어어, 저기, 해치려는 거 아니에요. 그냥… 지나가다가."},
-   {narr:1,text:"엉겁결에 두 손을 든 채 걸어 나온다. 손에 웬 낡은 검이 들려 있다는 걸, 그녀의 시선을 따라가고서야 깨닫는다."},
-   {sp:"neutral",name:"엘리아나",text:"…여행자? 이런 마수 들끓는 숲 한복판에. 무기는 들었는데, 눈빛은 꼭 길 잃은 강아지 같군. 넌 뭐지."},
-   {me:1,text:"그, 그게… 설명하기가 좀 복잡한데요."},
-   {narr:1,text:"뭐라고 해야 하나. '사실 저 야근하다 죽어서 여기 왔어요' 라고 하면 딱 미친놈 취급인데. 그렇다고 둘러댈 말도 딱히 없다."},
+   {narr:1,text:"짐승이 검은 안개가 되어 흩어진다. 숨을 고르던 그녀의 시선이, 정확히 나를 향한다."},
+   {sp:"neutral",name:"엘리아나",text:"……거기. 나무 뒤. 다 보인다. 나와."},
+   {narr:1,text:"숨어봐야 소용없다. 나는 검을 든 손을 천천히 내리고, 빈손을 보이며 걸어 나온다."},
+   {me:1,text:"…적의는 없습니다. 지나가던 사람이에요."},
+   {sp:"neutral",name:"엘리아나",text:"이런 마수 소굴 한복판을 그냥 지나가? 무기는 들었는데 몸놀림은 완전 아마추어고. …넌 뭐지."},
+   {me:1,text:"솔직히 말하면, 저도 제 상황이 잘 정리가 안 됩니다. 눈 떠보니 이 숲이었어요."},
+   {narr:1,text:"'과로로 죽었다가 여기서 깨어났다'고 하면 정신 나간 사람 취급이겠지. 하지만 어설프게 둘러대는 것보단, 사실이 낫다."},
    {q:{sp:"neutral",text:"「넌 뭐지.」",a:[
-     {t:"…솔직히 말할게요. 안 믿으시겠지만, 저 다른 세계에서 왔어요. 눈 떠보니 이 숲이었고요.",fit:"good",reply:{sp:"surprise",text:"다른 세계…? 하, 별 헛소리를 다 듣는군. ……그런데. 그 얼빠진 표정, 거짓말하는 놈 눈은 아니야. 하필 마수 소굴 한복판에서. 운이 없든가, 사연이 깊든가."}},
-     {t:"그냥 길 잃은 여행자예요. 그쪽이야말로, 저런 걸 혼자 잡는 거예요?",fit:"ok",reply:{sp:"neutral",text:"…이게 내 일이니까. 그보다 질문은 내가 먼저 했어. 얼버무리지 마."}}]}},
+     {t:"믿기 어려우시겠지만 — 저는 다른 세계에서 왔습니다. 정신을 차려보니 이곳이었어요.",fit:"good",reply:{sp:"surprise",text:"다른 세계라. …제정신으로 하는 소리 같진 않은데. 그런데 그 눈빛, 거짓을 지어내는 자의 것은 아니야. 하필 마수 소굴 한복판이라니. 운이 없든가, 사연이 깊든가."}},
+     {t:"길을 잃었습니다. 그쪽이야말로, 저런 걸 혼자 상대하는 겁니까?",fit:"ok",reply:{sp:"neutral",text:"…이게 내 일이니까. 그보다 질문은 내가 먼저 했다. 얼버무리지 마."}}]}},
    {sp:"neutral",name:"엘리아나",text:"…엘리아나. 아스라 왕국 기사단 부단장이다."},
-   {me:1,text:"(부단장… 왕국에 기사단까지. 그럼 여기 진짜 그런 세계란 거네. 와, 실화냐.)"},
-   {sp:"neutral",name:"엘리아나",text:"사정은 모르겠지만, 널 여기 두고 가면 해 지기 전에 마수 밥이 될 게 뻔해. 따라와. 성까지는 데려가 주지."},
-   {sp:"neutral",name:"엘리아나",text:"단, 허튼짓은 마. 내 눈 닿는 데서만 움직여. 알겠어?"},
-   {me:1,text:"…네. 감사합니다, 진짜로."},
-   {narr:1,text:"살았다. 낯선 세계 첫날부터 저 짐승 밥이 되는 건 사양이다. 나는 얌전히 그녀의 뒤를 따른다."},
+   {me:1,text:"(왕국, 기사단. 단어 하나하나가 현실감이 없다. 그런데 눈앞의 광경은 지나칠 만큼 선명하고.)"},
+   {sp:"neutral",name:"엘리아나",text:"사정은 모르겠지만, 널 여기 두고 가면 해 지기 전에 마수 밥이다. 따라와. 성까지는 데려가 주지."},
+   {sp:"neutral",name:"엘리아나",text:"단, 허튼짓은 마. 내 눈 닿는 데서만 움직여."},
+   {me:1,text:"…도움 감사합니다. 폐 끼치지 않겠습니다."},
+   {narr:1,text:"낯선 세계 첫날부터 저 짐승의 밥이 될 생각은 없다. 나는 적당한 거리를 둔 채, 그녀의 뒤를 따른다."},
    {bg:"asra_rampart",narr:1,text:"― 숲을 벗어나자 강철빛 성벽이 솟은 왕국이 나타났다. 아스라 왕국."},
-   {me:1,text:"(게임 시작 마을 같은 데를 실제로 보게 될 줄이야. 성벽 스케일 봐라…)"},
+   {me:1,text:"(성벽, 갑옷, 검. 배경이 통째로 다른 시대다. 이걸 실제로 걷게 될 줄은 몰랐군.)"},
    {narr:1,text:"그런데 성벽 한켠, 거대한 석문 앞을 지날 때. 걸음이 저절로 멈춘다. 빛도 소리도 없이 잠든, 완전히 죽은 문."},
    {sp:"neutral",name:"엘리아나",text:"…그 문은 신경 쓰지 마. 대단절 이후 죽어버린 게이트야. 세계의 모든 문이 끊긴 뒤로, 누구도 열지 못했어."},
-   {me:1,text:"(근데… 이상하다. 저 문을 본 순간부터 가슴이 저릿해. 처음 보는데 왜 이렇게 낯익지.)"},
-   {narr:1,text:"홀린 듯 문 앞으로 한 걸음 다가선다. 그 순간 ― 죽어 있던 문이, 아주 잠깐, 희미하게 떨렸다."},
+   {me:1,text:"(이상하다. 저 문을 본 순간부터 가슴 한쪽이 저릿하다. 분명 처음 보는데, 낯설지가 않아.)"},
+   {narr:1,text:"나도 모르게 문 앞으로 한 걸음 다가선다. 그 순간 ― 죽어 있던 문이, 아주 잠깐, 희미하게 떨렸다."},
    {sp:"surprise",name:"엘리아나",text:"…방금. 저 문이 반응했어. 몇 년이나 죽어 있던 게, 네가 다가서자. …너, 대체 뭐야."},
    {q:{sp:"surprise",text:"「너, 대체 뭐야.」",a:[
-     {t:"저도 모르겠어요. 근데… 저 문을 여는 게, 제가 여기 온 이유인 것 같아요.",fit:"good",reply:{sp:"surprise",text:"문을 연다… 대단절을 되돌린다는 소리로 들리는데. 하, 미친 소리야. …그런데 왜, 부정하고 싶지가 않지."}},
-     {t:"적어도 당신 적은 아니에요. 그건 확실해요.",fit:"ok",reply:{sp:"neutral",text:"적이 아니다라. …그건 두고 보면 알겠지. 증명은 말이 아니라 행동으로 해."}}]}},
+     {t:"저도 모릅니다. 다만 ― 저 문을 여는 게, 제가 여기 온 이유인 것 같습니다.",fit:"good",reply:{sp:"surprise",text:"문을 연다… 대단절을 되돌린다는 소리로 들리는데. 하, 미친 소리야. …그런데 왜, 부정하고 싶지가 않지."}},
+     {t:"적어도 당신의 적은 아닙니다. 그건 분명합니다.",fit:"ok",reply:{sp:"neutral",text:"적이 아니다라. …그건 두고 보면 알겠지. 증명은 말이 아니라 행동으로 해."}}]}},
    {sp:"smile",name:"엘리아나",text:"…일단 성 안으로는 들여보내 주지. 딱히 친해질 생각은 없으니 그리 알아. …그래도 저 문 얘긴, 아무래도 너랑 다시 하게 될 것 같군."},
-   {me:1,text:"(뭐가 뭔지 하나도 모르겠지만… 하나는 확실하다. 나, 진짜 이세계에 떨어졌구나. 그것도 저 검 든 누님이 있는 세계에.)"},
+   {me:1,text:"(하나는 분명하다. 나는 돌아갈 수 없는 데까지, 정말로 와버렸다.)"},
  ],end:"― 숲에서의 우연한 첫 만남. 그리고 죽은 문의 떨림. 얼어붙은 세계에서, 아주 작은 무언가가 다시 뛰기 시작했다."},
 
  {id:"ep2",title:"제2화 · 검을 든 이유",sub:"홀로 국경을 떠받치는 기사",reqAff:15,gold:30,bg:"asra_training",nodes:[
