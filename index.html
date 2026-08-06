@@ -240,27 +240,28 @@
   #staggerTag{position:absolute;top:24%;left:50%;transform:translateX(-50%);z-index:8;opacity:0;pointer-events:none;
     background:linear-gradient(135deg,#9a7bff,#c9a0ff);color:#1a0f3a;font-weight:900;font-size:14px;padding:6px 16px;border-radius:20px;box-shadow:0 0 24px rgba(180,150,255,.7)}
   #staggerTag.on{opacity:1;animation:warnPulse .5s ease-in-out infinite}
-  #bossMon{position:absolute;top:12%;left:50%;transform:translateX(-50%);width:68%;max-width:350px;aspect-ratio:1;
+  /* 몬스터 = 우측 상단 / 캐릭터 = 좌측 하단 */
+  #bossMon{position:absolute;top:9%;right:0%;width:60%;max-width:310px;aspect-ratio:1;
     background-size:contain;background-repeat:no-repeat;background-position:center;z-index:2;
-    filter:drop-shadow(0 16px 30px rgba(180,40,60,.5));animation:bossFloat 3.6s ease-in-out infinite;transform-origin:50% 80%}
-  @keyframes bossFloat{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-10px)}}
+    filter:drop-shadow(0 16px 30px rgba(180,40,60,.5));animation:bossFloat 3.6s ease-in-out infinite;transform-origin:60% 70%}
+  @keyframes bossFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
   #bossMon.hurt{animation:bossHurt .28s}
-  @keyframes bossHurt{0%{filter:brightness(3) drop-shadow(0 16px 30px rgba(255,80,80,.7))}40%{transform:translateX(-50%) translateY(-8px) scale(.98)}100%{filter:drop-shadow(0 16px 30px rgba(180,40,60,.5));transform:translateX(-50%) translateY(0)}}
+  @keyframes bossHurt{0%{filter:brightness(3) drop-shadow(0 16px 30px rgba(255,80,80,.7))}40%{transform:translateY(-8px) scale(.98)}100%{filter:drop-shadow(0 16px 30px rgba(180,40,60,.5));transform:translateY(0)}}
   #bossMon.smash{animation:bossSmash .5s}
-  @keyframes bossSmash{0%,100%{transform:translateX(-50%) translateY(0) scale(1)}40%{transform:translateX(-50%) translateY(40px) scale(1.16);filter:brightness(1.4) drop-shadow(0 16px 34px rgba(255,60,60,.8))}}
+  @keyframes bossSmash{0%,100%{transform:translate(0,0) scale(1)}40%{transform:translate(-30px,30px) scale(1.14);filter:brightness(1.4) drop-shadow(0 16px 34px rgba(255,60,60,.8))}}
   #bossMon.stagger{animation:bossStagger .5s ease-in-out infinite;filter:drop-shadow(0 16px 30px rgba(150,120,255,.6)) saturate(.6) brightness(.8)}
-  @keyframes bossStagger{0%,100%{transform:translateX(-50%) rotate(-2deg)}50%{transform:translateX(-51%) rotate(2deg)}}
+  @keyframes bossStagger{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
   #bossMon.dead{animation:bossDie .6s forwards}
-  @keyframes bossDie{to{opacity:0;transform:translateX(-50%) scale(1.3) translateY(-14px);filter:blur(10px) brightness(2)}}
-  #heroBack{position:absolute;bottom:-14%;left:50%;transform:translateX(-50%);width:70%;max-width:350px;aspect-ratio:431/560;
+  @keyframes bossDie{to{opacity:0;transform:scale(1.3) translateY(-14px);filter:blur(10px) brightness(2)}}
+  #heroBack{position:absolute;bottom:-8%;left:-3%;width:50%;max-width:250px;aspect-ratio:431/560;
     background-size:contain;background-repeat:no-repeat;background-position:bottom center;z-index:4;filter:drop-shadow(0 -4px 16px rgba(0,0,0,.7))}
   #heroBack.atk{animation:heroLunge .3s ease-out}
-  @keyframes heroLunge{0%{transform:translateX(-50%) translateY(0)}45%{transform:translateX(-50%) translateY(-14px)}100%{transform:translateX(-50%) translateY(0)}}
+  @keyframes heroLunge{0%{transform:translate(0,0)}45%{transform:translate(12px,-12px)}100%{transform:translate(0,0)}}
   #heroBack.guard{filter:drop-shadow(0 0 14px rgba(126,224,166,.9)) drop-shadow(0 -4px 16px rgba(0,0,0,.7))}
-  #slashArc{position:absolute;top:26%;left:50%;width:150px;height:150px;z-index:5;pointer-events:none;opacity:0;transform:translateX(-50%);
+  #slashArc{position:absolute;top:12%;right:6%;width:132px;height:132px;z-index:5;pointer-events:none;opacity:0;
     border:8px solid transparent;border-top-color:#fff;border-right-color:rgba(190,225,255,.9);border-radius:50%;filter:drop-shadow(0 0 10px rgba(200,230,255,.9))}
   #slashArc.go{animation:arcGo .3s ease-out}
-  @keyframes arcGo{0%{opacity:0;transform:translateX(-50%) rotate(-80deg) scale(.5)}40%{opacity:1;transform:translateX(-50%) rotate(0deg) scale(1.05)}100%{opacity:0;transform:translateX(-50%) rotate(60deg) scale(1.35)}}
+  @keyframes arcGo{0%{opacity:0;transform:rotate(-80deg) scale(.5)}40%{opacity:1;transform:rotate(0deg) scale(1.05)}100%{opacity:0;transform:rotate(60deg) scale(1.35)}}
   #hitVig{position:absolute;inset:0;pointer-events:none;z-index:7;opacity:0;box-shadow:inset 0 0 90px 30px rgba(220,30,40,.85)}
   #hitVig.flash{animation:vigFlash .4s}
   #hitVig.block{box-shadow:inset 0 0 90px 30px rgba(60,220,140,.7)}
@@ -1165,7 +1166,7 @@ function buyUpg(t){
   updateIdleHud();updateBars();logB(`${UPG[t].nm} 강화! Lv.${ST[UPG[t].key]+1}`);
 }
 function dealMon(dmg,kind,brkGain){
-  CB.monHP-=dmg;fx("#bossMon","hurt",280);floatDmg(50,28,fmt(dmg),kind);
+  CB.monHP-=dmg;fx("#bossMon","hurt",280);floatDmg(70,22,fmt(dmg),kind);
   if(CB.stagger<=0&&brkGain){CB.brk=Math.min(100,CB.brk+brkGain);if(CB.brk>=100)startStagger();}
   updateBars();
   if(CB.monHP<=0)monDown();
@@ -1205,7 +1206,7 @@ function resolveSmash(){
   setTimeout(()=>{
     if(!CB)return;
     if(CB.guardT>0){fx("#hitVig","block",380);logB("🛡 가드 성공! 피해 무효 + 마수 빈틈");CB.brk=Math.min(100,CB.brk+30);if(CB.brk>=100)startStagger();}
-    else{const md=Math.round(CB.monAtk*3*(0.9+Math.random()*0.3));CB.pHP-=md;fx("#hitVig","flash",400);fx("#huntScene","shake",340);floatDmg(50,64,fmt(md),"pl");logB("💥 강타 명중! 큰 피해 — 다음엔 🛡가드!");if(CB.pHP<=0){playerDown();}}
+    else{const md=Math.round(CB.monAtk*3*(0.9+Math.random()*0.3));CB.pHP-=md;fx("#hitVig","flash",400);fx("#huntScene","shake",340);floatDmg(24,58,fmt(md),"pl");logB("💥 강타 명중! 큰 피해 — 다음엔 🛡가드!");if(CB.pHP<=0){playerDown();}}
     updateBars();
   },260);
 }
