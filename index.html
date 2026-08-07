@@ -381,6 +381,36 @@
   .msgrOpts .mo{background:linear-gradient(135deg,rgba(122,178,255,.18),rgba(150,130,235,.12));border:1.5px solid rgba(150,180,255,.4);
     color:#eaf1ff;font-family:var(--sans);font-size:14px;font-weight:600;padding:12px 15px;border-radius:22px;cursor:pointer;text-align:left;transition:.12s}
   .msgrOpts .mo:hover,.msgrOpts .mo:active{background:linear-gradient(135deg,rgba(122,178,255,.32),rgba(150,130,235,.2));border-color:#8fb4ff}
+
+  /* 시스템 메시지 (상태창 톤) */
+  #vtag.sys{background:linear-gradient(135deg,#3ad0ff,#7ee0ff);color:#062a3a;letter-spacing:1px}
+  #vpanel.sysbox{background:rgba(8,22,34,.9);border-color:rgba(90,210,255,.55);box-shadow:0 0 24px rgba(60,190,255,.25),inset 0 0 30px rgba(60,190,255,.06)}
+  #vpanel.sysbox #vtext{color:#bdecff;font-weight:700;letter-spacing:.3px}
+  /* 이름 입력 오버레이 */
+  #nameOverlay{position:absolute;inset:0;z-index:42;display:none;align-items:center;justify-content:center;padding:26px;background:rgba(4,8,14,.9);backdrop-filter:blur(5px)}
+  #nameOverlay.on{display:flex}
+  .nbox{width:min(100%,360px);background:rgba(8,20,32,.96);border:1px solid rgba(90,210,255,.5);border-radius:18px;
+    padding:22px;text-align:center;box-shadow:0 0 40px rgba(60,190,255,.3)}
+  .nbox .nsys{font-size:12px;font-weight:800;color:#7ee0ff;letter-spacing:1px;margin-bottom:10px}
+  .nbox .ntitle{font-size:20px;font-weight:900;margin-bottom:16px}
+  .nbox input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(120,180,255,.4);border-radius:12px;
+    color:#eaf1ff;font-family:var(--sans);font-size:18px;font-weight:700;text-align:center;padding:13px;margin-bottom:14px;outline:none}
+  .nbox input:focus{border-color:#7ee0ff}
+  .nbox .btn{width:100%}
+  /* 상태창 */
+  #statusWin{position:absolute;inset:0;z-index:41;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(4,8,14,.86);backdrop-filter:blur(4px)}
+  #statusWin.on{display:flex}
+  .stbox{width:min(100%,380px);background:linear-gradient(160deg,rgba(10,24,38,.98),rgba(8,14,26,.98));
+    border:1px solid rgba(90,210,255,.5);border-radius:18px;padding:18px;box-shadow:0 0 40px rgba(60,190,255,.28)}
+  .sthead{display:flex;justify-content:space-between;align-items:center;font-weight:900;font-size:17px;color:#bdecff;margin-bottom:14px}
+  .sthead button{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer}
+  .strow{display:flex;justify-content:space-between;padding:7px 2px;border-bottom:1px solid rgba(255,255,255,.06);font-size:14px}
+  .strow .stk{color:var(--muted);font-weight:700}.strow .stv{font-weight:800}
+  .stbars{display:flex;gap:8px;margin:12px 0}
+  .stbar{flex:1;background:rgba(255,255,255,.05);border:1px solid var(--edge);border-radius:11px;padding:10px 6px;text-align:center}
+  .stbar span{display:block;font-size:11px;color:var(--muted);font-weight:700}
+  .stbar b{font-size:16px;color:var(--soft)}
+  .stquest{margin-top:12px;background:rgba(255,207,110,.12);border:1px solid rgba(255,207,110,.35);border-radius:11px;padding:10px 12px;font-size:13px;text-align:center}
   @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 
@@ -425,6 +455,7 @@
   <section class="screen" id="hub">
     <div class="topbar">
       <button class="bx" id="hubHome" style="padding:6px 11px">🏠</button>
+      <button class="bx" id="statBtn" style="padding:6px 11px">📊</button>
       <div class="lv">
         <span class="lvbadge">Lv.<span id="lvVal">1</span></span>
         <div class="xpwrap"><div class="xpb"><i id="xpBar"></i></div><small id="xpTxt">EXP</small></div>
@@ -531,6 +562,34 @@
   </section>
 
   <div id="overlay"></div>
+
+  <!-- 이름 입력 (플레이어 등록) -->
+  <div id="nameOverlay">
+    <div class="nbox">
+      <div class="nsys">SYSTEM · 플레이어 등록</div>
+      <div class="ntitle">당신의 이름은?</div>
+      <input id="nameInp" maxlength="12" placeholder="이름을 입력" autocomplete="off">
+      <button class="btn" id="nameOk">등록</button>
+    </div>
+  </div>
+
+  <!-- 상태창 (솔로레벨링식) -->
+  <div id="statusWin">
+    <div class="stbox">
+      <div class="sthead"><span>◆ 상태창</span><button id="stClose">✕</button></div>
+      <div class="strow"><span class="stk">이름</span><span class="stv" id="stName">―</span></div>
+      <div class="strow"><span class="stk">등급</span><span class="stv" id="stRank" style="color:var(--gold);font-weight:900">F</span></div>
+      <div class="strow"><span class="stk">레벨</span><span class="stv" id="stLv">1</span></div>
+      <div class="stbars">
+        <div class="stbar"><span>⚔️ 공격력</span><b id="stAtk">0</b></div>
+        <div class="stbar"><span>❤️ 체력</span><b id="stHp">0</b></div>
+        <div class="stbar"><span>💥 치명타</span><b id="stCrit">0%</b></div>
+      </div>
+      <div class="strow"><span class="stk">최고 스테이지</span><span class="stv" id="stStage">1</span></div>
+      <div class="strow"><span class="stk">💰 골드</span><span class="stv" id="stGold">0</span></div>
+      <div class="stquest">📜 퀘스트 · <b>살아남아라</b></div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -591,25 +650,43 @@ const TALKS=[
 // 대사가 길게 오가다가 선택지가 나오고, 또 오가다가 선택지가 나오는 구성.
 const EPS=[
  {id:"ep1",title:"제1화 · 눈을 뜬 곳",sub:"과로사한 직장인, 낯선 세계에서 깨어나다",reqAff:0,gold:20,bg:"loc_forest",nodes:[
-   {bg:"bg_office",narr:1,text:"― 밤 11시. 사무실에 남은 건 나 하나. 모니터 불빛만이 얼굴을 파랗게 비춘다."},
-   {narr:1,text:"(야근 나흘째. 서류는 줄지 않고, 팀장의 '이것만 더'는 매일 갱신된다. 이젠 화도 안 난다.)"},
-   {narr:1,text:"(언제부터였을까. 이 생활을 그냥 당연하게 받아들이게 된 게.)"},
-   {narr:1,text:"어깨가 무겁다. 눈앞이 뿌옇다. 그래도 손은 습관처럼 마우스를 움직인다."},
-   {bg:"bg_home",narr:1,text:"― 자정을 넘겨 도착한 원룸. 불도 켜지 않고 침대에 몸을 던진다."},
-   {narr:1,text:"(잠깐만 쉬자. 딱 오 분만.)"},
-   {narr:1,text:"그런데, 몸이 이상하다. 점점 무거워진다. 손끝 하나 움직이지 않는다. 심장 뛰는 소리가… 느려진다."},
-   {narr:1,text:"(…위험하다. 일어나야 하는데. 몸이, 말을 안 들어.)"},
-   {bg:"bg_void",narr:1,text:"― 그리고, 모든 것이 새하얗게 지워졌다."},
-   {narr:1,text:"(과로사, 인가. …끝이 이렇게 조용할 줄은 몰랐군.)"},
-   {narr:1,text:"새하얀 빛 속. 낯선 감각이 온몸을 감싼다. 마치 다시 태어나는 것처럼 ― 따뜻하고, 또 아프게."},
-   {bg:"loc_forest",narr:1,text:"― 얼굴 위로 쏟아지는 햇살. 새소리. 풀 냄새. 눈이 떠졌다."},
-   {narr:1,text:"(…여기가 어디지. 분명 집에서 쓰러졌는데. 병원 천장도, 익숙한 벽지도 아니다.)"},
-   {me:1,text:"…숲?"},
-   {narr:1,text:"몸을 일으킨다. 손엔 낡은 검 한 자루. 옷차림은 낯설고, 주머니엔 지갑도 사원증도 없다. 상황을 하나씩 맞춰본다."},
-   {me:1,text:"(죽었고, 눈을 떠보니 검을 든 채 낯선 숲 한복판. …정황을 종합하면, 답은 하나뿐이군.)"},
-   {me:1,text:"(다른 세계, 라는 건가.)"},
-   {narr:1,text:"믿기 어렵지만, 부정할 근거도 없다. 그리고 머릿속엔 딱 하나, 이상하게 선명한 감각이 있다. ― 어딘가의 '문'을 찾아야 한다는."},
-   {narr:1,text:"(앉아 있는다고 답이 나오진 않는다. 일단 움직이자.) 걸음을 옮기자 ― 저편에서 쇳소리와 짐승의 울음이 뒤섞여 들려온다."},
+   {bg:"bg_office",narr:1,text:"― 새벽 두 시. 형광등이 신경질적으로 깜빡이는 사무실. 남은 건 나 하나."},
+   {narr:1,text:"(스물아홉. 통장은 마이너스, 대출은 플러스, 애인은 처음부터 없음. 3년 새 확실히 늘어난 건 딱 둘 ― 뱃살, 그리고 이자.)"},
+   {narr:1,text:"모니터에 비친 얼굴을 본다. 푸석하고, 둥글고, 지쳐 있다. …체념은 습관이 되면 편하다."},
+   {bg:"bg_home",narr:1,text:"― 자정 넘어 기어든 원룸. 침대에 몸을 던진 순간, 폰이 울린다."},
+   {narr:1,text:"저장도 안 한 번호. 그런데 메시지 끝에 적힌 이름 석 자에 ― 심장이 철렁 내려앉는다."},
+   {me:1,text:"…소연."},
+   {narr:1,text:"대학 때, 4년 내내 짝사랑하고 말 한번 제대로 못 붙여본 그 애. 웃으면 왼쪽 볼에 옅게 패던 보조개, 반달로 접히던 눈웃음. 10년이 지났는데도 그 얼굴만은 어제처럼 선명하다."},
+   {narr:1,text:"「오랜만이다. 얼굴 한번 볼래? 다음 주쯤.」"},
+   {me:1,text:"(이 꼴로는… 못 만난다.)"},
+   {me:1,text:"딱 이 주. 이 주만이라도, 사람 꼴 만들자."},
+   {narr:1,text:"그날부터 안 먹었다. 물로 배를 채우고, 야근 끝엔 무릎이 꺾일 때까지 뛰었다. 몸이 보내는 신호를 전부 무시했다."},
+   {me:1,text:"(어지럽다. …근데 조금만 더. 그 애 앞에서만큼은, 초라하고 싶지 않아.)"},
+   {narr:1,text:"― 그리고, 만나기로 한 바로 그 전날 밤."},
+   {narr:1,text:"씻으러 일어서는데 ― 갑자기 세상이 기울었다. 심장 뛰는 간격이 벌어진다. 쿵… 쿵…… 쿵………"},
+   {me:1,text:"…으윽…!"},
+   {narr:1,text:"무릎이 꺾이고, 바닥이 얼굴로 달려든다. 손끝 하나 움직이질 않는다."},
+   {me:1,text:"(내일인데. …내일, 소연이 만나는데. 겨우 이런 걸로.)"},
+   {me:1,text:"(참… 나답게도, 한심하네.)"},
+   {bg:"bg_void",narr:1,text:"― 그리고 모든 것이, 새하얗게 지워졌다."},
+   {me:1,text:"(다이어트하다 죽는 놈이 세상에 어딨냐 싶겠지만. …아, 여기 하나 있네.)"},
+   {narr:1,text:"헛웃음 끝에서, 낯선 감각이 온몸으로 스민다. 따뜻하고, 살을 에는 듯 아프게 ― 처음부터 다시 빚어지는 것처럼."},
+   {narr:1,text:"그리고 그 정적의 저 밑바닥에서, 무언가가 나를 붙잡는다. 오래 잠들어 있던 것이 눈을 뜨듯, 나를 어딘가로 끌어당긴다."},
+   {bg:"loc_forest",narr:1,text:"― 뺨을 때리는 햇살. 새소리. 물기 머금은 흙냄새. 눈이 떠졌다."},
+   {me:1,text:"…윽…."},
+   {narr:1,text:"몸을 일으킨다. 그런데 ― 이상하다. 몸이, 거짓말처럼 가볍다. 발치의 물웅덩이에 비친 얼굴을 보고, 나는 굳는다."},
+   {me:1,text:"살이… 빠졌다. 아니, 아예 딴 몸이잖아. 젊고, 낯설고 ― 그런데 눈빛은, 분명 나야."},
+   {me:1,text:"죽어서 살을 빼네. …이런 식으로 성공할 줄은 몰랐다."},
+   {narr:1,text:"손에는 낡은 검 한 자루. 그리고 그때 ― 눈앞의 허공에, 반투명한 창이 떠오른다."},
+   {sys:1,text:"에테리아에 오신 것을 환영합니다."},
+   {sys:1,text:"플레이어를 등록합니다. 이름을 입력하십시오."},
+   {nameInput:1},
+   {sys:1,text:"등록 완료. 등급: F ― 최하위."},
+   {sys:1,text:"첫 번째 퀘스트  ―  ＜살아남아라.＞"},
+   {me:1,text:"(상태창에, 등급에, 퀘스트라. 웹소설에서나 보던 걸, 하필 죽고 나서 겪네.)"},
+   {narr:1,text:"멍하니 창을 바라보다 시선을 든다. 나무들 너머 저 멀리, 강철빛 성벽의 실루엣이 아침 안개를 뚫고 희미하게 솟아 있다."},
+   {me:1,text:"(사람 사는 곳이 있긴 하군. …저기가 어느 나라인지는 몰라도, 일단 살려면 저리로.)"},
+   {narr:1,text:"― 그리고 바로 그때. 성벽으로 이어지는 숲 어귀에서, 쇳소리와 짐승의 울음이 공기를 찢으며 뒤섞여 들려온다."},
    {narr:1,text:"나무 사이로 보인 광경에 걸음이 멈춘다. 은빛 머리의 여기사가, 사람만 한 시커먼 짐승과 홀로 맞붙고 있다. 검이 움직일 때마다 어둠이 베여 나간다."},
    {me:1,text:"(저건… 내가 아는 생물이 아니다. 그리고 저 사람, 혼자서 저걸 상대하고 있어.)"},
    {sp:"neutral",name:"엘리아나",text:"(마지막 일격으로 짐승의 숨통을 끊으며) …후. 이걸로 끝인가."},
@@ -827,7 +904,7 @@ const QUESTS={
 
 /* ============ STATE ============ */
 const DEF={seen:false,gold:0,exp:0,lv:1,aff:0,epDone:[],inv:{},cur:0,tprog:{gather:0,hunt:0,talk:0,gift:0},talkSeen:[],msgrLog:[],msgrUsed:[],
-  stage:1,bestStage:1,atkLv:0,hpLv:0,critLv:0};
+  stage:1,bestStage:1,atkLv:0,hpLv:0,critLv:0,playerName:""};
 let ST=load();
 function load(){let s;try{s=JSON.parse(localStorage.getItem("eth_v3"));}catch(e){}
   const st=s?{...DEF,...s}:{...DEF};
@@ -872,6 +949,21 @@ function openLobby(){
   if(si>=MSGR_MINSTAGE){mb.classList.remove("locked");mb.innerHTML='<span class="em">💌</span> 메신저';}
   else{mb.classList.add("locked");mb.innerHTML='<span class="em">🔒</span> 메신저 <span class="lk">· 연인이 되면 열려요</span>';}
 }
+/* ============ 상태창 (솔로레벨링식) ============ */
+function rankOf(lv){return lv>=80?"S":lv>=55?"A":lv>=35?"B":lv>=20?"C":lv>=10?"D":lv>=5?"E":"F";}
+function openStatus(){
+  $("#stName").textContent=ST.playerName||"게이트워커";
+  $("#stRank").textContent=rankOf(ST.lv);
+  $("#stLv").textContent=ST.lv;
+  $("#stAtk").textContent=pATK();
+  $("#stHp").textContent=pMaxHP();
+  $("#stCrit").textContent=Math.round(pCrit()*100)+"%";
+  $("#stStage").textContent=ST.bestStage;
+  $("#stGold").textContent=ST.gold;
+  $("#statusWin").classList.add("on");
+}
+$("#stClose").onclick=()=>$("#statusWin").classList.remove("on");
+$("#statBtn").onclick=()=>openStatus();
 
 /* ============ HUB ============ */
 let hubTab="story";
@@ -1308,16 +1400,23 @@ function vStep(){
   const n=queue[qi];
   if(n.q){vShowQ(n.q,()=>{qi++;vStep();});return;}
   if(n.bg)setBg(n.bg);else if(curEp&&curBg==="")setBg(curEp.bg);
-  if(n.me){ // 주인공(나) 대사 — 현재 스프라이트 유지, "나" 태그
-    vtag.textContent="나";vtag.className="me";vtag.style.display="inline-block";
+  if(n.nameInput){ openNameInput(()=>{qi++;vStep();}); return; }
+  const panel=$("#vpanel");
+  if(n.sys){ // 시스템 메시지 (상태창 스타일)
+    panel.classList.add("sysbox");vtag.textContent="SYSTEM";vtag.className="sys";vtag.style.display="inline-block";
   }else{
-    setSp(n.sp||null);
-    vtag.textContent=n.name||"";vtag.className=n.narr?"narr":"";vtag.style.display=n.name?"inline-block":"none";
+    panel.classList.remove("sysbox");
+    if(n.me){vtag.textContent=ST.playerName||"나";vtag.className="me";vtag.style.display="inline-block";}
+    else{setSp(n.sp||null);vtag.textContent=n.name||"";vtag.className=n.narr?"narr":"";vtag.style.display=n.name?"inline-block":"none";}
   }
   typew(n.text);
 }
-$("#vbox").onclick=()=>{if(vch.classList.contains("on"))return;
+$("#vbox").onclick=()=>{if(vch.classList.contains("on")||$("#nameOverlay").classList.contains("on"))return;
   if(typing){typing=false;vtext.textContent=curFull;vadv.classList.add("show");return;}qi++;vStep();};
+function openNameInput(cb){const ov=$("#nameOverlay");ov.classList.add("on");
+  const inp=$("#nameInp");inp.value=ST.playerName||"";setTimeout(()=>inp.focus(),60);
+  $("#nameOk").onclick=()=>{let v=(inp.value||"").trim().slice(0,12)||"게이트워커";ST.playerName=v;save();ov.classList.remove("on");cb&&cb();};
+  inp.onkeydown=(e)=>{if(e.key==="Enter")$("#nameOk").click();};}
 function scoreOf(fit){return fit==="good"?2:fit==="bad"?0:1;}
 function vShowQ(q,cb){
   setSp(q.sp||curSp);$("#vbox").style.display="none";
