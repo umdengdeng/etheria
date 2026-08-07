@@ -52,6 +52,14 @@ section{padding:52px 0;border-bottom:1px solid var(--line)}
 .sec-head .num{font-family:"Cinzel",serif;color:var(--crimson);font-size:15px;opacity:.9}
 .sec-head p{color:var(--muted);font-size:14px;margin:0}
 
+/* filters */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.filters button{font-family:"Cinzel",serif;font-size:12.5px;letter-spacing:.06em;color:var(--muted);
+  background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:7px 15px;cursor:pointer;transition:.15s}
+.filters button:hover{color:var(--ink)}
+.filters button.on{color:var(--ink);border-color:rgba(224,56,74,.6);background:rgba(224,56,74,.10)}
+.filters button.semper.on{border-color:rgba(224,56,74,.8);background:rgba(224,56,74,.16);color:#ff9aa6}
+
 /* heroine groups */
 .group-title{font-family:"Cinzel",serif;font-size:16px;letter-spacing:.06em;color:var(--gold);margin:34px 0 14px;
   display:flex;align-items:center;gap:12px}
@@ -134,6 +142,7 @@ footer{padding:36px 0 60px;color:var(--muted);font-size:12px;text-align:center}
 
 <div class="page active" id="heroines"><div class="wrap">
   <div class="sec-head"><span class="num">I</span><h2>히로인 도감</h2><p>얼굴·몸매 seed 고정 파이프라인으로 생성. 의상만 교체 가능.</p></div>
+  <div class="filters" id="hfilters"></div>
   <div id="hero-root"></div>
 </div></div>
 
@@ -237,9 +246,10 @@ const H = {
   rita:{n:"리타",race:"인간",mbti:"ESFJ",role:"신참 위병",d:"씩씩·정 많음. 주인공 감시하다 정든다."},
   vivian:{n:"비비안",race:"다크엘프",mbti:"INTP",role:"궁정 마법사",d:"4차원 천재. 네르하임 전투 장군의 딸(아스란서 성장). 아빠=7인 → 후반 마왕 강림 표적, 스토리의 심장."},
   rosaria:{n:"로자리아",race:"인간",mbti:"ISFJ",role:"왕궁 수도원장",d:"자애·신앙·헌신. 부하에게 뒤에서 조종당함(본인은 모름)."},
-  isolde:{n:"셀레스티아",race:"인간",mbti:"INTJ",role:"수도원 부원장 · ⚠️셈페르",d:"겉은 성녀처럼 자애로운데(선역 인상) 속은 냉혹. 수도원장을 배후 조종.",grade:"전설"},
+  isolde:{n:"셀레스티아",race:"인간",mbti:"INTJ",role:"수도원 부원장 · ⚠️셈페르",d:"겉은 성녀처럼 자애로운데(선역 인상) 속은 냉혹. 수도원장을 배후 조종.",grade:"전설",semper:1},
   klara:{n:"클라라",race:"인간",mbti:"INFP",role:"수도원 젊은 수녀",d:"순수·헌신·다정. 진짜 선역 — 셀레스티아의 가짜 선함과 대비."},
-  valentina:{n:"발렌티나",race:"인간",mbti:"ENTJ",role:"기사단 단장 · ⚠️셈페르",d:"엘리아나의 스승. 존경받는 명장, 실은 배신자.",grade:"전설"},
+  valentina:{n:"발렌티나",race:"인간",mbti:"ENTJ",role:"기사단 단장 · ⚠️셈페르",d:"엘리아나의 스승. 존경받는 명장, 실은 배신자.",grade:"전설",semper:1},
+  morgas:{n:"모르가스 ♂",race:"다크엘프",mbti:"—",role:"네르하임 전투 장군 · ⚠️셈페르",d:"비비안의 아버지. 딸을 마왕의 그릇으로 노림. (안타고니스트 NPC)",semper:1},
   sera:{n:"세라",race:"인간",mbti:"INFJ",role:"종군 사제(치유)",d:"조용·헌신·신념. 상처를 품는 온기."},
   eleonora:{n:"에레노라",race:"인간",mbti:"—",role:"왕비 (모후)",d:"자애·위엄의 연상 히로인. 자녀를 걱정하는 어머니.",grade:"전설"},
   adrian:{n:"아드리안 ♂",race:"인간",mbti:"ENTJ",role:"제1왕자 (왕세자·BL)",d:"냉철한 후계자. 책임·야망. 남성 히로인."},
@@ -289,9 +299,32 @@ function card(id){
     </div>
   </div>`;
 }
-document.getElementById("hero-root").innerHTML = GROUPS.map(g=>
-  `<div class="group-title">${g.t} <span style="color:var(--muted);font-size:12px;-webkit-text-fill-color:var(--muted)">(${g.ids.length})</span></div><div class="grid">${g.ids.map(card).join("")}</div>`
-).join("");
+const ALLIDS = [...GROUPS.flatMap(g=>g.ids), "morgas"];
+const FILTERS = [
+  {k:"all",   label:"전체"},
+  {k:"legend",label:"전설",     test:h=>h.grade==="전설"},
+  {k:"semper",label:"⚠ 셈페르", test:h=>h.semper, cls:"semper"},
+];
+function renderHeroes(fk){
+  const root=document.getElementById("hero-root");
+  if(fk==="all"){
+    root.innerHTML = GROUPS.map(g=>
+      `<div class="group-title">${g.t} <span style="color:var(--muted);font-size:12px;-webkit-text-fill-color:var(--muted)">(${g.ids.length})</span></div><div class="grid">${g.ids.map(card).join("")}</div>`
+    ).join("");
+  } else {
+    const f=FILTERS.find(x=>x.k===fk);
+    const ids=ALLIDS.filter(id=>H[id]&&f.test(H[id]));
+    const note = fk==="semper" ? `<p class="note" style="margin:0 0 14px">마왕의 힘으로 불로불사를 꾀하는 10인 결사. 현재 밝혀진 멤버 ${ids.length}명 + 미공개 ${10-ids.length}명.</p>` : "";
+    root.innerHTML = note + `<div class="grid">${ids.map(card).join("")}</div>`;
+  }
+}
+const hf=document.getElementById("hfilters");
+hf.innerHTML = FILTERS.map(f=>`<button data-fk="${f.k}" class="${f.cls||""} ${f.k==="all"?"on":""}">${f.label}</button>`).join("");
+hf.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+  hf.querySelectorAll("button").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on"); renderHeroes(b.dataset.fk);
+}));
+renderHeroes("all");
 
 // 탭 = 개별 페이지 전환
 const tabs=[...document.querySelectorAll("nav.tabs a")];
