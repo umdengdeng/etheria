@@ -968,14 +968,24 @@ const QUESTS={
 };
 
 /* ============ STATE ============ */
+// ★스토리 버전 — 대본을 크게 고칠 때마다 올린다. 올리면 다음 접속 때 1화부터 다시 재생된다.
+const STORY_VER=2;
 const DEF={seen:false,gold:0,exp:0,lv:1,aff:0,epDone:[],inv:{},cur:0,tprog:{gather:0,hunt:0,talk:0,gift:0},talkSeen:[],msgrLog:[],msgrUsed:[],
-  stage:1,bestStage:1,atkLv:0,hpLv:0,critLv:0,playerName:"",stats:{str:1,agi:1,vit:1,per:1,wis:1,will:1,karma:0},exp:0};
+  stage:1,bestStage:1,atkLv:0,hpLv:0,critLv:0,playerName:"",stats:{str:1,agi:1,vit:1,per:1,wis:1,will:1,karma:0},exp:0,storyVer:0};
 let ST=load();
 function load(){let s;try{s=JSON.parse(localStorage.getItem("eth_v3"));}catch(e){}
   const st=s?{...DEF,...s}:{...DEF};
   if(!st.tprog)st.tprog={gather:0,hunt:0,talk:0,gift:0};
   for(const k of["gather","hunt","talk","gift"])if(st.tprog[k]==null)st.tprog[k]=0;
   if(st.cur==null)st.cur=(st.epDone?st.epDone.length:0); // 구버전 세이브 이어받기
+  // ★스토리 개편 마이그레이션: 대본이 통째로 바뀌면 「이야기 진행만」 되감는다.
+  //   호감도·레벨·스탯·골드·아이템은 그대로 둔다 (플레이어가 쌓은 건 안 건드림)
+  if((st.storyVer||0) < STORY_VER){
+    st.cur=0; st.epDone=[];
+    st.tprog={gather:0,hunt:0,talk:0,gift:0};
+    st.storyVer=STORY_VER;
+    try{localStorage.setItem("eth_v3",JSON.stringify(st));}catch(e){}
+  }
   return st;}
 function save(){localStorage.setItem("eth_v3",JSON.stringify(ST));}
 const xpNeed=lv=>lv*100;
