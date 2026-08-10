@@ -130,6 +130,7 @@ footer{padding:36px 0 60px;color:var(--muted);font-size:12px;text-align:center}
     <span class="pill">최종 갱신 2026-08-09</span>
     <span class="pill">제1부 · 아스란 편</span>
     <span class="pill">라이브 서비스 · 최종 엔딩 없음</span>
+    <span class="pill">⏳ 이미지 미정 11명 포함</span>
   </div>
 </div></header>
 
@@ -382,6 +383,7 @@ const GROUPS = [
   {t:"셈페르 (흑막)", ids:["morgana","nenia","aris","iris"]},
   {t:"특수", ids:["soyeon"]},
   {t:"남성 히로인 (BL)", ids:["leon","yuan","noah"]},
+  {t:"⏳ 이미지 미정 — 스토리 인물", ids:["kael","stella","hero_human","hero_dwarf","hero_beast","outsider","semper_head","semper_x1","semper_x2","king","demonlord"]},
 ];
 const H = {
   eliana:{n:"엘리아나",race:"엘프",mbti:"ESTJ",role:"기사단 부단장 · 수색대장",d:"얼음·원칙·실력주의 츤데레. 실력 인정·진심에 약함. 첫 히로인."},
@@ -432,6 +434,19 @@ const H = {
   leon:{n:"레온 ♂",race:"인간",mbti:"ENFP",role:"자유기사 (BL)",d:"능글맞은 미남 검사."},
   yuan:{n:"유안 ♂",race:"엘프",mbti:"ISTP",role:"정찰·궁수 (BL)",d:"과묵·유능. 무심한 듯 챙김. 실바리스 출신 — 6장에서 고향 서사 회수."},
   noah:{n:"노아 ♂",race:"인간",mbti:"INFP",role:"보조·막내 (BL)",d:"순수·다정. 여린데 결정적 순간 단단."},
+
+  // ───── 이미지 미정 (2026-08-10 추가) ─────
+  kael:{n:"카엘 ♂",race:"다크엘프",mbti:"—",role:"200년 전 그릇 · 봉인터",d:"정화하러 갔다가 마왕을 담고 스스로 봉인터에 남은 일곱 영웅 중 하나. 200년째 깨어 있다. ⚠️셈페르 아님. 그가 놓으면 마왕이 풀려난다.",grade:"전설"},
+  stella:{n:"스텔라",race:"엘프",mbti:"—",role:"일곱 영웅 · 생존",d:"봉인의 한계를 처음 간파한 사람. 프롤로그에서 오열한 그 엘프 — 카엘과 무언가 있었다. 장수종이라 아직 살아 있다. 제6장 실바리스.",grade:"전설"},
+  hero_human:{n:"(이름 미정)",race:"인간",mbti:"—",role:"일곱 영웅 · 인간 대표",d:"검은 갑옷. \"끝났어\"를 되뇌며 주먹을 쥐었다 폈다. 인간이라 200년은 못 산다 — 사망? 후손? (아스란 왕가의 조상 가능성)"},
+  hero_dwarf:{n:"(이름 미정)",race:"드워프",mbti:"—",role:"일곱 영웅 · 생존",d:"전투 해머. \"희생을 헛되게 하지 말자\". 장로급으로 늙었지만 살아 있다. 제8장 카즈둠."},
+  hero_beast:{n:"(이름 미정)",race:"수인",mbti:"—",role:"일곱 영웅 · 생존",d:"한쪽 눈 실명. \"마지막까지 웃고 있었잖아\". 장로급으로 늙었지만 살아 있다. 제7장 볼가르."},
+  outsider:{n:"(이름 미정) ♂",race:"지구인",mbti:"—",role:"첫 번째 소환자 · ⚠️셈페르",d:"200년 전 왕국·수도원이 부른 이방인. 일곱 중 하나였으나 기록에서 지워짐 → 흑화. 주인공의 거울이자 선배.",semper:1},
+  semper_head:{n:"(미공개)",race:"?",mbti:"—",role:"셈페르 수장 · ⚠️셈페르",d:"정체 미정. ★카엘이 아니다. 로자리아·이방인보다 위여야 설득력이 있다.",semper:1,grade:"전설"},
+  semper_x1:{n:"(미공개)",race:"?",mbti:"—",role:"셈페르 · 귀족/학자",d:"창립자 계열(봉인 연구자). 미공개 2인 중 하나.",semper:1},
+  semper_x2:{n:"(미공개)",race:"?",mbti:"—",role:"셈페르 · 귀족/학자",d:"창립자 계열(봉인 연구자). 미공개 2인 중 하나.",semper:1},
+  king:{n:"아스란 왕 ♂",race:"인간",mbti:"—",role:"국왕",d:"평범한 사람. 역사와 전통을 소중히 여기고 왕가의 비밀을 잘 지키는 고지식한 성격. ★그래서 로자리아에게 속고 있다."},
+  demonlord:{n:"마왕",race:"다크엘프",mbti:"—",role:"봉인된 존재",d:"전쟁을 끝내려 정화에 나섰다가 마계의 기운에 삼켜진 다크엘프. 현재 의식은 잠들어 있다. 마족을 부린다.",grade:"전설"},
 };
 function card(id){
   const h=H[id]; if(!h) return "";
@@ -439,7 +454,7 @@ function card(id){
   const badge = h.grade ? `<span class="badge">${h.grade}</span>` : "";
   const por = img
     ? `<img src="${img}" alt="${h.n}" loading="lazy">`
-    : `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:12px">아트 예정</div>`;
+    : `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:12px">이미지 미정</div>`;
   return `<div class="card">
     <div class="por">${badge}${por}
       <div class="nm"><b>${h.n}</b><span>${h.role}</span></div>
@@ -455,6 +470,7 @@ const FILTERS = [
   {k:"all",   label:"전체"},
   {k:"legend",label:"전설",     test:h=>h.grade==="전설"},
   {k:"semper",label:"⚠ 셈페르", test:h=>h.semper, cls:"semper"},
+  {k:"pending",label:"⏳ 이미지 미정", test:h=>!IMG[Object.keys(H).find(k=>H[k]===h)]},
 ];
 function renderHeroes(fk){
   const root=document.getElementById("hero-root");
