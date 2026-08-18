@@ -128,16 +128,16 @@
   #vbg.dof{filter:blur(3px) brightness(.9)}
   #vbg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,8,12,.06) 40%,rgba(6,8,12,.82) 100%)}
   #vsp{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;pointer-events:none}
-  /* 인물 컷아웃 하단이 직선으로 잘려 보이던 것 → 아래로 갈수록 사라지게.
-     이미 아래가 부드럽게 처리된 스프라이트(shadowbeast·sd_*)는 그쪽이 이미 투명해서 영향이 없다. */
-  #vsp img{height:84%;object-fit:contain;filter:drop-shadow(0 8px 26px rgba(0,0,0,.55));transition:opacity .35s,transform .35s;opacity:0;transform:translateY(14px);
-    -webkit-mask-image:linear-gradient(to bottom,#000 72%,rgba(0,0,0,.72) 86%,rgba(0,0,0,.28) 95%,transparent 100%);
-    mask-image:linear-gradient(to bottom,#000 72%,rgba(0,0,0,.72) 86%,rgba(0,0,0,.28) 95%,transparent 100%)}
+  #vsp img{height:84%;object-fit:contain;filter:drop-shadow(0 8px 26px rgba(0,0,0,.55));transition:opacity .35s,transform .35s;opacity:0;transform:translateY(14px)}
   #vsp img.show{opacity:1;transform:translateY(0)}
   #vsp.silh img{filter:brightness(.08) contrast(1.25) drop-shadow(0 0 22px rgba(255,255,255,.6));opacity:.9}
   /* ★어두운 빈 화면(bg_blank) 위에선 검은 실루엣이 안 보인다 → 빛나는 잔상으로 */
     /* ★잔상은 작게 — 84%로 뜨면 밝은 배경에서 화면을 다 덮는다 */
-  #vsp.silh img{height:58%;align-self:center;margin-bottom:14%}
+  /* 실루엣은 화면 중간에 떠 있어서 잘린 단면이 그대로 보인다 → 아래를 흐리게 지운다.
+     엘리아나처럼 화면 아래까지 꽉 차는 컷아웃은 단면이 안 보이므로 건드리지 않는다. */
+  #vsp.silh img{height:58%;align-self:center;margin-bottom:14%;
+    -webkit-mask-image:linear-gradient(to bottom,#000 58%,rgba(0,0,0,.55) 78%,rgba(0,0,0,.18) 91%,transparent 100%);
+    mask-image:linear-gradient(to bottom,#000 58%,rgba(0,0,0,.55) 78%,rgba(0,0,0,.18) 91%,transparent 100%)}
   #vsp.silh.glow img{filter:brightness(2.2) saturate(.15) contrast(.75) drop-shadow(0 0 30px rgba(190,215,255,.8));opacity:.5}
   #vhud{position:absolute;top:14px;left:14px;right:14px;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:10px}
   #vhud .aff{display:flex;align-items:center;gap:9px;background:rgba(10,14,22,.62);border:1px solid var(--edge);border-radius:999px;
@@ -872,6 +872,22 @@ const TALKS=[
    {t:"그 한 가지를 그만큼 해낸 게, 난 멋있다고 생각해요.",fit:"good",reply:"…바보. 그런 말을 그렇게 진지하게 하면… 반칙이잖아. (귀가 빨개진다)"},
    {t:"이제부터 다른 것도 같이 하면 되죠.",fit:"ok",reply:"…같이? …흠. 네가 가르쳐준다면… 못 이기는 척 해줄 수도."},
    {t:"의외네요, 여자다운 면도 있고?",fit:"bad",reply:"…'여자다운'? 그 말, 별로야. 나는 그냥 나다."}]},
+ {q:"훈련을 마친 엘리아나가 땀에 젖은 셔츠 차림으로 숨을 고르고 있다. 시선을 어디에 둬야 할지 모르겠다.",a:[
+   {t:"(수건을 건네며) 여기요. …눈은 딴 데 두고 있었어요.",fit:"good",reply:"…봤잖아, 방금. (수건을 낚아채며) …됐어. 고맙다고는 해두지."},
+   {t:"땀 흘리는 것도 멋있네요.",fit:"ok",reply:"…멋있다? 하, 별 소릴 다 듣네. …그래도 뭐, 기분 나쁘진 않아."},
+   {t:"셔츠가… 좀 비치는데요.",fit:"bad",fx:{karma:-1},reply:"…! (수건을 집어던진다) 눈 감아. 지금 당장."}]},
+ {q:"늦은 밤. 엘리아나가 등 뒤 갑옷 끈을 혼자 못 풀고 애쓰고 있다. 「…거기. 안 보는 척하지 말고.」",a:[
+   {t:"(말없이 다가가 끈만 풀고 물러선다)",fit:"good",reply:"…빠르네. 익숙한 거야? …농담이다. …고마워. 손, 생각보다 따뜻하더라."},
+   {t:"제가… 해도 될까요?",fit:"ok",reply:"허락은 무슨. 빨리 해. …이러고 있는 게 더 부끄러우니까."},
+   {t:"이거 풀면, 그 다음은요?",fit:"bad",fx:{karma:-1},reply:"그 다음은 네가 훈련장 바닥을 구르는 거지. 셋 셀 동안 사라져."}]},
+ {q:"잡은 마수를 내려다보며 엘리아나가 중얼거린다. 「이 종류는 아직 이름이 없어. 보고서에 뭐라고 적지.」",a:[
+   {t:"「목줄 달린 개」요. 잡힌 게 아니라 풀린 거니까.",fit:"good",reply:"…목줄. (잠깐 멈춘다) 그래, 그게 정확하지. 너 가끔 무섭게 정확해."},
+   {t:"그냥 검은 개 아니에요?",fit:"ok",reply:"…성의 없기는. 뭐, 틀린 말도 아니라 화낼 수도 없네."},
+   {t:"「엘리아나가 혼자 세 마리 잡은 것」",fit:"bad",reply:"…내 이름 넣지 마. 그거 평생 남는 문서야. 평생."}]},
+ {q:"「내일 순찰 경로 말인데.」 엘리아나가 지도를 펼친다. 「너라면 어디부터 돌겠어?」",a:[
+   {t:"정해진 순서대로. 변수는 그다음에 대응하죠.",fit:"good",reply:"…그래. 순서를 지키는 놈이 오래 살아남아. 마음에 드는 대답이야."},
+   {t:"일단 나가보고, 이상한 데 있으면 거기부터요.",fit:"ok",reply:"…발로 뛰는 쪽이군. 나쁘진 않아. 대신 죽는 것도 그런 놈들이 먼저 죽지."},
+   {t:"대장님 가는 데로 따라갈게요.",fit:"bad",fx:{will:-1},reply:"…생각을 안 하겠다는 거네. 그럼 넌 내 등 뒤에 못 세워."}]},
 ];
 // 스토리 에피소드 (호감도 게이팅, 순차)
 // 엘리아나 서사 = 에테리아 큰 흐름 안에서. (봉인된 문 / 대단절 / 열쇠 / 게이트워커)
@@ -1511,7 +1527,7 @@ function encounterEliana(l){
   const t=TALKS[rnd(0,TALKS.length-1)];
   queue=[{bg:curEp.bg,narr:1,text:`― ${l.name}에서 ${l.act}하던 중, 엘리아나와 마주쳤다.`},
     {sp:"neutral",name:"엘리아나",text:"…너, 또 여기서 뭐 하는 거야."},
-    {q:{sp:"neutral",text:"「"+t.q+"」",a:t.a.map(x=>({t:x.t,fit:x.fit,reply:{sp:x.fit==="good"?"blush":x.fit==="bad"?"angry":"neutral",text:x.reply}}))}}];
+    {q:{sp:"neutral",text:"「"+t.q+"」",a:t.a.map(x=>({t:x.t,fit:x.fit,fx:x.fx,reply:{sp:x.fit==="good"?"blush":x.fit==="bad"?"angry":"neutral",text:x.reply}}))}}];
   qi=0;afterCb=()=>bigOverlay("💗","우연한 만남",`엘리아나와 마주쳤다.\n현재 단계 : ${stageOf(ST.aff).name}`,()=>openHub("explore"));
   curBg="";curSp="__none__";show("date");vHud();vStep();
 }
@@ -1786,7 +1802,7 @@ function vShowQ(q,cb){
 function startTalk(){
   const t=TALKS[Math.floor((Date.now()/1000)%TALKS.length)]; // vary without Math.random dependency on load
   curEp={bg:"asra.training.mid"};queue=[{bg:"asra.training.mid",sp:"neutral",name:"엘리아나",text:"…무슨 일이야. 할 말 있으면 해."},
-    {q:{sp:"neutral",text:"「"+t.q+"」",a:t.a.map(x=>({t:x.t,fit:x.fit,reply:{sp:x.fit==="good"?"blush":x.fit==="bad"?"angry":"neutral",text:x.reply}}))}}];
+    {q:{sp:"neutral",text:"「"+t.q+"」",a:t.a.map(x=>({t:x.t,fit:x.fit,fx:x.fx,reply:{sp:x.fit==="good"?"blush":x.fit==="bad"?"angry":"neutral",text:x.reply}}))}}];
   qi=0;afterCb=()=>{bumpTask("talk");bigOverlay("💬","대화 종료",`엘리아나와 대화했다.\n현재 단계: ${stageOf(ST.aff).name}`,()=>openHub("talk"));};
   curBg="";curSp="__none__";show("date");vHud();vStep();
 }
