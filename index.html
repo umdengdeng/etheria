@@ -132,10 +132,11 @@
   #vsp img.show{opacity:1;transform:translateY(0)}
   #vsp.silh img{filter:brightness(.08) contrast(1.1) blur(1.6px) drop-shadow(0 0 26px rgba(255,255,255,.55));opacity:.85}
   /* ★어두운 빈 화면(bg_blank) 위에선 검은 실루엣이 안 보인다 → 빛나는 잔상으로 */
-    /* ★잔상은 작게 — 84%로 뜨면 밝은 배경에서 화면을 다 덮는다 */
   /* 실루엣은 화면 중간에 떠 있어서 잘린 단면이 그대로 보인다 → 아래를 흐리게 지운다.
-     엘리아나처럼 화면 아래까지 꽉 차는 컷아웃은 단면이 안 보이므로 건드리지 않는다. */
-  #vsp.silh img{height:58%;align-self:center;margin-bottom:14%;
+     엘리아나처럼 화면 아래까지 꽉 차는 컷아웃은 단면이 안 보이므로 건드리지 않는다.
+     크기는 82%. 예전엔 화면을 다 덮을까 봐 58%로 줄여놨는데, 아래가 녹아 사라지게 된 뒤로는
+     그럴 일이 없다. 작으면 흐림이 뭉개져 보여서 오히려 지저분하다. */
+  #vsp.silh img{height:82%;align-self:center;margin-bottom:4%;
     -webkit-mask-image:linear-gradient(to bottom,#000 40%,rgba(0,0,0,.92) 55%,rgba(0,0,0,.72) 68%,rgba(0,0,0,.46) 79%,rgba(0,0,0,.22) 88%,rgba(0,0,0,.08) 95%,transparent 100%);
     mask-image:linear-gradient(to bottom,#000 40%,rgba(0,0,0,.92) 55%,rgba(0,0,0,.72) 68%,rgba(0,0,0,.46) 79%,rgba(0,0,0,.22) 88%,rgba(0,0,0,.08) 95%,transparent 100%)}
   #vsp.silh.glow img{filter:brightness(2.2) saturate(.15) contrast(.75) blur(2px) drop-shadow(0 0 30px rgba(190,215,255,.8));opacity:.5}
