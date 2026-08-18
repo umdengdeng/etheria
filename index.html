@@ -128,7 +128,11 @@
   #vbg.dof{filter:blur(3px) brightness(.9)}
   #vbg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,8,12,.06) 40%,rgba(6,8,12,.82) 100%)}
   #vsp{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;pointer-events:none}
-  #vsp img{height:84%;object-fit:contain;filter:drop-shadow(0 8px 26px rgba(0,0,0,.55));transition:opacity .35s,transform .35s;opacity:0;transform:translateY(14px)}
+  /* 인물 컷아웃 하단이 직선으로 잘려 보이던 것 → 아래로 갈수록 사라지게.
+     이미 아래가 부드럽게 처리된 스프라이트(shadowbeast·sd_*)는 그쪽이 이미 투명해서 영향이 없다. */
+  #vsp img{height:84%;object-fit:contain;filter:drop-shadow(0 8px 26px rgba(0,0,0,.55));transition:opacity .35s,transform .35s;opacity:0;transform:translateY(14px);
+    -webkit-mask-image:linear-gradient(to bottom,#000 72%,rgba(0,0,0,.72) 86%,rgba(0,0,0,.28) 95%,transparent 100%);
+    mask-image:linear-gradient(to bottom,#000 72%,rgba(0,0,0,.72) 86%,rgba(0,0,0,.28) 95%,transparent 100%)}
   #vsp img.show{opacity:1;transform:translateY(0)}
   #vsp.silh img{filter:brightness(.08) contrast(1.25) drop-shadow(0 0 22px rgba(255,255,255,.6));opacity:.9}
   /* ★어두운 빈 화면(bg_blank) 위에선 검은 실루엣이 안 보인다 → 빛나는 잔상으로 */
@@ -407,6 +411,8 @@
   /* 스탯 상승 팝업(화면 가운데) */
   #statPop{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;pointer-events:none}
   #statPop.on{display:flex}
+  #statPop.down .box{border-color:rgba(255,150,150,.7)}
+  #statPop.down .t{color:#ffb0b0}
   #statPop .box{background:rgba(10,16,26,.94);border:1px solid rgba(126,224,166,.65);border-radius:16px;padding:16px 28px;text-align:center;
     box-shadow:0 12px 44px rgba(0,0,0,.55);animation:statPopIn .28s ease}
   #statPop .t{color:#7ee0a6;font-weight:900;font-size:13px;letter-spacing:.14em;margin-bottom:7px}
@@ -609,7 +615,7 @@
       <div class="stquest">📜 퀘스트 · <b>살아남아라</b></div>
     </div>
   </div>
-  <div id="statPop"><div class="box"><div class="t">◆ 능력치 상승 ◆</div><div class="v" id="statPopV"></div></div></div>
+  <div id="statPop"><div class="box"><div class="t" id="statPopT">◆ 능력치 상승 ◆</div><div class="v" id="statPopV"></div></div></div>
 </div>
 
 <script>
@@ -1683,7 +1689,12 @@ function setSp(k){if(k===curSp)return;curSp=k;vbg.classList.toggle("dof",!!k);if
   setTimeout(()=>{vsp.src=SPR["eliana_"+k]||SPR[k]||"";requestAnimationFrame(()=>vsp.classList.add("show"));},160);}
 function vHud(){vMini.style.width=Math.min(100,ST.aff)+"%";vStage.textContent=stageOf(ST.aff).name;vGold.textContent=ST.gold;}
 function toast(m,cls){toastEl.className="toast on"+(cls?" "+cls:"");toastEl.textContent=m;setTimeout(()=>toastEl.classList.remove("on"),1500);}
-function showStatPop(txt){const p=$("#statPop");if(!p)return;$("#statPopV").textContent=txt;p.classList.add("on");setTimeout(()=>p.classList.remove("on"),1700);}
+function showStatPop(txt){const p=$("#statPop");if(!p)return;
+  // 깎인 게 섞여 있으면 제목과 색을 바꾼다. 전부 상승일 때만 "상승".
+  const down=txt.includes("−");
+  $("#statPopT").textContent = down ? "◆ 능력치 변화 ◆" : "◆ 능력치 상승 ◆";
+  p.classList.toggle("down", down);
+  $("#statPopV").textContent=txt;p.classList.add("on");setTimeout(()=>p.classList.remove("on"),1700);}
 function typew(t){typing=true;curFull=t;vtext.textContent="";vadv.classList.remove("show");let i=0;
   const step=()=>{if(!typing)return;vtext.textContent=t.slice(0,i);i++;if(i<=t.length)setTimeout(step,20);else{typing=false;vadv.classList.add("show");}};step();}
 
@@ -1727,12 +1738,21 @@ function openNameInput(cb){const ov=$("#nameOverlay");ov.classList.add("on");
   inp.onkeydown=(e)=>{if(e.key==="Enter")$("#nameOk").click();};}
 function scoreOf(fit){return fit==="good"?2:fit==="bad"?0:1;}
 const STATLBL={str:"힘",agi:"민첩",vit:"체력",per:"감각",wis:"지혜",will:"의지",karma:"자비"};
+// 부호를 값에서 뽑는다. 예전엔 "+"가 박혀 있어서 음수를 주면 "힘 +-1"로 나왔다.
+const sgn=v=>(v<0?"−":"+")+Math.abs(v);
 function applyFx(fx){ if(!fx)return ""; ST.stats=ST.stats||{str:1,agi:1,vit:1,per:1,wis:1,will:1,karma:0};
   const parts=[];
   for(const k in fx){
-    if(k==="exp"){ST.exp=(ST.exp||0)+fx[k];parts.push("EXP +"+fx[k]);}
-    else if(k==="gold"){ST.gold+=fx[k];parts.push("💰 +"+fx[k]);}
-    else {ST.stats[k]=(ST.stats[k]||0)+fx[k];parts.push((STATLBL[k]||k)+" +"+fx[k]);}
+    if(k==="exp"){ST.exp=Math.max(0,(ST.exp||0)+fx[k]);parts.push("EXP "+sgn(fx[k]));}
+    else if(k==="gold"){ST.gold=Math.max(0,ST.gold+fx[k]);parts.push("💰 "+sgn(fx[k]));}
+    else if(k==="aff"){ST.aff=Math.max(0,(ST.aff||0)+fx[k]);parts.push("호감도 "+sgn(fx[k]));}
+    else {
+      // 능력치는 1 밑으로 안 내려간다(자비는 0까지). 바닥에 닿으면 표시하지 않는다.
+      const floor=(k==="karma")?0:1, before=ST.stats[k]||floor;
+      ST.stats[k]=Math.max(floor, before+fx[k]);
+      const d=ST.stats[k]-before;
+      if(d!==0) parts.push((STATLBL[k]||k)+" "+sgn(d));
+    }
   }
   save(); return parts.join("  ·  ");
 }
