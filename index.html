@@ -658,7 +658,7 @@ const BG_REGIONS={
  asra:{ko:"아스라 왕국",def:"asra_rampart",
   art:"중세 북유럽풍 석조 왕국. 회청색 화강암과 짙은 남색 지붕, 포인트로만 금빛 문장. 하늘은 늘 옅은 구름이 낀 한랭한 톤. 광원은 낮게 깔린 태양 또는 횃불. 직선적이고 육중한 건축에 장식은 절제. 중간 채도, 명암 대비는 강하게."},
  sylvarn:{ko:"실바른 숲 일대",def:"forest_edge",
-  art:"습한 온대 활엽수림. 짙은 녹청과 이끼빛이 지배색, 흙은 적갈색. 나뭇잎 사이로 떨어지는 산광과 공기 중 부유물, 늘 옅게 깔린 안개. 채도는 낮추고 그린-틸 계열로 색보정."},
+  art:"습한 온대 활엽수림. 계절은 한여름이라 잎이 무성하고 바닥까지 초록 이끼가 덮여 있다. 낙엽이 쌓인 가을 풍경이 아니다. 짙은 녹청과 이끼빛이 지배색, 흙은 적갈색. 나뭇잎 사이로 떨어지는 산광과 공기 중 부유물, 늘 옅게 깔린 안개."},
  modern:{ko:"현실 · 한국",def:"bg_home",
   art:"현대 한국 도시. 형광등·모니터·가로등 같은 인공광만 쓰고 자연광은 넣지 않는다. 색온도는 차갑게(청록 기미), 대비는 나트륨등 주황으로만 준다. 좁고 답답한 프레이밍에 수직선 강조. 채도 낮게, 노이즈 약간."},
  fx:{ko:"연출용 · 무배경",def:"bg_void",
@@ -807,7 +807,7 @@ function bgPrompt(key){
  return ["[지역 · "+rg.ko+"] "+rg.art,
   place?"[장소] "+place:"",
   shot?"[시점 · "+shot.ko+"] "+shot.cam:"",
-  "[공통] 세로 2:3 (832x1216), 인물 없는 배경 원화, 게임 이벤트 CG 톤, 텍스트·워터마크 없음"
+  "[공통] 가로 16:9 (1456x816). ★2D anime background art, cel shaded, flat vivid saturated colors, clean crisp edges, Japanese animation studio background painting, bright and clear. NOT photorealistic, NOT a 3D render, no photographic texture, no realistic lighting. 인물 없음. 텍스트·워터마크 없음. ★화면 정중앙은 인물이 설 자리이므로 비워둘 것 — 중앙에 큰 나무나 구조물을 두지 말 것"
  ].filter(Boolean).join("\n");
 }
 /* 아직 안 뽑은 슬롯 목록. 콘솔에서 bgTodo() */
@@ -851,41 +851,58 @@ const LOC_BG={
  rampart:{card:"asra.rampart.mid",  pov:"asra.rampart.night"},
 };
 const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+// 질문을 고른다. ①호감도 단계가 안 되면 안 나온다(첫 만남에 갑옷 끈 질문이 뜨던 문제)
+//               ②아직 안 본 것을 먼저 쓴다. 다 봤으면 그때부터 다시 돈다
+function pickTalk(){
+  const aff=(typeof ST!=="undefined"&&ST.aff)||0;
+  const avail=TALKS.filter(t=>(t.minAff||0)<=aff);
+  const pool=avail.length?avail:[TALKS[0]];
+  const seen=(typeof ST!=="undefined"&&ST.talkQSeen)||[];
+  const fresh=pool.filter(t=>!seen.includes(TALKS.indexOf(t)));
+  const from=fresh.length?fresh:pool;
+  const t=from[rnd(0,from.length-1)];
+  if(typeof ST!=="undefined"){
+    const idx=TALKS.indexOf(t);
+    ST.talkQSeen=(ST.talkQSeen||[]).concat(idx);
+    if(!fresh.length)ST.talkQSeen=[idx];   // 한 바퀴 돌았으면 초기화
+  }
+  return t;
+}
 // 대화 모드: 성격 기반 Q&A (반복). fit: good/ok/bad
 const TALKS=[
- {q:"훈련장에서 홀로 검을 휘두르는 엘리아나. 어떻게 말을 걸까?",a:[
+ {q:"훈련장에서 홀로 검을 휘두르는 엘리아나. 어떻게 말을 걸까?",minAff:0,a:[
    {t:"방금 그 검술… 군더더기가 하나도 없네요. 대단해요.",fit:"good",reply:"…흥. 당연한 걸 새삼스럽게. 그래도, 보는 눈은 있는 모양이네."},
    {t:"오늘도 예쁘시네요~ 딱 반했잖아요.",fit:"bad",reply:"…그런 가벼운 소리 하러 왔어? 시간 아까우니까 저리 가."},
    {t:"저기, 훈련 끝나면 차라도 한잔?",fit:"ok",reply:"…바쁜 거 안 보여? 뭐, 다 끝나고 나서라면… 생각해보지."}]},
- {q:"엘리아나가 부하 기사를 혹독하게 몰아붙인 뒤 홀로 남았다. 뭐라고 할까?",a:[
+ {q:"엘리아나가 부하 기사를 혹독하게 몰아붙인 뒤 홀로 남았다. 뭐라고 할까?",minAff:20,a:[
    {t:"다들 안 보는 데선, 당신도 힘들죠. 수고했어요.",fit:"good",reply:"…! 뭐야, 갑자기. …그런 말, 처음 들어. …고, 고맙다. 딱 한 번만 봐준다."},
    {t:"너무 빡세게 하시는 거 아녜요? 좀 살살 하죠.",fit:"ok",reply:"약하게 굴리면 전장에서 죽는 건 저들이야. 이게 내 방식이다."},
    {t:"역시 무서운 분이시네요 ㅎㅎ",fit:"bad",reply:"…무섭다? 그래, 무서우면 다가오지 마."}]},
- {q:"'여자가 무슨 기사냐'며 비웃는 귀족 앞에서 엘리아나의 표정이 굳었다. 당신은?",a:[
+ {q:"'여자가 무슨 기사냐'며 비웃는 귀족 앞에서 엘리아나의 표정이 굳었다. 당신은?",minAff:20,a:[
    {t:"(귀족에게) 그녀의 검을 한 번이라도 보고 말하시죠.",fit:"good",reply:"…내 싸움에 끼어들다니. 건방져. …그래도, 나쁘진 않았어. 조금은."},
    {t:"(엘리아나에게) 신경 쓰지 마요, 저런 말.",fit:"ok",reply:"신경 안 써. …그래도, 편들어 준 건… 뭐, 기억해두지."},
    {t:"(웃으며) 뭐, 사람들 말이 다 그렇죠~",fit:"bad",reply:"…너도 그렇게 생각한다는 거네. 실망이야. 꺼져."}]},
- {q:"빗속, 성벽에서 순찰하던 엘리아나가 흠뻑 젖었다. 당신의 행동은?",a:[
+ {q:"빗속, 성벽에서 순찰하던 엘리아나가 흠뻑 젖었다. 당신의 행동은?",minAff:45,a:[
    {t:"말없이 겉옷을 벗어 어깨에 걸쳐준다.",fit:"good",reply:"…! 됐어, 이런 거… (그래도 벗지는 않는다) …잠깐만 걸치고 있을게."},
    {t:"감기 걸려요, 얼른 들어가요!",fit:"ok",reply:"…알아. 순찰만 끝나면 들어간다. …걱정, 해준 거야?"},
    {t:"비 맞은 모습도 섹시한데요?",fit:"bad",reply:"…한 번만 더 그딴 소리 하면 이 검, 장식 아니다."}]},
- {q:"엘리아나가 어렵게 '사실 나… 검밖에 몰라서'라며 말끝을 흐린다. 뭐라 답할까?",a:[
+ {q:"엘리아나가 어렵게 '사실 나… 검밖에 몰라서'라며 말끝을 흐린다. 뭐라 답할까?",minAff:45,a:[
    {t:"그 한 가지를 그만큼 해낸 게, 난 멋있다고 생각해요.",fit:"good",reply:"…바보. 그런 말을 그렇게 진지하게 하면… 반칙이잖아. (귀가 빨개진다)"},
    {t:"이제부터 다른 것도 같이 하면 되죠.",fit:"ok",reply:"…같이? …흠. 네가 가르쳐준다면… 못 이기는 척 해줄 수도."},
    {t:"의외네요, 여자다운 면도 있고?",fit:"bad",reply:"…'여자다운'? 그 말, 별로야. 나는 그냥 나다."}]},
- {q:"훈련을 마친 엘리아나가 땀에 젖은 셔츠 차림으로 숨을 고르고 있다. 시선을 어디에 둬야 할지 모르겠다.",a:[
+ {q:"훈련을 마친 엘리아나가 땀에 젖은 셔츠 차림으로 숨을 고르고 있다. 시선을 어디에 둬야 할지 모르겠다.",minAff:45,a:[
    {t:"(수건을 건네며) 여기요. …눈은 딴 데 두고 있었어요.",fit:"good",reply:"…봤잖아, 방금. (수건을 낚아채며) …됐어. 고맙다고는 해두지."},
    {t:"땀 흘리는 것도 멋있네요.",fit:"ok",reply:"…멋있다? 하, 별 소릴 다 듣네. …그래도 뭐, 기분 나쁘진 않아."},
    {t:"셔츠가… 좀 비치는데요.",fit:"bad",fx:{karma:-1},reply:"…! (수건을 집어던진다) 눈 감아. 지금 당장."}]},
- {q:"늦은 밤. 엘리아나가 등 뒤 갑옷 끈을 혼자 못 풀고 애쓰고 있다. 「…거기. 안 보는 척하지 말고.」",a:[
+ {q:"늦은 밤. 엘리아나가 등 뒤 갑옷 끈을 혼자 못 풀고 애쓰고 있다. 「…거기. 안 보는 척하지 말고.」",minAff:70,a:[
    {t:"(말없이 다가가 끈만 풀고 물러선다)",fit:"good",reply:"…빠르네. 익숙한 거야? …농담이다. …고마워. 손, 생각보다 따뜻하더라."},
    {t:"제가… 해도 될까요?",fit:"ok",reply:"허락은 무슨. 빨리 해. …이러고 있는 게 더 부끄러우니까."},
    {t:"이거 풀면, 그 다음은요?",fit:"bad",fx:{karma:-1},reply:"그 다음은 네가 훈련장 바닥을 구르는 거지. 셋 셀 동안 사라져."}]},
- {q:"잡은 마수를 내려다보며 엘리아나가 중얼거린다. 「이 종류는 아직 이름이 없어. 보고서에 뭐라고 적지.」",a:[
+ {q:"잡은 마수를 내려다보며 엘리아나가 중얼거린다. 「이 종류는 아직 이름이 없어. 보고서에 뭐라고 적지.」",minAff:0,a:[
    {t:"「목줄 달린 개」요. 잡힌 게 아니라 풀린 거니까.",fit:"good",reply:"…목줄. (잠깐 멈춘다) 그래, 그게 정확하지. 너 가끔 무섭게 정확해."},
    {t:"그냥 검은 개 아니에요?",fit:"ok",reply:"…성의 없기는. 뭐, 틀린 말도 아니라 화낼 수도 없네."},
    {t:"「엘리아나가 혼자 세 마리 잡은 것」",fit:"bad",reply:"…내 이름 넣지 마. 그거 평생 남는 문서야. 평생."}]},
- {q:"「내일 순찰 경로 말인데.」 엘리아나가 지도를 펼친다. 「너라면 어디부터 돌겠어?」",a:[
+ {q:"「내일 순찰 경로 말인데.」 엘리아나가 지도를 펼친다. 「너라면 어디부터 돌겠어?」",minAff:20,a:[
    {t:"정해진 순서대로. 변수는 그다음에 대응하죠.",fit:"good",reply:"…그래. 순서를 지키는 놈이 오래 살아남아. 마음에 드는 대답이야."},
    {t:"일단 나가보고, 이상한 데 있으면 거기부터요.",fit:"ok",reply:"…발로 뛰는 쪽이군. 나쁘진 않아. 대신 죽는 것도 그런 놈들이 먼저 죽지."},
    {t:"대장님 가는 데로 따라갈게요.",fit:"bad",fx:{will:-1},reply:"…생각을 안 하겠다는 거네. 그럼 넌 내 등 뒤에 못 세워."}]},
@@ -1015,16 +1032,24 @@ const EPS=[
    {bg:"sylvarn.edge.wide",narr:1,text:"짐승들이 흩어진다. 그녀가 검을 내리지 않은 채, 천천히 이쪽으로 걸어온다."},
    {sp:"neutral",name:"엘리아나",text:"…그 옷차림. 어느 나라 사람이지? 아스란 말이 통하는 걸 보면 아주 먼 데서 온 것 같진 않은데."},
    {me:1,text:"(옷차림… 아. 트레이닝복 차림이지, 나.)"},
+   {me:1,text:"(…잠깐.)"},
+   {narr:1,text:"아스란 말. 그녀는 그렇게 불렀다. 그리고 나는 그 말을 알아들었고, 대답까지 했다."},
+   {me:1,text:"(나 지금… 무슨 말로 말하고 있는 거야?)"},
+   {narr:1,text:"입이 멋대로 굴러갔다. 나무가 나무인 걸 알듯이, 이 말도 그냥 알고 있었다. 배운 기억이 없는데."},
+   {me:1,text:"(세상은 다 아는데 나만 없다더니. …말까지 그런가.)"},
+   {narr:1,text:"물어볼 사람이 없다. 물어볼 말조차, 내 것이 아닐지 모른다."},
    {sp:"neutral",name:"엘리아나",text:"이름."},
    {narr:1,text:"이름을 말했다. 그녀가 한 번, 낮게 되뇌었다. 낯선 발음이라는 듯이."},
    {sp:"neutral",name:"엘리아나",text:"…처음 듣는 이름이군. 뭐, 좋아."},
+   {me:1,text:"(처음 듣는 게 당연하죠. 방금 내가 지었으니까.)"},
    {sp:"neutral",name:"엘리아나",text:"엘리아나. 아스란 국경 수색대다. …네가 뭘 하다 여기 떨어졌는지는 모르겠지만, 이 숲에 혼자 서 있을 실력은 아닌 것 같은데."},
    {narr:1,text:"할 말이 없었다. 사실이니까."},
    {bg:"sylvarn.edge.wide",narr:1,text:"돌아서려던 그녀가 문득 걸음을 멈춘다. 쓰러진 짐승의 목께를 내려다본다."},
    {sp:"surprise",name:"엘리아나",text:"…이 목줄."},
    {narr:1,text:"검 끝으로 녹슨 쇠고리를 툭 건드린다. 표정이 굳는다. 놀란 얼굴이 아니다. ― 아는 것을 다시 본 얼굴이다."},
-   {sp:"neutral",name:"엘리아나",text:"야생이 아니야. 누가 채운 거다. …요즘 부쩍 늘었어."},
-   {me:1,text:"(누가… 마수한테 목줄을 채워?)"},
+   {me:1,text:"(…아까 그 신호. 저 목줄.)"},
+   {sp:"neutral",name:"엘리아나",text:"…요즘 부쩍 늘었어. 반년 전엔 한 해에 한 마리 볼까 말까였는데."},
+   {me:1,text:"(늘었다고? 누가 이걸 계속 채우고 있다는 거잖아.)"},
    {sp:"neutral",name:"엘리아나",text:"묻지 마. 네가 알 일 아니야."},
    {narr:1,text:"말은 그렇게 하면서도, 그녀는 한참을 그 쇠고리에서 눈을 떼지 못했다."},
    {bg:"sylvarn.deep.vista",sp:"neutral",name:"엘리아나",text:"따라와. 성벽까지는 데려다줄 테니까. …그 다음은, 네가 알아서 해."},
@@ -1365,15 +1390,31 @@ function heroCard(){
     <div class="bar"><i style="width:${Math.min(100,a)}%"></i></div></div>
     <div class="row"><button class="btn ghost" onclick="openGiftModal()">🎁 선물하기</button></div></div></div>`;
 }
+// 선물로는 관계를 끝까지 끌고 갈 수 없다.
+// 전에는 골드만 모아 반지를 반복 구매하면 대화도 전투도 없이 최종화까지 열렸다.
+const GIFT_CAP = 45;                 // 선물로 얻을 수 있는 호감도 총량
+function giftGain(g){
+  const cnt = (ST.giftCnt||{})[g.id] || 0;
+  const decay = Math.max(0.2, 1 - 0.25*cnt);          // 같은 선물은 반복할수록 시들해진다
+  const base = g.fav ? g.aff*1.5 : g.aff;
+  const room = Math.max(0, GIFT_CAP - (ST.affGift||0));
+  return { add: Math.min(Math.round(base*decay), room), room, decay };
+}
 function openGiftModal(){
   const gl=GIFTS.map(g=>`<div class="item"><div class="ic">${g.ic}</div><div class="m"><b>${g.name} ${g.fav?'💗':''}</b>
-    <p>${g.desc} · 호감도 +${g.fav?Math.round(g.aff*1.5):g.aff}</p></div>
+    <p>${g.desc} · 호감도 +${giftGain(g).add}${giftGain(g).decay<1?` <span style="color:var(--dim)">(반복 −${Math.round((1-giftGain(g).decay)*100)}%)</span>`:''}</p></div>
     <button class="go gold gbuy" data-g="${g.id}" ${ST.gold<g.cost?'disabled':''}>💰${g.cost}</button></div>`).join("");
   ov.innerHTML=`<div style="width:min(100%,440px);max-height:86%;overflow-y:auto"><h2 style="color:var(--gold);margin-bottom:4px">🎁 엘리아나에게 선물</h2>
-    <p style="margin-bottom:14px">보유 💰 ${ST.gold} · 💗=최애 +50%</p>${gl}<button class="btn ghost" id="giftClose" style="margin-top:8px;width:100%">닫기</button></div>`;
+    <p style="margin-bottom:14px">보유 💰 ${ST.gold} · 💗=최애 +50%<br>
+    <span style="color:var(--dim);font-size:13px">선물로 올릴 수 있는 호감도는 ${GIFT_CAP} 까지 (${ST.affGift||0}/${GIFT_CAP} 사용) · 나머지는 대화와 이야기로</span></p>${gl}<button class="btn ghost" id="giftClose" style="margin-top:8px;width:100%">닫기</button></div>`;
   ov.classList.add("on");
   ov.querySelectorAll(".gbuy").forEach(b=>b.onclick=()=>{const g=GIFTS.find(x=>x.id===b.dataset.g);if(ST.gold<g.cost)return;
-    ST.gold-=g.cost;const add=g.fav?Math.round(g.aff*1.5):g.aff;const before=ST.aff;ST.aff=Math.min(100,ST.aff+add);bumpTask("gift");save();
+    const {add}=giftGain(g);
+    if(add<=0){toast("선물만으로는 여기까지야. 이제는 함께 시간을 보내야 해.","bad");return;}
+    ST.gold-=g.cost;
+    ST.giftCnt=ST.giftCnt||{}; ST.giftCnt[g.id]=(ST.giftCnt[g.id]||0)+1;
+    ST.affGift=(ST.affGift||0)+add;
+    const before=ST.aff;ST.aff=Math.min(100,ST.aff+add);bumpTask("gift");save();
     ov.classList.remove("on");openHub("story");flashStage(before,ST.aff);});
   $("#giftClose").onclick=()=>{ov.classList.remove("on");};
 }
@@ -1525,7 +1566,7 @@ function finishGather(){
 $("#gatherBack").onclick=()=>openHub("explore");
 function encounterEliana(l){
   curEp={bg:l.id==="rampart"?"asra_rampart":"asra_training"};
-  const t=TALKS[rnd(0,TALKS.length-1)];
+  const t=pickTalk();
   queue=[{bg:curEp.bg,narr:1,text:`― ${l.name}에서 ${l.act}하던 중, 엘리아나와 마주쳤다.`},
     {sp:"neutral",name:"엘리아나",text:"…너, 또 여기서 뭐 하는 거야."},
     {q:{sp:"neutral",text:"「"+t.q+"」",a:t.a.map(x=>({t:x.t,fit:x.fit,fx:x.fx,reply:{sp:x.fit==="good"?"blush":x.fit==="bad"?"angry":"neutral",text:x.reply}}))}}];
@@ -1781,9 +1822,11 @@ function vShowQ(q,cb){
   vch.classList.add("on");
   q.a.forEach((c,i)=>{const b=document.createElement("button");b.className="ch";b.textContent=c.t;
     b.onclick=()=>{vch.classList.remove("on");vch.innerHTML="";$("#vbox").style.display="";
-      let done;
-      if(c.fx){ const g=applyFx(c.fx); if(g)showStatPop(g); done=cb; }
-      else {
+      // fx 와 fit 은 따로 논다. 전에는 else 로 묶여 있어서
+      // fx 가 붙은 선택지는 호감도·골드가 아예 안 올랐다.
+      let done=cb;
+      if(c.fx){ const g=applyFx(c.fx); if(g)showStatPop(g); }
+      if(c.fit!==undefined){
         const sc=scoreOf(c.fit),aff=[0,6,12][sc],gold=[3,10,18][sc],before=ST.aff;
         ST.aff=Math.min(100,ST.aff+aff);ST.gold+=gold;save();vHud();
         if(sc===2)toast(`정답! 호감 +${aff} ♥ 골드 +${gold}`,"gold");else if(sc===1)toast(`무난… +${aff} ♥`,"");else toast("역효과…","bad");
@@ -1801,7 +1844,7 @@ function vShowQ(q,cb){
 }
 // standalone talk (random Q from TALKS)
 function startTalk(){
-  const t=TALKS[Math.floor((Date.now()/1000)%TALKS.length)]; // vary without Math.random dependency on load
+  const t=pickTalk();
   curEp={bg:"asra.training.mid"};queue=[{bg:"asra.training.mid",sp:"neutral",name:"엘리아나",text:"…무슨 일이야. 할 말 있으면 해."},
     {q:{sp:"neutral",text:"「"+t.q+"」",a:t.a.map(x=>({t:x.t,fit:x.fit,fx:x.fx,reply:{sp:x.fit==="good"?"blush":x.fit==="bad"?"angry":"neutral",text:x.reply}}))}}];
   qi=0;afterCb=()=>{bumpTask("talk");bigOverlay("💬","대화 종료",`엘리아나와 대화했다.\n현재 단계: ${stageOf(ST.aff).name}`,()=>openHub("talk"));};
