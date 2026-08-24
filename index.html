@@ -836,11 +836,11 @@ const ITEMS={
 };
 // 지역 맵 장소: act 활동 / drops 드랍풀 / exp·gold 범위 / enc 히로인 조우 확률
 const LOCS=[
- {id:"forest",name:"실바른 숲",ic:"🌲",act:"채집",drops:["berry","herb","wood"],exp:[2,5],gold:[2,6],mx:19,my:34},
+ {id:"forest",name:"실바른 숲",ic:"🌲",act:"채집",drops:["berry","herb","wood"],exp:[4,9],gold:[6,14],mx:19,my:34},
  {id:"hunt",name:"마수 사냥터",ic:"⚔️",act:"사냥",drops:["hide","fang","core"],exp:[14,26],gold:[8,18],combat:true,mx:71,my:73},
- {id:"mine",name:"버려진 광산",ic:"⛏️",act:"채굴",drops:["ore","gem"],exp:[3,7],gold:[4,10],mx:81,my:15},
- {id:"orchard",name:"왕립 과수원",ic:"🍎",act:"채집",drops:["apple","honey"],exp:[2,5],gold:[3,7],mx:43,my:64},
- {id:"rampart",name:"아스라 성벽",ic:"🏰",act:"순찰",drops:["ore","herb"],exp:[3,6],gold:[3,7],enc:0.5,mx:50,my:29},
+ {id:"mine",name:"버려진 광산",ic:"⛏️",act:"채굴",drops:["ore","gem"],exp:[5,11],gold:[9,20],mx:81,my:15},
+ {id:"orchard",name:"왕립 과수원",ic:"🍎",act:"채집",drops:["apple","honey"],exp:[4,9],gold:[7,15],mx:43,my:64},
+ {id:"rampart",name:"아스라 성벽",ic:"🏰",act:"순찰",drops:["ore","herb"],exp:[5,10],gold:[7,15],enc:0.5,mx:50,my:29},
 ];
 // 장소 → 배경 키. 같은 장소라도 카드는 멀리서(card), 1인칭 채집은 가까이서(pov) 본다.
 const LOC_BG={
@@ -907,6 +907,55 @@ const TALKS=[
    {t:"일단 나가보고, 이상한 데 있으면 거기부터요.",fit:"ok",reply:"…발로 뛰는 쪽이군. 나쁘진 않아. 대신 죽는 것도 그런 놈들이 먼저 죽지."},
    {t:"대장님 가는 데로 따라갈게요.",fit:"bad",fx:{will:-1},reply:"…생각을 안 하겠다는 거네. 그럼 넌 내 등 뒤에 못 세워."}]},
 ];
+/* ============ 상황별 사건 ============
+   히로인 대화(TALKS)와 별개로, 탐험 중 혼자 겪는 상황.
+   호감도가 아니라 능력치·골드가 움직인다. where 는 장소 id, "*" 는 아무 데나. */
+const SITU=[
+ {where:"forest",s:"수풀을 헤치다 얼굴 옆으로 뭔가 윙 하고 지나간다. 올려다보니 머리 위에 커다란 벌집이 매달려 있다.",q:"어떻게 할까.",a:[
+   {t:"숨도 안 쉬고 천천히 물러난다.",fx:{wis:1,exp:4},r:"한 발씩. 벌집이 시야에서 멀어질 때까지. 등이 땀으로 젖었지만 한 방도 안 쏘였다."},
+   {t:"연기를 피워 벌을 재운 뒤 꿀을 딴다.",fx:{per:1,gold:12,exp:6},r:"젖은 이끼를 태워 연기를 올린다. 벌들이 느려진 사이 벌집 아래쪽을 잘라낸다. 손등을 두 방 쏘였지만 꿀이 묵직하다."},
+   {t:"돌을 던져본다.",fx:{vit:1,gold:-5,exp:3},r:"…왜 그랬을까. 다음 십 분간의 기억은 그다지 떠올리고 싶지 않다. 약초 값이 붕대 값으로 나갔다."}]},
+ {where:"forest",s:"나뭇가지에 옷자락이 걸려 찍 하는 소리가 났다. 허리께가 시원하다.",q:"…이거 어떡하지.",a:[
+   {t:"약초 줄기로 대충 꿰맨다.",fx:{wis:1,exp:4},r:"바느질이라곤 해본 적 없는데 손은 곧잘 움직인다. 볼품은 없지만 다시 벌어지진 않는다."},
+   {t:"겉옷을 허리에 둘러 가린다.",fx:{per:1,exp:3},r:"응급 처치. 대신 팔이 시리다."},
+   {t:"어차피 아무도 없는데 뭐 어때.",fx:{will:1,karma:-1,exp:5},r:"그렇게 반나절을 돌아다녔다. 성벽 앞에서 위병 둘이 이쪽을 보고 수군거리는 걸 보고서야 정신이 들었다."}]},
+ {where:"mine",s:"갱도 안쪽에서 규칙적인 소리가 들린다. 똑. 똑. 똑. 물방울이라기엔 너무 정확하다.",q:"들어가 볼까.",a:[
+   {t:"소리 나는 쪽으로 조심히 간다.",fx:{per:2,gold:18,exp:8},r:"낡은 배수 장치였다. 아직도 돌아가고 있다. 그 옆에 누군가 두고 간 연장 자루가 삭은 채 놓여 있고, 안에 광석 몇 개가 남아 있다."},
+   {t:"소리를 무시하고 하던 걸 계속한다.",fx:{will:1,exp:4},r:"똑. 똑. 등 뒤에서 계속 들린다. 끝까지 돌아보지 않았다."},
+   {t:"소리 지르며 대꾸해본다.",fx:{karma:1,exp:3},r:"「거기 누구 있어요?」 소리가 갱도를 타고 길게 되돌아왔다. 여러 번. 대답은 없었다."}]},
+ {where:"orchard",s:"가장 굵은 가지 끝에 유난히 붉은 과실이 하나 달려 있다. 올라가면 닿을 것 같다.",q:"올라가 볼까.",a:[
+   {t:"올라간다.",fx:{agi:2,gold:10,exp:7},r:"생각보다 몸이 가볍다. 과실을 따고 내려오는데, 내가 이런 걸 할 줄 알았나 싶다."},
+   {t:"장대를 구해 털어낸다.",fx:{wis:1,gold:6,exp:4},r:"확실하고 안전하다. 대신 세 개쯤 같이 떨어져 터졌다."},
+   {t:"밑에서 입 벌리고 기다린다.",fx:{vit:1,exp:2},r:"…떨어지긴 했다. 이마에."}]},
+ {where:"rampart",s:"순찰로 모퉁이. 위병 둘이 등을 돌린 채 잡담 중이다. 엘리아나 이름이 들린다.",q:"어떻게 할까.",a:[
+   {t:"헛기침을 해서 인기척을 낸다.",fx:{karma:2,exp:5},r:"둘이 화들짝 놀라 자세를 고친다. 「아, 아무것도 아닙니다!」 …뭐가 아무것도 아닌지는 끝내 안 알려줬다."},
+   {t:"모른 척 지나간다.",fx:{wis:1,exp:4},r:"들은 걸 못 들은 척하는 것도 요령이다. 다만 「부단장님이 비 오는 날에만」 까지는 들렸다."},
+   {t:"벽에 붙어서 끝까지 듣는다.",fx:{per:2,karma:-1,exp:6},r:"기사단에서 도는 소문 세 개를 알게 됐다. 두 개는 시시했고 하나는… 나중에 엘리아나 얼굴을 어떻게 보나 싶은 내용이었다."}]},
+ {where:"hunt",s:"쓰러뜨린 마수의 목에도 쇠고리가 있다. 안쪽에 뭔가 긁혀 있다.",q:"확인해볼까.",a:[
+   {t:"고리를 떼어내 챙긴다.",fx:{per:2,wis:1,exp:9},r:"안쪽에 숫자 같은 게 새겨져 있다. 「7」. …일곱 번째라는 뜻일까, 아니면 다른 뜻일까."},
+   {t:"엘리아나에게 알린다.",fx:{karma:2,exp:7},r:"「…또야.」 그녀는 그 말만 하고 한참을 서 있었다."},
+   {t:"찝찝해서 그냥 묻어버린다.",fx:{will:1,exp:4},r:"흙을 덮으면서도 계속 뒤가 켕겼다."}]},
+ {where:"*",s:"물소리가 난다. 사람 손 안 탄 개울이다. 며칠째 흙투성이인 게 새삼 신경 쓰인다.",q:"씻고 갈까.",a:[
+   {t:"주위를 확인하고 재빨리 씻는다.",fx:{vit:2,exp:5},r:"차갑지만 살 것 같다. 오랜만에 사람 꼴이 됐다."},
+   {t:"옷째로 들어가 대충 헹군다.",fx:{vit:1,wis:1,exp:4},r:"옷도 나도 반쯤만 깨끗해졌다. 마를 때까지 좀 걷긴 해야겠지만."},
+   {t:"어차피 아무도 없잖아? 시원하게 다 벗는다.",fx:{will:2,karma:-1,exp:6},r:"…바로 그때 상류 쪽에서 빨래하던 아주머니 셋과 눈이 마주쳤다. 뭐라고 하는지 한 마디도 빠짐없이 알아들었다. 못 알아들었으면 좋았을 텐데."}]},
+ {where:"*",s:"길가에 웬 노인이 앉아 있다. 「젊은이, 다리가 아파서 그러는데.」",q:"어떻게 할까.",a:[
+   {t:"업고 마을까지 간다.",fx:{vit:1,karma:3,exp:8},r:"생각보다 가볍다. 내려주자 노인이 주머니에서 꼬깃한 걸 꺼내 쥐여준다. 「받아둬. 언젠가 쓸 데가 있어.」"},
+   {t:"부축해서 조금만 데려다준다.",fx:{karma:1,exp:5},r:"「고마워, 젊은이.」 그거면 됐다."},
+   {t:"바쁘다고 하고 지나간다.",fx:{karma:-2,gold:5,exp:3},r:"뒤가 켕겼지만 시간을 아꼈다. 아낀 시간으로 뭘 했는지는 기억이 안 난다."}]},
+];
+function pickSitu(locId){
+  const pool=SITU.filter(x=>x.where===locId||x.where==="*");
+  if(!pool.length)return null;
+  const seen=ST.situSeen||[];
+  const fresh=pool.filter(x=>!seen.includes(SITU.indexOf(x)));
+  const from=fresh.length?fresh:pool;
+  const v=from[rnd(0,from.length-1)];
+  const i=SITU.indexOf(v);
+  ST.situSeen=fresh.length?(ST.situSeen||[]).concat(i):[i];
+  return v;
+}
+
 // 스토리 에피소드 (호감도 게이팅, 순차)
 // 엘리아나 서사 = 에테리아 큰 흐름 안에서. (봉인된 문 / 대단절 / 열쇠 / 게이트워커)
 // 대사가 길게 오가다가 선택지가 나오고, 또 오가다가 선택지가 나오는 구성.
@@ -1554,10 +1603,24 @@ function finishGather(){
   save();
   // 순찰(성벽) 등에서 자연스러운 히로인 조우
   if(l.enc&&Math.random()<l.enc){ $("#gLog").textContent="…인기척이 느껴진다."; setTimeout(()=>encounterEliana(l),700); return; }
+  // 히로인이 안 나왔으면 혼자 겪는 사건이 걸릴 수 있다
+  if(Math.random()<0.4){ const sv=pickSitu(l.id); if(sv){ $("#gLog").textContent="…뭔가 있다."; setTimeout(()=>situationEvent(l,sv),700); return; } }
   $("#gLog").textContent=`${l.act} 완료! 💰+${GA.gold}  ⚔️EXP+${GA.exp}${lvUp?`  · ⚔️레벨업 Lv.${ST.lv}`:""}`;
   const done=$("#gatherDone");done.style.display="";done.textContent="완료 · 돌아가기";done.onclick=()=>openHub("explore");
 }
 $("#gatherBack").onclick=()=>openHub("explore");
+function situationEvent(l,sv){
+  // 히로인 없이 혼자 겪는 사건. 능력치·골드만 움직이고 호감도는 건드리지 않는다.
+  curEp={bg:(LOC_BG[l.id]||{}).pov||"sylvarn.edge.mid"};
+  queue=[{bg:curEp.bg,narr:1,text:sv.s},
+    {q:{who:l.name,text:sv.q,a:sv.a.map(x=>({t:x.t,fx:x.fx,reply:{narr:1,text:x.r}}))}}];
+  qi=0;afterCb=()=>{
+    const lvUp=(()=>{let up=false;while(ST.exp>=xpNeed(ST.lv)){ST.exp-=xpNeed(ST.lv);ST.lv++;up=true;}save();return up;})();
+    bigOverlay("🌿",l.name,`${l.act} 중에 있었던 일.${lvUp?`
+⚔️ 레벨업 Lv.${ST.lv}`:""}`,()=>openHub("explore"));
+  };
+  curBg="";curSp="__none__";show("date");vHud();vStep();
+}
 function encounterEliana(l){
   curEp={bg:l.id==="rampart"?"asra_rampart":"asra_training"};
   const t=pickTalk();
