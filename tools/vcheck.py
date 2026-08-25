@@ -62,10 +62,12 @@ STAGING_WORDS = [
 ]
 
 # 정면 대칭이 오히려 맞는 것들 — 여기 걸려도 넘어간다
-SYMMETRY_OK = ("gate", "hall", "door", "corridor", "shrine", "altar")
+# 문·복도·제단은 정면이어야 문답고, 뒤로 빠지는 컷(pull)은 좌우가 같아야
+# 「카메라가 멀어진다」로 읽힌다. 비대칭으로 만들면 오히려 틀린 그림이 된다.
+SYMMETRY_OK = ("gate", "hall", "door", "corridor", "shrine", "altar", "pull", "tunnel")
 
 # 그림이 아니라 화면 전환 장치다. 연출을 따지지 않는다
-BLANKS = ("bg_blank", "bg_void")
+BLANKS = ("bg_black", "bg_white")
 
 
 def load_assets():
@@ -77,6 +79,12 @@ def load_assets():
     for m in re.finditer(r'"([A-Za-z0-9_]+)"\s*:\s*"data:image/[a-z]+;base64,([^"]+)"', blk):
         out[m.group(1)] = m.group(2)
     return out, src
+
+
+def tone_of(src, asset_id):
+    """BG_LIB 에 적힌 tone 을 되찾는다. 밤 컷을 「평평하다」고 잡지 않기 위해서다."""
+    m = re.search(r'\{[^}]*src\s*:\s*"%s"[^}]*tone\s*:\s*"([a-z]+)"' % re.escape(asset_id), src)
+    return m.group(1) if m else None
 
 
 def key_of(src, asset_id):
@@ -132,7 +140,9 @@ def judge(asset_id, key, m, prompt):
 
     # 덩어리가 있는 그림에만 구도를 따진다 (숲·성벽은 무게중심이 늘 한가운데다)
     has_subject = m["ent"] < 0.93
-    night = name.endswith(".night") or "night" in asset_id
+    # 어두운 게 맞는 컷인지는 이름이 아니라 라이브러리의 tone 으로 판단한다.
+    # tone 은 실제 이미지를 눈으로 확인하고 적어둔 값이라 파일명보다 믿을 만하다.
+    night = m.get("tone") in ("night", "dim", "flat")
 
     if m["sym"] < 0.045 and not sym_exempt:
         bad.append((
@@ -197,6 +207,7 @@ def main():
             continue
         im = Image.open(io.BytesIO(base64.b64decode(b64)))
         m = measure(im)
+        m["tone"] = tone_of(src, aid)
         bad, warn = judge(aid, key, m, prompts.get(aid))
         rows.append((aid, key, m, bad, warn))
 

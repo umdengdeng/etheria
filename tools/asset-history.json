@@ -43,6 +43,28 @@
       "kb": 277,
       "src_file": "serenia_call_close.jpg",
       "prompt": "새하얀 빈 공간을 배경으로 한 젊은 여성의 상반신. 까만 긴 머리, 머리에 은빛 관, 얇게 비쳐 보이는 흰 옷자락. 두 팔을 활짝 벌린 채 정면을 똑바로 바라본다. 얼굴이 또렷하게 보인다. 표정은 애원도 위협도 아닌, 오래 기다린 사람의 얼굴이고 눈에 미안함이 조금 섞여 있다. ★★머리 위 여백을 넉넉히 두고 벌린 양손 끝까지 화면 안에 전부 들어온다. 얼굴이나 손이 화면 밖으로 잘리면 안 된다. 배경은 아무것도 없는 흰빛. 채도 낮게. 가로 16:9. 2D anime illustration, cel shaded, soft flat colors, Japanese animation key visual. NOT photorealistic, no 3D render. 텍스트 없음."
+    },
+    {
+      "key": "modern.phone.close",
+      "asset": "modern_phone_close",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1280x720",
+      "kb": 8,
+      "src_file": "phone_close.jpg",
+      "prompt": "한국의 원룸. 새벽 세 시. 불은 다 꺼져 있고 유일한 광원은 손에 든 휴대폰 화면 하나다. ★카메라는 침대에 누운 사람의 눈높이 1인칭. 화면 아래쪽에 이불과 폰을 쥔 손이 크게 들어오고, 폰 화면의 푸른빛이 손가락과 이불에 번진다. 방의 나머지는 거의 안 보일 만큼 어둡다. ★한쪽으로 치우친 구도 — 손과 폰은 화면 오른쪽 아래, 왼쪽 위는 어둠으로 비운다. 정면 대칭 금지. 쓸쓸하고 조용한 공기. 채도 낮게, 푸른빛과 검정만. 가로 16:9. 2D anime illustration, cel shaded, cinematic lighting, Japanese animation background art. NOT photorealistic, no 3D render. 텍스트·글자 없음. 사람 얼굴 없음."
+    },
+    {
+      "key": "modern.room.pull",
+      "asset": "modern_room_pull",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1280x720",
+      "kb": 8,
+      "src_file": "room_pull.jpg",
+      "prompt": "어두운 원룸이 뒤로 빠르게 멀어지는 순간. ★카메라가 뒤로 끌려나가며 찍은 것처럼 방 전체가 원근으로 급격히 좁아지고, 가장자리가 속도감 있게 늘어나 흐려진다(모션 블러). 방 한가운데에 조금 전까지 사람이 누워 있던 흐트러진 이불과 아직 켜져 있는 휴대폰 불빛만 남아 있다. ★사람은 없다. 화면 가장자리는 검게 빨려 들어가고 중앙만 겨우 보인다. 공포보다는 뜯겨나가는 감각. 채도 낮게, 푸른빛과 검정. 가로 16:9. 2D anime illustration, cel shaded, cinematic lighting, Japanese animation background art. NOT photorealistic, no 3D render. 텍스트·글자 없음. 사람 얼굴 없음."
     }
   ]
 }
