@@ -131,6 +131,50 @@
       "kb": 21,
       "src_file": "close.jpg",
       "prompt": "새하얀 빈 공간을 배경으로 한 스물 남짓한 여성. 까맣고 긴 생머리, 머리에 가느다란 은색 관, 목까지 여민 얇은 흰 옷(가슴이 파이지 않는다). 표정은 웃지도 울지도 않는다. 오래 기다린 얼굴이고 눈에 미안함이 조금 있다. ★★한 손을 **카메라 쪽으로 곧게 뻗는다.** 손바닥이 이쪽을 향하고, 원근 때문에 손이 얼굴보다 크게 보인다(포어쇼트닝). ★★눈은 이쪽을 똑바로 본다. 시선을 피하지 않는다. 「이리 와」라고 부르는 자세다. 포즈를 취하는 게 아니다. 다른 팔은 자연스럽게 내려가 있다. 양팔을 T자로 벌리지 않는다. 가슴 위까지 보이는 구도. 몸은 아주 살짝만 틀어져 있고 얼굴은 정면. ★인물은 화면 왼쪽 3분의 1 자리에 두고 오른쪽은 비운다. 카메라는 눈높이보다 조금 아래에서 올려다본다. 뻗은 "
+    },
+    {
+      "key": "serenia.call.wide",
+      "asset": "serenia_call_wide",
+      "tool": "ComfyUI",
+      "model": "prefectIllustriousXL_v70 (seed 515150)",
+      "ratio": "16:9",
+      "size": "1280x720",
+      "kb": 23,
+      "src_file": "wide.png",
+      "prompt": "heroine_gen.py serenia 락 + gen_serenia_call.py wide 컷. 부루 태그 방식."
+    },
+    {
+      "key": "serenia.call.mid",
+      "asset": "serenia_call_mid",
+      "tool": "ComfyUI",
+      "model": "prefectIllustriousXL_v70 (seed 515150)",
+      "ratio": "16:9",
+      "size": "1280x720",
+      "kb": 22,
+      "src_file": "mid.png",
+      "prompt": "heroine_gen.py serenia 락 + gen_serenia_call.py mid 컷. 부루 태그 방식."
+    },
+    {
+      "key": "serenia.call.close",
+      "asset": "serenia_call_close",
+      "tool": "ComfyUI",
+      "model": "prefectIllustriousXL_v70 (seed 515150)",
+      "ratio": "16:9",
+      "size": "1280x720",
+      "kb": 46,
+      "src_file": "close.png",
+      "prompt": "heroine_gen.py serenia 락 + gen_serenia_call.py close 컷. 부루 태그 방식."
+    },
+    {
+      "key": "serenia.call.dissolve",
+      "asset": "serenia_call_dissolve",
+      "tool": "ComfyUI",
+      "model": "prefectIllustriousXL_v70 (seed 515150)",
+      "ratio": "16:9",
+      "size": "1280x720",
+      "kb": 27,
+      "src_file": "dissolve.png",
+      "prompt": "heroine_gen.py serenia 락 + gen_serenia_call.py dissolve 컷. 부루 태그 방식."
     }
   ]
 }
