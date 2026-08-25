@@ -180,4 +180,6 @@ if (problems.length) { console.log("■ 고쳐야 함"); problems.forEach(p => c
 if (notes.length) { console.log("■ 확인 필요"); notes.forEach(p => console.log("  · " + p)); console.log(""); }
 if (!problems.length && !notes.length) console.log("문제 없음.");
 else if (!problems.length) console.log("치명적인 문제는 없음.");
+console.log("");
+console.log("비주얼 연출(정면대칭·정중앙·명암)은 따로 본다 →  python tools/vcheck.py");
 process.exit(problems.length ? 1 : 0);
