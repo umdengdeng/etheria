@@ -65,6 +65,50 @@
       "kb": 8,
       "src_file": "room_pull.jpg",
       "prompt": "어두운 원룸이 뒤로 빠르게 멀어지는 순간. ★카메라가 뒤로 끌려나가며 찍은 것처럼 방 전체가 원근으로 급격히 좁아지고, 가장자리가 속도감 있게 늘어나 흐려진다(모션 블러). 방 한가운데에 조금 전까지 사람이 누워 있던 흐트러진 이불과 아직 켜져 있는 휴대폰 불빛만 남아 있다. ★사람은 없다. 화면 가장자리는 검게 빨려 들어가고 중앙만 겨우 보인다. 공포보다는 뜯겨나가는 감각. 채도 낮게, 푸른빛과 검정. 가로 16:9. 2D anime illustration, cel shaded, cinematic lighting, Japanese animation background art. NOT photorealistic, no 3D render. 텍스트·글자 없음. 사람 얼굴 없음."
+    },
+    {
+      "key": "serenia.call.wide",
+      "asset": "serenia_call_wide",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1280x720",
+      "kb": 7,
+      "src_file": "wide.jpg",
+      "prompt": "경계도 지평선도 없는 새하얀 빈 공간. 그 안에 스물 남짓한 여성. 까맣고 긴 생머리, 머리에 가느다란 은색 관, 얇게 비치는 흰 옷. 표정은 웃지도 울지도 않는다. 무언가를 오래 참아온 얼굴이고 눈에 미안함이 조금 있다. ★몸을 반측면으로 살짝 튼 채 서 있고, 한쪽 팔만 앞으로 내밀고 있다. 다른 팔은 자연스럽게 내려가 있다. ★인물은 화면 오른쪽 3분의 1 자리에 작게 서 있고 왼쪽은 비운다. 정면 대칭 금지, T자로 양팔 벌리는 자세 금지. 발끝부터 머리끝까지 전부 화면 안에 들어온다. 뒤에서 은은한 역광이 들어와 어깨와 머리 윤곽이 빛으로 떠오른다. 가로 16:9. 2D anime illustration, cel shaded, soft flat colors, Japanese animation key"
+    },
+    {
+      "key": "serenia.call.mid",
+      "asset": "serenia_call_mid",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1280x720",
+      "kb": 4,
+      "src_file": "mid.jpg",
+      "prompt": "새하얀 빈 공간 한가운데 사람 형체 하나. 빛이 너무 강해 사람인지 빛 얼룩인지 분간이 안 된다. 긴 머리와 ★한쪽만 내민 팔의 윤곽만 겨우 읽히고 얼굴은 빛에 묻혀 안 보인다. ★형체는 화면 오른쪽으로 조금 치우쳐 있다. 좌우 대칭 금지. 윤곽이 빛에 녹아 번진다. 가로 16:9. 2D anime illustration, cel shaded, soft flat colors, Japanese animation key visual. NOT photorealistic, no 3D render. 텍스트 없음."
+    },
+    {
+      "key": "serenia.call.close",
+      "asset": "serenia_call_close",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1280x720",
+      "kb": 29,
+      "src_file": "close.jpg",
+      "prompt": "새하얀 빈 공간을 배경으로 한 스물 남짓한 여성. 까맣고 긴 생머리, 머리에 가느다란 은색 관, 얇게 비치는 흰 옷. 표정은 웃지도 울지도 않는다. 무언가를 오래 참아온 얼굴이고 눈에 미안함이 조금 있다. ★가슴 위까지 보이는 반측면 구도. 얼굴은 4분의 3 각도로 이쪽을 본다. 한쪽 손만 가슴 높이로 들어 올려 손끝이 이쪽을 향한다. ★얼굴은 화면 왼쪽 3분의 1 자리에 두고 오른쪽을 비운다. 카메라는 눈높이보다 아주 조금 아래에서 올려다본다. 정면 대칭 금지, 양팔 벌리기 금지. 머리 위 여백을 남기고 손끝까지 화면 안에 들어온다. 옆에서 들어오는 빛이 뺨과 목의 윤곽을 만든다. 가로 16:9. 2D anime illustration, cel shaded, soft flat colors, Japanese"
+    },
+    {
+      "key": "serenia.call.dissolve",
+      "asset": "serenia_call_dissolve",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1280x720",
+      "kb": 19,
+      "src_file": "dissolve.jpg",
+      "prompt": "새하얀 빈 공간. 사람이 서 있던 자리에서 형체가 빛에 녹아 사라지는 순간. 긴 머리와 ★내밀었던 한쪽 팔의 윤곽이 입자처럼 흩어지며 번진다. 이목구비는 이미 안 읽힌다. ★흩어지는 방향이 한쪽으로 쏠려 있다. 좌우 대칭 금지. 가로 16:9. 2D anime illustration, cel shaded, soft flat colors, Japanese animation key visual. NOT photorealistic, no 3D render. 텍스트 없음."
     }
   ]
 }
