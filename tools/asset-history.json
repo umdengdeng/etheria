@@ -1,0 +1,586 @@
+{
+  "_설명": "이미지를 무엇으로 뽑았는지 남기는 기록. 나중에 톤을 맞추거나 같은 결로 더 뽑을 때 이게 없으면 처음부터 다시 헤맨다.",
+  "_규칙": "import_image.py 로 넣으면 자동으로 여기 한 줄이 쌓인다. 손으로 넣었으면 손으로 적을 것.",
+  "_교훈": "2026-08-20, 기존 배경 35장을 무엇으로 뽑았는지 아무 기록이 없어서 추정만 했다. 그래서 이 파일을 만들었다.",
+  "기존자산_추정": {
+    "대상": "2026-08-13 이전에 들어온 배경 35장 · 스프라이트 13장",
+    "확인된것": {
+      "832x1216": "25장",
+      "1248x1824": "5장 (832x1216 의 1.5배 업스케일)",
+      "1024x1024": "1장",
+      "1024x700": "4장 (아스라 관련, 다른 규격)"
+    },
+    "사용자기억": "파이어플라이 GPT Image 2 로 추정",
+    "메모": "832x1216·1024x1024 는 SDXL 규격 해상도와 일치해서 로컬 SDXL 가능성도 있다. 확정 불가.",
+    "ComfyUI": "설치돼 있으나 모델 파일 0개 (2026-08-20 확인). 출력물 메타데이터에도 체크포인트명 없음."
+  },
+  "entries": [
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "sylvarn.deep.ground",
+      "file": ".shots/L_anime.png",
+      "result": "반려",
+      "note": "애니풍 지시했으나 반사실적 회화풍으로 나옴. 계절(한여름)은 해결됨.",
+      "prompt": "[지역 · 실바른 숲 일대] 습한 온대 활엽수림. 계절은 한여름이라 잎이 무성하고 바닥까지 초록 이끼가 덮여 있다. 낙엽이 쌓인 가을 풍경이 아니다. 짙은 녹청과 이끼빛이 지배색, 흙은 적갈색. 나뭇잎 사이로 떨어지는 산광과 공기 중 부유물, 늘 옅게 깔린 안개.\n[장소] 숲 속 깊은 곳. 하ë"
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Firefly",
+      "model": "GPT Image 2",
+      "ratio": "16:9",
+      "key": "sylvarn.deep.ground",
+      "file": ".shots/L_gpt2.png",
+      "result": "반려",
+      "note": "Grok보다 어둡고 밀도 높아 인물이 파묻힘. 역시 애니풍 아님.",
+      "prompt": "[지역 · 실바른 숲 일대] 습한 온대 활엽수림. 계절은 한여름이라 잎이 무성하고 바닥까지 초록 이끼가 덮여 있다. 낙엽이 쌓인 가을 풍경이 아니다. 짙은 녹청과 이끼빛이 지배색, 흙은 적갈색. 나뭇잎 사이로 떨어지는 산광과 공기 중 부유물, 늘 옅게 깔린 안개.\n[장소] 숲 속 깊은 곳. 하ë"
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "sylvarn.deep.wake/edge/rampart",
+      "file": ".shots/L_wake.png .shots/L_edge.png .shots/L_rampart.png",
+      "result": "반려",
+      "note": "가로 첫 테스트. 사실적 화풍이라 캐릭터와 안 붙음."
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "sylvarn.deep.ground",
+      "file": ".shots/A2_grok.png",
+      "result": "테스트",
+      "note": "애니풍 v2 — 영어 스타일 토큰(2D anime background art, cel shaded) 적용. 이전보다 밝고 평면적.",
+      "prompt": "[지역 · 실바른 숲 일대] 습한 온대 활엽수림. 계절은 한여름이라 잎이 무성하고 바닥까지 초록 이끼가 덮여 있다. 낙엽이 쌓인 가을 풍경이 아니다. 짙은 녹청과 이끼빛이 지배색, 흙은 적갈색. 나뭇잎 사이로 떨어지는 산광과 공기 중 부유물, 늘 옅게 깔린 안개.\n[장소] 숲 속 깊은 곳. 하ë"
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Firefly",
+      "model": "GPT Image 2",
+      "ratio": "16:9",
+      "key": "sylvarn.deep.ground",
+      "file": ".shots/A2_gpt.png",
+      "result": "테스트",
+      "note": "애니풍 v2 — 같은 프롬프트. Grok보다 어둡고 사실적.",
+      "prompt": "[지역 · 실바른 숲 일대] 습한 온대 활엽수림. 계절은 한여름이라 잎이 무성하고 바닥까지 초록 이끼가 덮여 있다. 낙엽이 쌓인 가을 풍경이 아니다. 짙은 녹청과 이끼빛이 지배색, 흙은 적갈색. 나뭇잎 사이로 떨어지는 산광과 공기 중 부유물, 늘 옅게 깔린 안개.\n[장소] 숲 속 깊은 곳. 하ë"
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Firefly",
+      "model": "GPT Image 2",
+      "ratio": "16:9",
+      "key": "sylvarn.deep.ground",
+      "file": ".shots/ORIG_gpt2_anime.png",
+      "result": "원본확보",
+      "note": "1376x768 원본 다운로드 완료 (Firefly 다운로드 버튼)"
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "sylvarn.deep.ground",
+      "file": ".shots/ORIG_grok_anime.png",
+      "result": "원본확보",
+      "note": "1286x726. Grok 은 다운로드 버튼을 못 찾아 상세보기 화면을 최대 크기로 캡쳐한 것"
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "sylvarn.deep.ground",
+      "file": ".shots/ORIG_grok_clean.jpg",
+      "result": "원본확보",
+      "note": "Grok 상세보기 하단의 다운로드 버튼으로 진짜 원본 받음. 앞서 캡쳐본에 있던 흰 테두리는 세그먼트 선택 UI였다."
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "asra.castle.night",
+      "file": ".shots/bg20\\asra_castle_night.jpg",
+      "result": "채택후보",
+      "note": "애니풍 가로 일괄 생성. 1792x1008 원본 다운로드."
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "asra.castle.wide",
+      "file": ".shots/bg20\\asra_castle_wide.jpg",
+      "result": "채택후보",
+      "note": "애니풍 가로 일괄 생성. 1792x1008 원본 다운로드."
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "asra.mine.close",
+      "file": ".shots/bg20\\asra_mine_close.jpg",
+      "result": "채택후보",
+      "note": "애니풍 가로 일괄 생성. 1792x1008 원본 다운로드."
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "asra.mine.mid",
+      "file": ".shots/bg20\\asra_mine_mid.jpg",
+      "result": "채택후보",
+      "note": "애니풍 가로 일괄 생성. 1792x1008 원본 다운로드."
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "asra.orchard.dusk",
+      "file": ".shots/bg20\\asra_orchard_dusk.jpg",
+      "result": "채택후보",
+      "note": "애니풍 가로 일괄 생성. 1792x1008 원본 다운로드."
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "asra.orchard.mid",
+      "file": ".shots/bg20\\asra_orchard_mid.jpg",
+      "result": "채택후보",
+      "note": "애니풍 가로 일괄 생성. 1792x1008 원본 다운로드."
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "asra.rampart.mid",
+      "file": ".shots/bg20\\asra_rampart_mid.jpg",
+      "result": "채택후보",
+      "note": "애니풍 가로 일괄 생성. 1792x1008 원본 다운로드."
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "asra.rampart.night",
+      "file": ".shots/bg20\\asra_rampart_night.jpg",
+      "result": "채택후보",
+      "note": "애니풍 가로 일괄 생성. 1792x1008 원본 다운로드."
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "asra.rampart.rain",
+      "file": ".shots/bg20\\asra_rampart_rain.jpg",
+      "result": "채택후보",
+      "note": "애니풍 가로 일괄 생성. 1792x1008 원본 다운로드."
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "asra.training.mid",
+      "file": ".shots/bg20\\asra_training_mid.jpg",
+      "result": "채택후보",
+      "note": "애니풍 가로 일괄 생성. 1792x1008 원본 다운로드."
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "sylvarn.deep.blur",
+      "file": ".shots/bg20\\sylvarn_deep_blur.jpg",
+      "result": "채택후보",
+      "note": "애니풍 가로 일괄 생성. 1792x1008 원본 다운로드."
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "sylvarn.deep.bush",
+      "file": ".shots/bg20\\sylvarn_deep_bush.jpg",
+      "result": "채택후보",
+      "note": "애니풍 가로 일괄 생성. 1792x1008 원본 다운로드."
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "sylvarn.deep.goblin",
+      "file": ".shots/bg20\\sylvarn_deep_goblin.jpg",
+      "result": "채택후보",
+      "note": "애니풍 가로 일괄 생성. 1792x1008 원본 다운로드."
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "sylvarn.deep.ground",
+      "file": ".shots/bg20\\sylvarn_deep_ground.jpg",
+      "result": "채택후보",
+      "note": "애니풍 가로 일괄 생성. 1792x1008 원본 다운로드."
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "sylvarn.deep.panic",
+      "file": ".shots/bg20\\sylvarn_deep_panic.jpg",
+      "result": "채택후보",
+      "note": "애니풍 가로 일괄 생성. 1792x1008 원본 다운로드."
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "sylvarn.deep.tracks",
+      "file": ".shots/bg20\\sylvarn_deep_tracks.jpg",
+      "result": "채택후보",
+      "note": "애니풍 가로 일괄 생성. 1792x1008 원본 다운로드."
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "sylvarn.deep.vista",
+      "file": ".shots/bg20\\sylvarn_deep_vista.jpg",
+      "result": "채택후보",
+      "note": "애니풍 가로 일괄 생성. 1792x1008 원본 다운로드."
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "sylvarn.deep.wake",
+      "file": ".shots/bg20\\sylvarn_deep_wake.jpg",
+      "result": "채택후보",
+      "note": "애니풍 가로 일괄 생성. 1792x1008 원본 다운로드."
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "sylvarn.edge.mid",
+      "file": ".shots/bg20\\sylvarn_edge_mid.jpg",
+      "result": "채택후보",
+      "note": "애니풍 가로 일괄 생성. 1792x1008 원본 다운로드."
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "sylvarn.edge.wide",
+      "file": ".shots/bg20\\sylvarn_edge_wide.jpg",
+      "result": "채택후보",
+      "note": "애니풍 가로 일괄 생성. 1792x1008 원본 다운로드."
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "sylvarn.pond.close",
+      "file": ".shots/bg20\\sylvarn_pond_close.jpg",
+      "result": "채택후보",
+      "note": "애니풍 가로 일괄 생성. 1792x1008 원본 다운로드."
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "sylvarn.rift.close",
+      "file": ".shots/bg20\\sylvarn_rift_close.jpg",
+      "result": "채택후보",
+      "note": "애니풍 가로 일괄 생성. 1792x1008 원본 다운로드."
+    },
+    {
+      "kind": "생성시도",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "key": "sylvarn.rift.wide",
+      "file": ".shots/bg20\\sylvarn_rift_wide.jpg",
+      "result": "채택후보",
+      "note": "애니풍 가로 일괄 생성. 1792x1008 원본 다운로드."
+    },
+    {
+      "key": "asra.castle.night",
+      "asset": "asra_castle_night",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1456x816",
+      "kb": 147,
+      "src_file": "asra_castle_night.jpg",
+      "prompt": ""
+    },
+    {
+      "key": "asra.castle.wide",
+      "asset": "asra_castle_wide",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1456x816",
+      "kb": 234,
+      "src_file": "asra_castle_wide.jpg",
+      "prompt": ""
+    },
+    {
+      "key": "asra.mine.close",
+      "asset": "asra_mine_close",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1456x816",
+      "kb": 130,
+      "src_file": "asra_mine_close.jpg",
+      "prompt": ""
+    },
+    {
+      "key": "asra.mine.mid",
+      "asset": "asra_mine_mid",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1456x816",
+      "kb": 239,
+      "src_file": "asra_mine_mid.jpg",
+      "prompt": ""
+    },
+    {
+      "key": "asra.orchard.dusk",
+      "asset": "asra_orchard_dusk",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1456x816",
+      "kb": 188,
+      "src_file": "asra_orchard_dusk.jpg",
+      "prompt": ""
+    },
+    {
+      "key": "asra.orchard.mid",
+      "asset": "asra_orchard_mid",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1456x816",
+      "kb": 310,
+      "src_file": "asra_orchard_mid.jpg",
+      "prompt": ""
+    },
+    {
+      "key": "asra.rampart.mid",
+      "asset": "asra_rampart_mid",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1456x816",
+      "kb": 190,
+      "src_file": "asra_rampart_mid.jpg",
+      "prompt": ""
+    },
+    {
+      "key": "asra.rampart.night",
+      "asset": "asra_rampart_night",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1456x816",
+      "kb": 114,
+      "src_file": "asra_rampart_night.jpg",
+      "prompt": ""
+    },
+    {
+      "key": "asra.rampart.rain",
+      "asset": "asra_rampart_rain",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1456x816",
+      "kb": 192,
+      "src_file": "asra_rampart_rain.jpg",
+      "prompt": ""
+    },
+    {
+      "key": "asra.training.mid",
+      "asset": "asra_training_mid",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1456x816",
+      "kb": 279,
+      "src_file": "asra_training_mid.jpg",
+      "prompt": ""
+    },
+    {
+      "key": "sylvarn.deep.blur",
+      "asset": "sylvarn_deep_blur",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1456x816",
+      "kb": 271,
+      "src_file": "sylvarn_deep_blur.jpg",
+      "prompt": ""
+    },
+    {
+      "key": "sylvarn.deep.bush",
+      "asset": "sylvarn_deep_bush",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1456x816",
+      "kb": 293,
+      "src_file": "sylvarn_deep_bush.jpg",
+      "prompt": ""
+    },
+    {
+      "key": "sylvarn.deep.goblin",
+      "asset": "sylvarn_deep_goblin",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1456x816",
+      "kb": 194,
+      "src_file": "sylvarn_deep_goblin.jpg",
+      "prompt": ""
+    },
+    {
+      "key": "sylvarn.deep.ground",
+      "asset": "sylvarn_deep_ground",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1456x816",
+      "kb": 335,
+      "src_file": "sylvarn_deep_ground.jpg",
+      "prompt": ""
+    },
+    {
+      "key": "sylvarn.deep.panic",
+      "asset": "sylvarn_deep_panic",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1456x816",
+      "kb": 290,
+      "src_file": "sylvarn_deep_panic.jpg",
+      "prompt": ""
+    },
+    {
+      "key": "sylvarn.deep.tracks",
+      "asset": "sylvarn_deep_tracks",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1456x816",
+      "kb": 354,
+      "src_file": "sylvarn_deep_tracks.jpg",
+      "prompt": ""
+    },
+    {
+      "key": "sylvarn.deep.vista",
+      "asset": "sylvarn_deep_vista",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1456x816",
+      "kb": 379,
+      "src_file": "sylvarn_deep_vista.jpg",
+      "prompt": ""
+    },
+    {
+      "key": "sylvarn.deep.wake",
+      "asset": "sylvarn_deep_wake",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1456x816",
+      "kb": 415,
+      "src_file": "sylvarn_deep_wake.jpg",
+      "prompt": ""
+    },
+    {
+      "key": "sylvarn.edge.mid",
+      "asset": "sylvarn_edge_mid",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1456x816",
+      "kb": 393,
+      "src_file": "sylvarn_edge_mid.jpg",
+      "prompt": ""
+    },
+    {
+      "key": "sylvarn.edge.wide",
+      "asset": "sylvarn_edge_wide",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1456x816",
+      "kb": 314,
+      "src_file": "sylvarn_edge_wide.jpg",
+      "prompt": ""
+    },
+    {
+      "key": "sylvarn.pond.close",
+      "asset": "sylvarn_pond_close",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1456x816",
+      "kb": 354,
+      "src_file": "sylvarn_pond_close.jpg",
+      "prompt": ""
+    },
+    {
+      "key": "sylvarn.rift.close",
+      "asset": "sylvarn_rift_close",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1456x816",
+      "kb": 304,
+      "src_file": "sylvarn_rift_close.jpg",
+      "prompt": ""
+    },
+    {
+      "key": "sylvarn.rift.wide",
+      "asset": "sylvarn_rift_wide",
+      "tool": "Grok Imagine",
+      "model": "v2.0",
+      "ratio": "16:9",
+      "size": "1456x816",
+      "kb": 387,
+      "src_file": "sylvarn_rift_wide.jpg",
+      "prompt": ""
+    }
+  ]
+}

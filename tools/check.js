@@ -153,11 +153,29 @@ if (rk.length > 1) {
     note("비율", `주 비율 ${main} 과 다른 배경 ${ratios[r].length}장 (${r}) → ${ratios[r].join(", ")}`);
 }
 
+/* ---------- 0. 아직 적용 안 된 결정 ----------
+   Etheria/DECISIONS.md 의 ⬜대기 줄을 세어 맨 앞에 띄운다.
+   정해놓고 잊어버리는 걸 막으려는 것이다. */
+let pendingLines = [];
+try {
+  const dp = path.join(__dirname, "..", "..", "..", "Etheria", "DECISIONS.md");
+  const md = fs.readFileSync(dp, "utf8");
+  const sec = md.split("## 🔧")[0];
+  pendingLines = sec.split(String.fromCharCode(10)).filter(l => l.indexOf("| ⬜ |") >= 0)
+    .map(l => l.split("|").map(x => x.trim()).filter(Boolean))
+    .map(c => `${c[0]}  ${c[1]}${c[3] ? "  — " + c[3] : ""}`);
+} catch (e) { /* 문서가 없으면 조용히 넘어간다 */ }
+
 /* ---------- 결과 ---------- */
 const todo = sandbox.window.__lib.bgTodo();
 console.log(`배경 에셋 ${Object.keys(BGS).length}장 · 라이브러리 슬롯 ${Object.keys(BG_LIB).length}개 · 생성 대기 ${todo.length}개`);
 console.log(`스프라이트 ${Object.keys(SPRITES).length}장 · 에피소드 ${eps.length}개 · 씬이 부르는 배경 키 ${usedBg.size}개`);
 console.log("");
+if (pendingLines.length) {
+  console.log("■ 정해놓고 아직 안 한 것 (DECISIONS.md)");
+  pendingLines.forEach(l => console.log("  ⬜ " + l));
+  console.log("");
+}
 if (problems.length) { console.log("■ 고쳐야 함"); problems.forEach(p => console.log("  ✗ " + p)); console.log(""); }
 if (notes.length) { console.log("■ 확인 필요"); notes.forEach(p => console.log("  · " + p)); console.log(""); }
 if (!problems.length && !notes.length) console.log("문제 없음.");

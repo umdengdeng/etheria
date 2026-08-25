@@ -3,25 +3,73 @@
   "_왜": "코드 검사만으로는 못 잡는다. 늑대 목줄이 대표 사례 — 대사는 '목에 낡은 쇠 목줄이 걸려 있다'인데 그림에는 없었다.",
   "_보는법": "ok=확인함 / fail=어긋남(고쳐야 함) / todo=아직 눈으로 안 봄",
   "claims": [
-    { "asset": "giantrat", "key": "sylvarn.deep.beast", "must": "목에 낡고 녹슨 쇠 목줄",
+    {
+      "asset": "giantrat",
+      "key": "sylvarn.deep.beast",
+      "must": "목에 낡고 녹슨 쇠 목줄",
       "line": "짐승이 고개를 든다. 목에, 낡은 쇠 목줄이 걸려 있다.",
-      "state": "fail", "note": "목줄이 그림에 없다. 1화 전체 복선의 핵심 물건이라 반드시 다시 뽑아야 한다." },
-    { "asset": "giantrat", "key": "sylvarn.deep.beast", "must": "등줄기를 따라 흐르는 검은 김",
-      "line": "등줄기를 따라 검은 김 같은 것이 흘러내린다.", "state": "ok" },
-    { "asset": "giantrat", "key": "sylvarn.deep.beast", "must": "붉은 눈", "line": "―", "state": "ok" },
-    { "asset": "pond", "key": "sylvarn.pond.close", "must": "수면에 비친 젊은 남자의 얼굴, 오른쪽 눈썹 끝 흉터",
+      "state": "fail",
+      "note": "목줄이 그림에 없다. 1화 전체 복선의 핵심 물건이라 반드시 다시 뽑아야 한다."
+    },
+    {
+      "asset": "giantrat",
+      "key": "sylvarn.deep.beast",
+      "must": "등줄기를 따라 흐르는 검은 김",
+      "line": "등줄기를 따라 검은 김 같은 것이 흘러내린다.",
+      "state": "ok"
+    },
+    {
+      "asset": "giantrat",
+      "key": "sylvarn.deep.beast",
+      "must": "붉은 눈",
+      "line": "―",
+      "state": "ok"
+    },
+    {
+      "asset": "sylvarn_pond_close",
+      "key": "sylvarn.pond.close",
+      "must": "수면에 비친 젊은 남자의 얼굴, 오른쪽 눈썹 끝 흉터",
       "line": "젊은 남자다. 마른 얼굴. 오른쪽 눈썹 끝에 오래된 흉터 하나.",
-      "state": "fail", "note": "수면 클로즈업이지만 얼굴이 비치지 않는다. 떠 있는 잎만 보인다." },
-    { "asset": "bg_ser_2", "key": "serenia.call.close", "must": "까만 머리, 은빛 관, 두 팔을 벌린 자세",
-      "line": "까만 머리. 은빛 관. 얇게 비치는 흰 옷자락. 두 팔을 활짝 벌린 채 ― 나를 보고 있다.", "state": "ok" },
-    { "asset": "forest_ground", "key": "sylvarn.deep.ground", "must": "한여름 녹음의 숲 바닥",
+      "state": "fail",
+      "note": "가로로 교체했지만 여전히 얼굴이 안 비친다. 인물 컷이라 따로 뽑아야 함."
+    },
+    {
+      "asset": "bg_ser_2",
+      "key": "serenia.call.close",
+      "must": "까만 머리, 은빛 관, 두 팔을 벌린 자세",
+      "line": "까만 머리. 은빛 관. 얇게 비치는 흰 옷자락. 두 팔을 활짝 벌린 채 ― 나를 보고 있다.",
+      "state": "ok"
+    },
+    {
+      "asset": "sylvarn_deep_ground",
+      "key": "sylvarn.deep.ground",
+      "must": "한여름 녹음의 숲 바닥",
       "line": "1화 전체가 아침 여름 숲이다.",
-      "state": "fail", "note": "혼자 가을 낙엽 톤. 1화에서 6번 쓰여 계속 튄다." },
-    { "asset": "asra_rampart", "key": "asra.rampart.mid", "must": "성벽 순찰로",
-      "line": "― 성 안뜰. 순찰을 돌던 엘리아나가 당신을 발견한다.", "state": "ok" },
-    { "asset": null, "key": "sylvarn.deep.tracks", "must": "사람 것도 짐승 것도 아닌 발자국 여럿",
-      "line": "사람 발보다 작고, 폭이 넓고, 발가락이 길다.", "state": "todo", "note": "아직 안 뽑음" },
-    { "asset": null, "key": "sylvarn.deep.goblin", "must": "작고 등이 굽은 실루엣 서넛, 손에 창",
-      "line": "안개 너머로 작고 굽은 그림자 서넛이 스쳐 지나간다.", "state": "todo", "note": "아직 안 뽑음" }
+      "state": "ok",
+      "note": "2026-08-25 Grok 가로 애니풍으로 교체. 한여름 녹음으로 해결됨."
+    },
+    {
+      "asset": "asra_rampart",
+      "key": "asra.rampart.mid",
+      "must": "성벽 순찰로",
+      "line": "― 성 안뜰. 순찰을 돌던 엘리아나가 당신을 발견한다.",
+      "state": "ok"
+    },
+    {
+      "asset": "sylvarn_deep_tracks",
+      "key": "sylvarn.deep.tracks",
+      "must": "사람 것도 짐승 것도 아닌 발자국 여럿",
+      "line": "사람 발보다 작고, 폭이 넓고, 발가락이 길다.",
+      "state": "fail",
+      "note": "가로로 뽑았으나 발자국이 안 보인다. 재생성 필요."
+    },
+    {
+      "asset": "sylvarn_deep_goblin",
+      "key": "sylvarn.deep.goblin",
+      "must": "작고 등이 굽은 실루엣 서넛, 손에 창",
+      "line": "안개 너머로 작고 굽은 그림자 서넛이 스쳐 지나간다.",
+      "state": "fail",
+      "note": "가로로 뽑았으나 실루엣이 안 보인다. 재생성 필요."
+    }
   ]
 }
