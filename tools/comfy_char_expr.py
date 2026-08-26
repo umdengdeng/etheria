@@ -73,10 +73,11 @@ DEFAULT_SET = ["neutral", "smile", "sad", "blush", "surprise", "worried"]
 
 VIEW = ("solo, upper body, facing viewer, front view, straight-on, arms down at her sides, "
         "looking at viewer")
-BG = "white background, simple background, no shadow, soft even lighting"
+BG = ("plain flat chroma green background, solid green backdrop, simple background, "
+      "no shadow, soft even lighting")
 BASE_NEG = ("multiple views, reference sheet, character sheet, turnaround, multiple girls, 2girls, "
             "extra person, deformed, bad anatomy, bad hands, extra digits, watermark, signature, text, "
-            "cropped head, out of frame, lowres, blurry, windswept hair, "
+            "cropped head, out of frame, lowres, blurry, windswept hair, green clothes, green tint on skin, green hair, "
             "gold trim, red gem, colored accessory")
 
 

@@ -24,7 +24,7 @@ import re
 import sys
 from pathlib import Path
 
-from PIL import Image, ImageFilter
+from PIL import Image
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -32,55 +32,50 @@ if hasattr(sys.stdout, "reconfigure"):
 ROOT = Path(__file__).resolve().parent.parent
 INDEX = ROOT / "index.html"
 TARGET_H = 820
-BRIGHT = 232        # 이보다 밝으면 배경으로 본다
+# 순백(255,255,255)에서 이만큼 떨어지면 인물로 본다.
+# LO 이하는 완전 투명, HI 이상은 완전 불투명, 사이는 부드럽게.
+LO, HI = 26, 70   # 배경색과 이만큼 떨어지면 인물. 크로마키라 넉넉히 잡아도 된다
 
 
 def cut_bg(im):
-    """배경만 알파로 바꾼다.
+    """배경을 지워 알파를 만든다. **테두리에서 배경색을 직접 읽어** 쓴다.
 
-    ★밝기만 보면 **흰 드레스가 통째로 뚫린다.** (2026-08-26에 실제로 그랬다)
-      그래서 「밝다」가 아니라 **「테두리에서 이어져 있는 밝은 영역」**만 배경으로 본다.
-      화면 가장자리에서 flood fill 로 번져 들어가고, 인물 안쪽의 흰색은 살아남는다.
+    ★여기까지 오는 데 세 번 틀렸다.
+      ① 「밝으면 배경」(임계 232) → **흰 드레스가 통째로 뚫렸다**
+      ② 테두리 flood fill → 머리카락 사이 **갇힌 흰 구멍이 남고**,
+         치마 밑단은 아래 테두리와 이어져 **거꾸로 파먹혔다**
+      ③ 「순백과의 거리」 → 갇힌 구멍은 지워졌지만
+         **비치는 흰 소매가 배경과 색이 완전히 같아서** 같이 지워졌다.
+         흰 배경 + 흰 옷은 **색으로는 원리적으로 못 나눈다.**
+      → ④ 그래서 배경을 **초록(크로마키)** 으로 뽑는다. 인물 팔레트가
+         흰·검정·붉은 눈뿐이라 초록과 절대 안 겹친다. 이제 분리가 확실하다.
+
+    despill(초록 물빼기)까지 한다 — 안 하면 머리카락 가장자리가 초록으로 뜬다.
     """
-    im = im.convert("RGBA")
-    W, H = im.size
-    px = im.load()
+    import numpy as np
 
-    bright = bytearray(W * H)
-    for y in range(H):
-        base = y * W
-        for x in range(W):
-            r, g, b, _ = px[x, y]
-            if r >= BRIGHT and g >= BRIGHT and b >= BRIGHT:
-                bright[base + x] = 1
+    im = im.convert("RGB")
+    a = np.asarray(im).astype(np.float32)
+    H, W, _ = a.shape
 
-    # 테두리의 밝은 점에서 시작해 번져 나간다
-    from collections import deque
-    seen = bytearray(W * H)
-    q = deque()
-    for x in range(W):
-        for y in (0, H - 1):
-            i = y * W + x
-            if bright[i] and not seen[i]:
-                seen[i] = 1; q.append(i)
-    for y in range(H):
-        for x in (0, W - 1):
-            i = y * W + x
-            if bright[i] and not seen[i]:
-                seen[i] = 1; q.append(i)
-    while q:
-        i = q.popleft()
-        x, y = i % W, i // W
-        for nx, ny in ((x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)):
-            if 0 <= nx < W and 0 <= ny < H:
-                j = ny * W + nx
-                if bright[j] and not seen[j]:
-                    seen[j] = 1; q.append(j)
+    # 테두리에서 배경색을 읽는다 (사람이 테두리에 닿아 있어도 중앙값이면 버틴다)
+    border = np.concatenate([a[0], a[-1], a[:, 0], a[:, -1]], axis=0)
+    bg = np.median(border, axis=0)
 
-    mask = Image.frombytes("L", (W, H), bytes(0 if seen[i] else 255 for i in range(W * H)))
-    mask = mask.filter(ImageFilter.GaussianBlur(0.8))   # 톱니 줄이기
-    im.putalpha(mask)
-    return im
+    dist = np.abs(a - bg).max(axis=2)
+    alpha = np.clip((dist - LO) * (255.0 / (HI - LO)), 0, 255)
+
+    # despill — 초록물만 뺀다.
+    # ★기준을 R·B **평균**으로 잡으면 피부까지 깎여서 보랏빛이 된다.
+    #   피부는 R > G > B 라 평균보다는 늘 높기 때문이다. (2026-08-26에 그렇게 됐다)
+    #   R·B 중 **큰 값**을 넘을 때만 깎아야 초록이 실제로 튄 곳만 잡힌다.
+    if bg[1] > bg[0] and bg[1] > bg[2]:
+        rb = np.maximum(a[:, :, 0], a[:, :, 2])
+        over = np.clip(a[:, :, 1] - rb, 0, None)
+        a[:, :, 1] -= over
+
+    out = np.dstack([np.clip(a, 0, 255), alpha]).astype(np.uint8)
+    return Image.fromarray(out, "RGBA")
 
 
 def trim(im):
