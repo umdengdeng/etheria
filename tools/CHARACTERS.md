@@ -65,6 +65,24 @@ python tools/import_sprite.py .shots/expr/serenia_sad.png
 node tools/check.js
 ```
 
+### ★전신으로 뽑아서 상반신으로 자른다
+
+```bash
+python tools/import_sprite.py .shots/expr/serenia_sad.png --upper
+```
+
+상반신으로 **직접** 뽑으면 이 모델은 인물로 프레임을 꽉 채워서 **머리카락이 잘린다.**
+전신으로 뽑아야 여백이 생기고, 자르는 건 `--upper` 가 계산으로 한다.
+
+같이 걸어야 하는 네거티브 — `figurine, pedestal, display stand, statue, floor, ground`
+「전신이 다 들어오게」라고 쓰면 모델이 **진열대 위 피규어**를 그린다. 실제로 그랬다.
+
+### 표정마다 얼굴이 달라질 때
+
+**FaceDetailer 의 `denoise` 를 낮춘다.** 0.45 는 얼굴을 **다시 그려서** 눈매까지 바뀐다.
+**0.30** 이면 다듬기만 하고 원래 얼굴을 유지한다.
+표정 문장도 **짧게, 프롬프트 맨 뒤에** 붙인다 — 앞에 길게 넣으면 구도까지 흔든다.
+
 ### 규칙
 
 - ★**seed 와 facebody 는 절대 안 건드린다.** 이게 캐릭터의 정체성이다.

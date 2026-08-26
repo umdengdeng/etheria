@@ -78,6 +78,28 @@ def cut_bg(im):
     return Image.fromarray(out, "RGBA")
 
 
+def to_upper(im, ratio=0.60):
+    """전신 그림을 대사용 상반신으로 잘라낸다.
+
+    ★전신으로 뽑는 이유는 **머리가 안 잘리게 여백을 확보하려고**다.
+      상반신으로 직접 뽑으면 이 모델은 인물로 프레임을 꽉 채워서 머리카락이 잘린다.
+      그래서 전신으로 뽑고 여기서 자른다.
+    """
+    import numpy as np
+    a = np.asarray(im.convert("RGB")).astype(float)
+    border = np.concatenate([a[0], a[-1], a[:, 0], a[:, -1]], axis=0)
+    bg = np.median(border, axis=0)
+    subj = np.abs(a - bg).max(axis=2) > 40
+    ys, xs = np.where(subj)
+    if not len(ys):
+        return im
+    top, bot = ys.min(), ys.max()
+    cut = int(top + (bot - top) * ratio)
+    pad = 12
+    return im.crop((max(0, xs.min() - pad), max(0, top - pad),
+                    min(im.width, xs.max() + pad), min(im.height, cut)))
+
+
 def trim(im):
     bb = im.getbbox()
     return im.crop(bb) if bb else im
@@ -108,7 +130,10 @@ def main():
         if not p.exists():
             print("  없다: %s" % p); continue
         name = name_arg or p.stem
-        im = trim(cut_bg(Image.open(p)))
+        raw = Image.open(p)
+        if "--upper" in sys.argv:
+            raw = to_upper(raw)
+        im = trim(cut_bg(raw))
         w = max(1, round(im.width * TARGET_H / im.height))
         im = im.resize((w, TARGET_H), Image.LANCZOS)
         buf = io.BytesIO()

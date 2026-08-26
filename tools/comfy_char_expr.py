@@ -71,27 +71,28 @@ EXPR = {
 }
 DEFAULT_SET = ["neutral", "smile", "sad", "blush", "surprise", "worried"]
 
-VIEW = ("solo, upper body, facing viewer, front view, straight-on, arms down at her sides, "
-        "looking at viewer")
-BG = ("plain flat chroma green background, solid green backdrop, simple background, "
-      "no shadow, soft even lighting")
+VIEW = ("solo, full body, facing viewer, front view, straight-on, arms down at her sides, "
+        "looking at viewer, standing on nothing, no ground")
+BG = ("flat vivid green background, solid bright green backdrop, chroma key green screen, "
+      "simple background, no shadow, soft even lighting")
 BASE_NEG = ("multiple views, reference sheet, character sheet, turnaround, multiple girls, 2girls, "
             "extra person, deformed, bad anatomy, bad hands, extra digits, watermark, signature, text, "
-            "cropped head, out of frame, lowres, blurry, windswept hair, green clothes, green tint on skin, green hair, "
+            "figurine, figure, pedestal, display stand, display base, statue, doll, showcase, floor, ground, shadow on ground, cropped head, cropped hair, out of frame, close-up, lowres, blurry, windswept hair, green clothes, green tint on skin, green hair, "
             "gold trim, red gem, colored accessory")
 
 
 def build(cid, expr_key, outfit_key):
     c = CHARS[cid]
     P = ("masterpiece, best quality, amazing quality, %s, %s, %s, %s, %s"
-         % (c["facebody"], EXPR[expr_key], OUTFITS[outfit_key], VIEW, BG))
+         % (c["facebody"], OUTFITS[outfit_key], VIEW, BG, EXPR[expr_key]))
     N = BASE_NEG + ", " + OUTFIT_NEG[outfit_key] + ((", " + c["neg"]) if c["neg"] else "")
     seed = c["seed"]
     wf = {
      "c": CKPT,
      "pos": {"class_type": "CLIPTextEncode", "inputs": {"text": P, "clip": ["c", 1]}},
      "neg": {"class_type": "CLIPTextEncode", "inputs": {"text": N, "clip": ["c", 1]}},
-     "lat": {"class_type": "EmptyLatentImage", "inputs": {"width": 832, "height": 1216, "batch_size": 1}},
+     # ★가로를 넓혔다. 머리가 옆으로 퍼져서 832 폭에선 항상 잘렸다
+     "lat": {"class_type": "EmptyLatentImage", "inputs": {"width": 1024, "height": 1216, "batch_size": 1}},
      "ks": {"class_type": "KSampler", "inputs": {
         "model": ["c", 0], "positive": ["pos", 0], "negative": ["neg", 0], "latent_image": ["lat", 0],
         "seed": seed, "steps": 30, "cfg": 5.0,
@@ -107,7 +108,7 @@ def build(cid, expr_key, outfit_key):
         "guide_size": 512.0, "guide_size_for": True, "max_size": 1024.0,
         "seed": seed + 1, "steps": 24, "cfg": 5.0,
         "sampler_name": "euler_ancestral", "scheduler": "normal",
-        "denoise": 0.45, "feather": 5, "noise_mask": True, "force_inpaint": True,
+        "denoise": 0.30, "feather": 5, "noise_mask": True, "force_inpaint": True,
         "bbox_threshold": 0.5, "bbox_dilation": 10, "bbox_crop_factor": 3.0,
         "sam_detection_hint": "center-1", "sam_dilation": 0, "sam_threshold": 0.93,
         "sam_bbox_expansion": 0, "sam_mask_hint_threshold": 0.7,
