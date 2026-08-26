@@ -186,6 +186,17 @@
       "kb": 21,
       "src_file": "wide_16x9.png",
       "prompt": "cowboy shot + FaceDetailer + HandDetailer. 세로로 뽑아 흰 캔버스에 오른쪽 3분의 1로 합성."
+    },
+    {
+      "key": "serenia.call.wide",
+      "asset": "serenia_call_wide",
+      "tool": "ComfyUI",
+      "model": "prefectIllustriousXL_v70 (seed 515150)",
+      "ratio": "832x1216 → 16:9 합성",
+      "size": "1280x720",
+      "kb": 33,
+      "src_file": "poseA_16x9.png",
+      "prompt": "cowboy shot + leaning forward, head down, looking up (연출 A안). FaceDetailer + HandDetailer."
     }
   ]
 }

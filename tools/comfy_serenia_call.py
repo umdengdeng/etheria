@@ -32,12 +32,12 @@ FACEBODY = ("1girl, solo, beautiful young princess age 22, very long straight gl
 # ★이 모델(Illustrious)은 **부루 태그**로 알아듣는다. 긴 영어 문장은 거의 무시되고
 #   대신 엉뚱한 단어만 문자 그대로 그린다 — 「camera」라고 썼더니 REC 뷰파인더를 그렸다.
 #   그래서 전부 짧은 태그로 쓴다.
-OUTFIT = ("simple long white dress, opaque fabric, turtleneck, high collar, long sleeves, "
-          "covered shoulders, closed clothes, tiara, plain, modest")
+OUTFIT = ("flowing white robe, sheer gauzy layered fabric, high collar, long wide sleeves, "
+          "covered shoulders, tiara, plain, elegant")
 CHAR_NEG = ("cleavage, exposed chest, revealing clothes, plunging neckline, bare shoulders, off-shoulder, "
             "strapless, sleeveless, bare arms, collarbone, bare chest, seductive pose")
-BASE_NEG = ("ball gown, wedding dress, long train, trailing skirt, wide skirt, poofy dress, full body, feet, shoes, multicolored hair, gradient hair, streaked hair, red hair, colored hair tips, two-tone hair, viewfinder, rec, recording indicator, frame border, letterbox, ui, hud, battery icon, "
-            "closed eyes, eyes closed, windswept hair, floating hair, twintails, earrings, jewelry, "
+BASE_NEG = ("red clothes, red sash, red ribbon, gold ornament, colored accessory, necklace, pendant, brooch, ball gown, wedding dress, long train, trailing skirt, wide skirt, poofy dress, full body, feet, shoes, multicolored hair, gradient hair, streaked hair, red hair, colored hair tips, two-tone hair, viewfinder, rec, recording indicator, frame border, letterbox, ui, hud, battery icon, "
+            "closed eyes, eyes closed, twintails, earrings, jewelry, "
             "giant hand, oversized hand, smug, smirk, grin, angry, glaring, "
             "multiple views, reference sheet, character sheet, turnaround, front and back view, multiple girls, 2girls, extra person, deformed, bad anatomy, bad hands, extra digits, "
             "watermark, signature, text, cropped head, out of frame, muscular, old, child, lowres, blurry")
@@ -50,6 +50,24 @@ CALL = "reaching towards viewer, outstretched arm, open palm, looking at viewer,
 NO_TPOSE = "spread arms, t-pose, symmetrical pose, both arms outstretched, "
 
 CUTS = {
+  "poseA": dict(
+    expr="sad, apologetic, open eyes, looking at viewer, closed mouth",
+    view="cowboy shot, leaning forward, reaching towards viewer, outstretched arm, open palm, head tilt, head down, looking up, upturned eyes, from below",
+    extra_neg=NO_TPOSE + "full body, feet, legs, close-up",
+    detail=True, hands=True, portrait=True),
+
+  "poseB": dict(
+    expr="sad, apologetic, open eyes, looking at viewer, closed mouth",
+    view="cowboy shot, floating, weightless, hair floating upwards, clothes floating, wide sleeves billowing, reaching towards viewer, outstretched arm, open palm, looking at viewer, from below",
+    extra_neg=NO_TPOSE + "full body, feet, legs, close-up",
+    detail=True, hands=True, portrait=True),
+
+  "poseC": dict(
+    expr="sad, apologetic, open eyes, looking at viewer, closed mouth",
+    view="cowboy shot, dutch angle, reaching towards viewer, outstretched arm across the frame, open palm, foreshortening, upper body turned away, looking back at viewer, over the shoulder",
+    extra_neg=NO_TPOSE + "full body, feet, legs, close-up",
+    detail=True, hands=True, portrait=True),
+
   # ★전신이 아니라 카우보이샷(허벅지 위). 전신은 얼굴에 갈 픽셀이 없어서 눈·코가 뭉갠다.
   #   그리고 세로(832x1216)로 뽑는다 — 이 모델이 학습한 비율이라 인물이 크게 잡힌다.
   #   배경이 순백이라 뒤에서 16:9 흰 캔버스에 얹으면 이음매가 안 보인다.
