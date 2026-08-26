@@ -106,14 +106,23 @@ def measure(im):
     cx = sum(v * (i % W) for i, v in enumerate(e)) / tot / (W - 1)
     cy = sum(v * (i // W) for i, v in enumerate(e)) / tot / (H - 1)
 
-    # --- 0) 잘림 : 테두리에 피사체가 닿아 있나 ------------------------------
-    # 흰 공간 컷에서 뻗은 손이 화면 밖으로 나가는 사고가 반복됐다.
-    # 배경이 밝은 컷은 테두리 픽셀만 봐도 잘렸는지 정확히 알 수 있다.
+    # --- 0) 잘림 : 테두리에 **살갗**이 닿아 있나 ---------------------------
+    # 처음엔 「테두리에 뭐라도 닿으면 잘림」으로 봤는데 너무 뭉툭했다.
+    # 머리카락·옷자락이 화면 끝에 닿는 건 정상이다. 문제는 **손이 잘리는 것**이다.
+    # (2026-08-26: 이미 잘린 그림을 캔버스 안쪽으로 옮겨놓고 「안 닿는다」로
+    #  통과시킨 적이 있다. 그래서 색으로 직접 본다.)
+    rgb = im.convert("RGB").resize((96, 54), Image.LANCZOS)
+    rp = rgb.load()
+
+    def _skin(c):
+        r, g_, b = c
+        return r > 150 and g_ > 100 and b > 80 and r > g_ > b and (r - b) > 25 and (r - g_) < 70
+
     edge = {}
-    for k, pts in (("top", [(x, 0) for x in range(W)]),
-                   ("left", [(0, y) for y in range(H)]),
-                   ("right", [(W - 1, y) for y in range(H)])):
-        edge[k] = sum(1 for x, y in pts if px[y * W + x] < 238) / len(pts)
+    for k, pts in (("top", [(x, 0) for x in range(96)]),
+                   ("left", [(0, y) for y in range(54)]),
+                   ("right", [(95, y) for y in range(54)])):
+        edge[k] = sum(1 for x, y in pts if _skin(rp[x, y]))
 
     # --- 4) 명암폭 --------------------------------------------------------
     mean = sum(px) / len(px)
@@ -185,16 +194,14 @@ def judge(asset_id, key, m, prompt):
     # 밝은 배경 컷에서만 의미가 있다. 어두운 배경은 테두리가 원래 어둡다
     # ★클로즈업은 화면 밖으로 넘치는 게 정상이다. 넘치지 않으면 오히려 클로즈업이 아니다.
     closeup = name.endswith(".close") or "close" in asset_id
-    if m.get("edge") and not closeup and m["sd"] < 0.30 and m.get("tone") in ("white", "flat"):
-        cut_at = [k for k, v in m["edge"].items() if v > 0.02]
+    if m.get("edge") and not closeup:
+        cut_at = [k for k, v in m["edge"].items() if v > 0]
         if cut_at:
             ko = {"top": "위", "left": "왼쪽", "right": "오른쪽"}
             bad.append((
                 "잘림",
-                "피사체가 화면 %s 끝에 닿아 있다 (%s)." % (
-                    "·".join(ko[k] for k in cut_at),
-                    " ".join("%s %.0f%%" % (ko[k], m["edge"][k] * 100) for k in cut_at)),
-                "뻗은 손이 화면 밖으로 나갔을 가능성이 높다. 인물을 줄이거나 안쪽으로 옮긴다.",
+                "화면 %s 끝에 살갗이 닿아 있다 — 손이나 팔이 잘렸다." % "·".join(ko[k] for k in cut_at),
+                "뻗은 손이 좁은 프레임에 안 들어간 것이다. 전신으로 뽑아 여백을 만든 뒤 잘라낸다.",
             ))
 
     if m["sd"] < 0.085 and not flat_ok:
