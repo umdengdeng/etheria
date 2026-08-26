@@ -197,6 +197,17 @@
       "kb": 33,
       "src_file": "poseA_16x9.png",
       "prompt": "cowboy shot + leaning forward, head down, looking up (연출 A안). FaceDetailer + HandDetailer."
+    },
+    {
+      "key": "serenia.call.wide",
+      "asset": "serenia_call_wide",
+      "tool": "ComfyUI",
+      "model": "prefectIllustriousXL_v70 (seed 515150)",
+      "ratio": "832x1216 → 16:9 합성",
+      "size": "1280x720",
+      "kb": 33,
+      "src_file": "grabB_16x9.png",
+      "prompt": "붙잡으려는 포즈 B — lunging forward, clawed hand, hair/clothes flowing backwards. 포즈+웹툰 2관점 설계."
     }
   ]
 }

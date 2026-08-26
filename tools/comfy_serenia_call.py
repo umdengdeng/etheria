@@ -50,6 +50,24 @@ CALL = "reaching towards viewer, outstretched arm, open palm, looking at viewer,
 NO_TPOSE = "spread arms, t-pose, symmetrical pose, both arms outstretched, "
 
 CUTS = {
+  "grabA": dict(
+    expr="sad, desperate, open eyes, looking at viewer, parted lips",
+    view="cowboy shot, outstretched hand, reaching towards viewer, grabbing motion, fingers curled, clawed hand, leaning forward, off balance, shoulder pulled forward, other arm trailing behind, hair flowing backwards, clothes flowing backwards, dynamic pose, foreshortening, looking at viewer, desperate, straining",
+    extra_neg=NO_TPOSE + "full body, feet, close-up, open palm, relaxed, standing still, calm pose",
+    detail=True, hands=True, portrait=True),
+
+  "grabB": dict(
+    expr="sad, desperate, open eyes, looking at viewer, parted lips",
+    view="cowboy shot, outstretched hand, reaching towards viewer, grabbing motion, fingers curled, clawed hand, leaning forward, off balance, shoulder pulled forward, other arm trailing behind, hair flowing backwards, clothes flowing backwards, dynamic pose, foreshortening, looking at viewer, desperate, straining, lunging forward, one foot lifted, falling towards viewer, motion blur",
+    extra_neg=NO_TPOSE + "full body, feet, close-up, open palm, relaxed, standing still, calm pose",
+    detail=True, hands=True, portrait=True),
+
+  "grabC": dict(
+    expr="sad, desperate, open eyes, looking at viewer, parted lips",
+    view="cowboy shot, outstretched hand, reaching towards viewer, grabbing motion, fingers curled, clawed hand, leaning forward, off balance, shoulder pulled forward, other arm trailing behind, hair flowing backwards, clothes flowing backwards, dynamic pose, foreshortening, looking at viewer, desperate, straining, hand in front of face, extreme foreshortening, hand reaching out of frame",
+    extra_neg=NO_TPOSE + "full body, feet, close-up, open palm, relaxed, standing still, calm pose",
+    detail=True, hands=True, portrait=True),
+
   "poseA": dict(
     expr="sad, apologetic, open eyes, looking at viewer, closed mouth",
     view="cowboy shot, leaning forward, reaching towards viewer, outstretched arm, open palm, head tilt, head down, looking up, upturned eyes, from below",
