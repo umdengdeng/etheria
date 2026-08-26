@@ -106,6 +106,15 @@ def measure(im):
     cx = sum(v * (i % W) for i, v in enumerate(e)) / tot / (W - 1)
     cy = sum(v * (i // W) for i, v in enumerate(e)) / tot / (H - 1)
 
+    # --- 0) 잘림 : 테두리에 피사체가 닿아 있나 ------------------------------
+    # 흰 공간 컷에서 뻗은 손이 화면 밖으로 나가는 사고가 반복됐다.
+    # 배경이 밝은 컷은 테두리 픽셀만 봐도 잘렸는지 정확히 알 수 있다.
+    edge = {}
+    for k, pts in (("top", [(x, 0) for x in range(W)]),
+                   ("left", [(0, y) for y in range(H)]),
+                   ("right", [(W - 1, y) for y in range(H)])):
+        edge[k] = sum(1 for x, y in pts if px[y * W + x] < 238) / len(pts)
+
     # --- 4) 명암폭 --------------------------------------------------------
     mean = sum(px) / len(px)
     sd = math.sqrt(sum((v - mean) ** 2 for v in px) / len(px)) / 255.0
@@ -131,7 +140,7 @@ def measure(im):
     #    배경 넓이에 휘둘리지 않고 「어디에 뭐가 있나」만 남는다.
     sym = sum(abs(col[x] - col[W - 1 - x]) for x in range(W)) / 2.0
 
-    return {"sym": sym, "cx": cx, "cy": cy, "sd": sd, "top": top, "bot": bot, "ent": ent}
+    return {"sym": sym, "cx": cx, "cy": cy, "sd": sd, "top": top, "bot": bot, "ent": ent, "edge": edge}
 
 
 def judge(asset_id, key, m, prompt):
@@ -172,6 +181,21 @@ def judge(asset_id, key, m, prompt):
             "시선 높이가 정확히 화면 절반이다 (y=%.2f)." % m["cy"],
             "올려다보거나 내려다본다. 같은 장면이 이어질 때 높이를 바꾸면 리듬이 생긴다.",
         ))
+
+    # 밝은 배경 컷에서만 의미가 있다. 어두운 배경은 테두리가 원래 어둡다
+    # ★클로즈업은 화면 밖으로 넘치는 게 정상이다. 넘치지 않으면 오히려 클로즈업이 아니다.
+    closeup = name.endswith(".close") or "close" in asset_id
+    if m.get("edge") and not closeup and m["sd"] < 0.30 and m.get("tone") in ("white", "flat"):
+        cut_at = [k for k, v in m["edge"].items() if v > 0.02]
+        if cut_at:
+            ko = {"top": "위", "left": "왼쪽", "right": "오른쪽"}
+            bad.append((
+                "잘림",
+                "피사체가 화면 %s 끝에 닿아 있다 (%s)." % (
+                    "·".join(ko[k] for k in cut_at),
+                    " ".join("%s %.0f%%" % (ko[k], m["edge"][k] * 100) for k in cut_at)),
+                "뻗은 손이 화면 밖으로 나갔을 가능성이 높다. 인물을 줄이거나 안쪽으로 옮긴다.",
+            ))
 
     if m["sd"] < 0.085 and not flat_ok:
         bad.append((

@@ -36,7 +36,7 @@ OUTFIT = ("flowing white robe, sheer gauzy layered fabric, high collar, long wid
           "covered shoulders, tiara, plain, elegant")
 CHAR_NEG = ("cleavage, exposed chest, revealing clothes, plunging neckline, bare shoulders, off-shoulder, "
             "strapless, sleeveless, bare arms, collarbone, bare chest, seductive pose")
-BASE_NEG = ("red clothes, red sash, red ribbon, gold ornament, colored accessory, necklace, pendant, brooch, ball gown, wedding dress, long train, trailing skirt, wide skirt, poofy dress, full body, feet, shoes, multicolored hair, gradient hair, streaked hair, red hair, colored hair tips, two-tone hair, viewfinder, rec, recording indicator, frame border, letterbox, ui, hud, battery icon, "
+BASE_NEG = ("gold trim, gold embroidery, golden ornament, red gem, red jewel, blue pattern, red clothes, red sash, red ribbon, gold ornament, colored accessory, necklace, pendant, brooch, ball gown, wedding dress, long train, trailing skirt, wide skirt, poofy dress, full body, feet, shoes, multicolored hair, gradient hair, streaked hair, red hair, colored hair tips, two-tone hair, viewfinder, rec, recording indicator, frame border, letterbox, ui, hud, battery icon, "
             "closed eyes, eyes closed, twintails, earrings, jewelry, "
             "giant hand, oversized hand, smug, smirk, grin, angry, glaring, "
             "multiple views, reference sheet, character sheet, turnaround, front and back view, multiple girls, 2girls, extra person, deformed, bad anatomy, bad hands, extra digits, "
@@ -50,6 +50,24 @@ CALL = "reaching towards viewer, outstretched arm, open palm, looking at viewer,
 NO_TPOSE = "spread arms, t-pose, symmetrical pose, both arms outstretched, "
 
 CUTS = {
+  "holdA": dict(
+    expr="sad, apologetic, determined, eyebrows slightly lowered, closed mouth, steady gaze, looking at viewer, not crying, not desperate",
+    view="cowboy shot, reaching toward the viewer, hand in front of her own body, palm toward the camera, fingers slightly curled about to close, foreshortening, other hand gripping her robe near the chest, leaning slightly forward, hair and sleeves floating gently, weightless, looking at viewer",
+    extra_neg=NO_TPOSE + "full body, feet, close-up, cropped hand, cropped fingers, cropped arm, arm extended sideways, arm to the side, spread arm, open mouth, sweat, tears, crying, screaming, motion blur, windswept",
+    detail=True, hands=True, portrait=True),
+
+  "holdB": dict(
+    expr="sad, apologetic, determined, eyebrows slightly lowered, closed mouth, steady gaze, looking at viewer, not crying, not desperate",
+    view="cowboy shot, reaching toward the viewer, hand in front of her own body, palm toward the camera, fingers slightly curled about to close, foreshortening, other hand gripping her robe near the chest, leaning slightly forward, hair and sleeves floating gently, weightless, looking at viewer, from below, head tilted down, upturned eyes",
+    extra_neg=NO_TPOSE + "full body, feet, close-up, cropped hand, cropped fingers, cropped arm, arm extended sideways, arm to the side, spread arm, open mouth, sweat, tears, crying, screaming, motion blur, windswept",
+    detail=True, hands=True, portrait=True),
+
+  "holdC": dict(
+    expr="sad, apologetic, determined, eyebrows slightly lowered, closed mouth, steady gaze, looking at viewer, not crying, not desperate",
+    view="cowboy shot, reaching toward the viewer, hand in front of her own body, palm toward the camera, fingers slightly curled about to close, foreshortening, other hand gripping her robe near the chest, leaning slightly forward, hair and sleeves floating gently, weightless, looking at viewer, head slightly tilted, hand higher near her face",
+    extra_neg=NO_TPOSE + "full body, feet, close-up, cropped hand, cropped fingers, cropped arm, arm extended sideways, arm to the side, spread arm, open mouth, sweat, tears, crying, screaming, motion blur, windswept",
+    detail=True, hands=True, portrait=True),
+
   "grabA": dict(
     expr="sad, desperate, open eyes, looking at viewer, parted lips",
     view="cowboy shot, outstretched hand, reaching towards viewer, grabbing motion, fingers curled, clawed hand, leaning forward, off balance, shoulder pulled forward, other arm trailing behind, hair flowing backwards, clothes flowing backwards, dynamic pose, foreshortening, looking at viewer, desperate, straining",
