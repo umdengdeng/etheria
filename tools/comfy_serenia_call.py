@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 """세레니아 「부름」 컷 — 1화 오프닝 전용 (2026-08-25)
 
-    ※ 실행은 D:\ComfyUI_windows_portable\gen_serenia_call.py 에서 한다.
-      (ComfyUI 폴더가 git 밖이라 여기 사본을 둔다. 고칠 땐 양쪽 다.)
-
     python gen_serenia_call.py            # 4컷 전부
     python gen_serenia_call.py close      # 하나만
 
@@ -35,11 +32,11 @@ FACEBODY = ("1girl, solo, beautiful young princess age 22, very long straight gl
 # ★이 모델(Illustrious)은 **부루 태그**로 알아듣는다. 긴 영어 문장은 거의 무시되고
 #   대신 엉뚱한 단어만 문자 그대로 그린다 — 「camera」라고 썼더니 REC 뷰파인더를 그렸다.
 #   그래서 전부 짧은 태그로 쓴다.
-OUTFIT = ("white royal gown, turtleneck, high collar, long sleeves, covered shoulders, closed clothes, "
-          "silver embroidery, tiara, elegant, modest")
+OUTFIT = ("simple long white dress, opaque fabric, turtleneck, high collar, long sleeves, "
+          "covered shoulders, closed clothes, tiara, plain, modest")
 CHAR_NEG = ("cleavage, exposed chest, revealing clothes, plunging neckline, bare shoulders, off-shoulder, "
             "strapless, sleeveless, bare arms, collarbone, bare chest, seductive pose")
-BASE_NEG = ("multicolored hair, gradient hair, streaked hair, red hair, colored hair tips, two-tone hair, viewfinder, rec, recording indicator, frame border, letterbox, ui, hud, battery icon, "
+BASE_NEG = ("ball gown, wedding dress, long train, trailing skirt, wide skirt, poofy dress, full body, feet, shoes, multicolored hair, gradient hair, streaked hair, red hair, colored hair tips, two-tone hair, viewfinder, rec, recording indicator, frame border, letterbox, ui, hud, battery icon, "
             "closed eyes, eyes closed, windswept hair, floating hair, twintails, earrings, jewelry, "
             "giant hand, oversized hand, smug, smirk, grin, angry, glaring, "
             "multiple views, reference sheet, character sheet, turnaround, front and back view, multiple girls, 2girls, extra person, deformed, bad anatomy, bad hands, extra digits, "
@@ -53,17 +50,20 @@ CALL = "reaching towards viewer, outstretched arm, open palm, looking at viewer,
 NO_TPOSE = "spread arms, t-pose, symmetrical pose, both arms outstretched, "
 
 CUTS = {
+  # ★전신이 아니라 카우보이샷(허벅지 위). 전신은 얼굴에 갈 픽셀이 없어서 눈·코가 뭉갠다.
+  #   그리고 세로(832x1216)로 뽑는다 — 이 모델이 학습한 비율이라 인물이 크게 잡힌다.
+  #   배경이 순백이라 뒤에서 16:9 흰 캔버스에 얹으면 이음매가 안 보인다.
   "wide": dict(
     expr="sad, apologetic, open eyes, looking at viewer, closed mouth",
-    view="solo, full body, standing, " + CALL,
-    extra_neg=NO_TPOSE + "close-up, portrait, cropped legs",
-    detail=False),
+    view="cowboy shot, " + CALL,
+    extra_neg=NO_TPOSE + "full body, feet, legs, close-up",
+    detail=True, hands=True, portrait=True),
 
   "close": dict(
     expr="sad, apologetic, half-closed eyes, closed mouth",
     view="upper body, from below, " + CALL,
     extra_neg=NO_TPOSE + "full body, wide shot",
-    detail=True),
+    detail=True, hands=True),
 
   "mid": dict(
     expr="face obscured by light",
@@ -88,7 +88,11 @@ def build(name, cut):
      "pos": {"class_type": "CLIPTextEncode", "inputs": {"text": P, "clip": ["c", 1]}},
      "neg": {"class_type": "CLIPTextEncode", "inputs": {"text": N, "clip": ["c", 1]}},
      # ★가로 16:9. SDXL 계열이라 1344x768 이 안전하다 (832x1216 의 가로판)
-     "lat": {"class_type": "EmptyLatentImage", "inputs": {"width": 1344, "height": 768, "batch_size": 1}},
+     # 세로 컷은 832x1216 — heroine_gen.py 가 쓰는 비율이고 얼굴에 픽셀이 제일 많이 간다.
+     # 가로가 필요하면 뽑은 뒤 흰 캔버스에 얹는다 (배경이 순백이라 이음매가 없다).
+     "lat": {"class_type": "EmptyLatentImage", "inputs": {
+        "width": 832 if cut.get("portrait") else 1344,
+        "height": 1216 if cut.get("portrait") else 768, "batch_size": 1}},
      "ks": {"class_type": "KSampler", "inputs": {
         "model": ["c", 0], "positive": ["pos", 0], "negative": ["neg", 0], "latent_image": ["lat", 0],
         "seed": SEED, "steps": 30, "cfg": 5.0,
@@ -114,6 +118,24 @@ def build(name, cut):
             "sam_bbox_expansion": 0, "sam_mask_hint_threshold": 0.7,
             "sam_mask_hint_use_negative": "False", "drop_size": 10, "wildcard": "", "cycle": 1}}
         img = ["fd", 0]
+    if cut.get("hands"):
+        # ★손은 FaceDetailer(얼굴 디텍터)로 안 잡힌다. hand_yolov8s 로 한 번 더 태운다.
+        #   전신샷에서 손가락이 뭉개지던 걸 이걸로 잡는다.
+        wf["ulth"] = {"class_type": "UltralyticsDetectorProvider",
+                      "inputs": {"model_name": "bbox/hand_yolov8s.pt"}}
+        wf["hd"] = {"class_type": "FaceDetailer", "inputs": {
+            "image": img, "model": ["c", 0], "clip": ["c", 1], "vae": ["c", 2],
+            "positive": ["pos", 0], "negative": ["neg", 0],
+            "bbox_detector": ["ulth", 0],
+            "guide_size": 384.0, "guide_size_for": True, "max_size": 1024.0,
+            "seed": SEED + 2, "steps": 24, "cfg": 5.0,
+            "sampler_name": "euler_ancestral", "scheduler": "normal",
+            "denoise": 0.5, "feather": 5, "noise_mask": True, "force_inpaint": True,
+            "bbox_threshold": 0.5, "bbox_dilation": 10, "bbox_crop_factor": 3.0,
+            "sam_detection_hint": "center-1", "sam_dilation": 0, "sam_threshold": 0.93,
+            "sam_bbox_expansion": 0, "sam_mask_hint_threshold": 0.7,
+            "sam_mask_hint_use_negative": "False", "drop_size": 10, "wildcard": "", "cycle": 1}}
+        img = ["hd", 0]
     wf["save"] = {"class_type": "SaveImage",
                   "inputs": {"images": img, "filename_prefix": "sercall_" + name}}
     return wf

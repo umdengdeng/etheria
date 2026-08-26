@@ -175,6 +175,17 @@
       "kb": 27,
       "src_file": "dissolve.png",
       "prompt": "heroine_gen.py serenia 락 + gen_serenia_call.py dissolve 컷. 부루 태그 방식."
+    },
+    {
+      "key": "serenia.call.wide",
+      "asset": "serenia_call_wide",
+      "tool": "ComfyUI",
+      "model": "prefectIllustriousXL_v70 (seed 515150)",
+      "ratio": "832x1216 → 16:9 합성",
+      "size": "1280x720",
+      "kb": 21,
+      "src_file": "wide_16x9.png",
+      "prompt": "cowboy shot + FaceDetailer + HandDetailer. 세로로 뽑아 흰 캔버스에 오른쪽 3분의 1로 합성."
     }
   ]
 }
