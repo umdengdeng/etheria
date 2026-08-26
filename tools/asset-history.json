@@ -230,6 +230,17 @@
       "kb": 19,
       "src_file": "serenia_wide_final.png",
       "prompt": "full body 로 뽑아 여백 확보 후 손이 다 들어오는 범위로 잘라냄. 손 뻗은 컷을 좁은 프레임에 직접 뽑으면 반드시 손가락이 잘린다."
+    },
+    {
+      "key": "serenia.call.wide",
+      "asset": "serenia_call_wide",
+      "tool": "ComfyUI",
+      "model": "prefectIllustriousXL_v70 (seed 515150)",
+      "ratio": "832x1216 → 16:9 크롭",
+      "size": "1280x720",
+      "kb": 26,
+      "src_file": "f2_16x9.png",
+      "prompt": "정면 · 눈물이 고인 슬픈 눈 · 입 다뭄. front view, tears welling, holding back tears."
     }
   ]
 }

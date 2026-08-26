@@ -180,6 +180,32 @@ if (problems.length) { console.log("■ 고쳐야 함"); problems.forEach(p => c
 if (notes.length) { console.log("■ 확인 필요"); notes.forEach(p => console.log("  · " + p)); console.log(""); }
 if (!problems.length && !notes.length) console.log("문제 없음.");
 else if (!problems.length) console.log("치명적인 문제는 없음.");
+// ── 캐릭터 표정 보유 현황 ──────────────────────────────────
+// 대사마다 얼굴을 바꿔 쓰려면 누가 뭘 갖고 있는지 알아야 한다.
+// 없는 표정을 대본에서 부르면 그냥 안 바뀌고 조용히 넘어가서 눈치채기 어렵다.
+{
+  const STD = ["neutral","smile","sad","blush","surprise","worried"];
+  const chars = {};
+  for (const id of Object.keys(SPRITES || {})) {
+    const i = id.lastIndexOf("_");
+    if (i < 0) continue;
+    const c = id.slice(0, i), e = id.slice(i + 1);
+    if (!STD.includes(e) && !["angry","smug","shy"].includes(e)) continue;
+    (chars[c] = chars[c] || []).push(e);
+  }
+  const names = Object.keys(chars).sort();
+  if (names.length) {
+    console.log("");
+    console.log("■ 캐릭터 표정 보유");
+    for (const c of names) {
+      const miss = STD.filter(e => !chars[c].includes(e));
+      console.log("  " + c + "  " + chars[c].sort().join("·")
+        + (miss.length ? "   ← 없음: " + miss.join(",") : "   (표준 6종 완비)"));
+    }
+    console.log("  새로 뽑기:  python D:/ComfyUI_windows_portable/gen_char_expr.py <캐릭터> <표정...>");
+  }
+}
+
 console.log("");
 console.log("비주얼 연출(정면대칭·정중앙·명암)은 따로 본다 →  python tools/vcheck.py");
 process.exit(problems.length ? 1 : 0);
