@@ -50,6 +50,66 @@ CALL = "reaching towards viewer, outstretched arm, open palm, looking at viewer,
 NO_TPOSE = "spread arms, t-pose, symmetrical pose, both arms outstretched, "
 
 CUTS = {
+  "t1": dict(
+    expr="sad, holding back tears, glistening eyes, eyebrows lowered, closed mouth, looking at viewer",
+    view="full body, ★leaning far forward, bending at the waist, upper body tilted toward the viewer, reaching toward the viewer, hand in front of her own body, palm toward the camera, fingers curled about to grab, hair and sleeves floating, one hand reaching, other hand clenching her robe at the chest",
+    extra_neg=NO_TPOSE + "cropped hand, cropped fingers, out of frame, close-up, portrait, standing straight, upright posture, relaxed, smug, smirk, angry, windswept",
+    detail=True, hands=True, portrait=True),
+
+  "t2": dict(
+    expr="sad, desperate, eyebrows lowered, slightly parted lips, looking at viewer",
+    view="full body, ★leaning far forward, bending at the waist, upper body tilted toward the viewer, reaching toward the viewer, hand in front of her own body, palm toward the camera, fingers curled about to grab, hair and sleeves floating, both hands reaching forward at different heights, asymmetrical",
+    extra_neg=NO_TPOSE + "cropped hand, cropped fingers, out of frame, close-up, portrait, standing straight, upright posture, relaxed, smug, smirk, angry, windswept",
+    detail=True, hands=True, portrait=True),
+
+  "t3": dict(
+    expr="sad, pleading, eyebrows lowered, upturned eyes, closed mouth, looking at viewer",
+    view="full body, ★leaning far forward, bending at the waist, upper body tilted toward the viewer, reaching toward the viewer, hand in front of her own body, palm toward the camera, fingers curled about to grab, hair and sleeves floating, one knee slightly forward as if stepping toward the viewer, one hand reaching",
+    extra_neg=NO_TPOSE + "cropped hand, cropped fingers, out of frame, close-up, portrait, standing straight, upright posture, relaxed, smug, smirk, angry, windswept",
+    detail=True, hands=True, portrait=True),
+
+  "t4": dict(
+    expr="sad, sorrowful, tears welling, eyebrows lowered, closed mouth, upturned eyes",
+    view="full body, ★leaning far forward, bending at the waist, upper body tilted toward the viewer, reaching toward the viewer, hand in front of her own body, palm toward the camera, fingers curled about to grab, hair and sleeves floating, one hand reaching, head tilted down, shoulders drawn in, off balance",
+    extra_neg=NO_TPOSE + "cropped hand, cropped fingers, out of frame, close-up, portrait, standing straight, upright posture, relaxed, smug, smirk, angry, windswept",
+    detail=True, hands=True, portrait=True),
+
+  "s1": dict(
+    expr="sad, apologetic, eyebrows lowered, closed mouth, looking at viewer",
+    view="full body, standing, reaching toward the viewer, hair and sleeves floating gently, one hand extended forward toward the viewer, palm up, fingers curled about to close, other hand gripping her robe at the chest, leaning forward",
+    extra_neg=NO_TPOSE + "cropped hand, cropped fingers, cropped arm, out of frame, close-up, portrait, smug, smirk, grin, angry, glaring, motion blur, windswept",
+    detail=True, hands=True, portrait=True),
+
+  "s2": dict(
+    expr="sad, desperate, eyebrows lowered, slightly parted lips, looking at viewer",
+    view="full body, standing, reaching toward the viewer, hair and sleeves floating gently, both hands reaching forward toward the viewer at different heights, fingers curled, asymmetrical arms, leaning forward",
+    extra_neg=NO_TPOSE + "cropped hand, cropped fingers, cropped arm, out of frame, close-up, portrait, smug, smirk, grin, angry, glaring, motion blur, windswept",
+    detail=True, hands=True, portrait=True),
+
+  "s3": dict(
+    expr="sad, pleading, eyebrows lowered, closed mouth, upturned eyes, looking at viewer",
+    view="full body, standing, reaching toward the viewer, hair and sleeves floating gently, knees slightly bent, lowered stance, one hand reaching upward toward the viewer, fingers curled, other arm trailing down",
+    extra_neg=NO_TPOSE + "cropped hand, cropped fingers, cropped arm, out of frame, close-up, portrait, smug, smirk, grin, angry, glaring, motion blur, windswept",
+    detail=True, hands=True, portrait=True),
+
+  "s4": dict(
+    expr="sad, regretful, eyebrows lowered, closed mouth, looking at viewer",
+    view="full body, standing, reaching toward the viewer, hair and sleeves floating gently, three quarter view, body turned away, one hand reaching back toward the viewer, fingers curled, looking back over her shoulder",
+    extra_neg=NO_TPOSE + "cropped hand, cropped fingers, cropped arm, out of frame, close-up, portrait, smug, smirk, grin, angry, glaring, motion blur, windswept",
+    detail=True, hands=True, portrait=True),
+
+  "s5": dict(
+    expr="sad, straining, eyebrows lowered, slightly parted lips, looking at viewer",
+    view="full body, standing, reaching toward the viewer, hair and sleeves floating gently, arm fully extended forward toward the viewer, straining, fingertips reaching, shoulder pulled forward, body tilted forward, off balance",
+    extra_neg=NO_TPOSE + "cropped hand, cropped fingers, cropped arm, out of frame, close-up, portrait, smug, smirk, grin, angry, glaring, motion blur, windswept",
+    detail=True, hands=True, portrait=True),
+
+  "s6": dict(
+    expr="sad, holding back tears, glistening eyes, eyebrows lowered, closed mouth, upturned eyes",
+    view="full body, standing, reaching toward the viewer, hair and sleeves floating gently, one hand reaching forward toward the viewer with curled fingers, the other hand clenching her own robe tightly at the chest, head tilted down, shoulders drawn in",
+    extra_neg=NO_TPOSE + "cropped hand, cropped fingers, cropped arm, out of frame, close-up, portrait, smug, smirk, grin, angry, glaring, motion blur, windswept",
+    detail=True, hands=True, portrait=True),
+
   "fullA": dict(
     expr="sad, apologetic, determined, eyebrows slightly lowered, closed mouth, steady gaze, looking at viewer, not crying, not desperate",
     view="full body, standing, reaching toward the viewer, hand in front of her body, palm toward the camera, fingers slightly curled, other hand gripping her robe, leaning slightly forward, hair and sleeves floating gently, looking at viewer",
