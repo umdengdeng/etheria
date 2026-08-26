@@ -63,7 +63,21 @@ def cut_bg(im):
     bg = np.median(border, axis=0)
 
     dist = np.abs(a - bg).max(axis=2)
-    alpha = np.clip((dist - LO) * (255.0 / (HI - LO)), 0, 255)
+
+    # ★비치는 천이 문제였다.
+    #   얇은 천이 초록 배경 위에 겹치면 렌더 결과가 「흰색+초록」의 중간색이 된다.
+    #   거리로만 알파를 매기면 그 부분이 **반투명**으로 남아, 게임에서 뒤 배경이
+    #   그대로 비쳐 보인다 (자주색 배경에 올려보니 드레스가 얼룩덜룩해 보였다).
+    #   → 실루엣 **안쪽은 무조건 불투명**으로 채우고, 부드럽게 깎는 건
+    #     바깥 경계 한 겹에서만 한다.
+    solid = dist > LO                      # 배경이 아니라고 볼 수 있는 곳
+    from scipy import ndimage             # noqa
+    filled = ndimage.binary_fill_holes(solid)
+    alpha = np.where(filled, 255.0, 0.0)
+    # 경계만 살짝 부드럽게 (계단 방지)
+    edge = np.clip((dist - LO) * (255.0 / (HI - LO)), 0, 255)
+    boundary = filled & (ndimage.binary_erosion(filled, iterations=2) == False)
+    alpha[boundary] = np.minimum(alpha[boundary], edge[boundary])
 
     # despill — 초록물만 뺀다.
     # ★기준을 R·B **평균**으로 잡으면 피부까지 깎여서 보랏빛이 된다.
@@ -73,6 +87,20 @@ def cut_bg(im):
         rb = np.maximum(a[:, :, 0], a[:, :, 2])
         over = np.clip(a[:, :, 1] - rb, 0, None)
         a[:, :, 1] -= over
+
+        # ★어두운 머리카락 가장자리는 이것만으로 안 빠진다.
+        #   검은 머리에 초록이 섞이면 G 를 깎아도 (R, B, B) 꼴이 남아 **청록**으로 뜬다.
+        #   그래서 어두운 픽셀 중 G·B 가 R 보다 뜬 곳은 무채색으로 눌러버린다.
+        #   밝은 드레스는 luminance 조건에 안 걸려서 안전하다.
+        # ★밝기 조건을 걸면 머리 **끝쪽의 밝은 청록**이 안 잡힌다.
+        #   이 캐릭터의 팔레트에는 초록·청록이 아예 없다(흰 드레스·검은 머리·붉은 눈·은관).
+        #   그러니 G·B 가 R 보다 뜨는 곳은 전부 배경물이 든 것으로 봐도 된다.
+        #   흰 드레스는 R≈G≈B, 피부는 R>G>B 라 안 걸린다.
+        teal = (a[:, :, 1] > a[:, :, 0] + 6) & (a[:, :, 2] > a[:, :, 0] + 6)
+        if teal.any():
+            r = a[:, :, 0]
+            a[:, :, 1] = np.where(teal, r, a[:, :, 1])
+            a[:, :, 2] = np.where(teal, r, a[:, :, 2])
 
     out = np.dstack([np.clip(a, 0, 255), alpha]).astype(np.uint8)
     return Image.fromarray(out, "RGBA")
